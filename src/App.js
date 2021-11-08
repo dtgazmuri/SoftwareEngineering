@@ -8,6 +8,7 @@ import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
 import { Container } from 'react-bootstrap';
 import LoginPage from './Site/loginpage';
+import { LoginForm } from './Site/login';
 function App() {
   return (
   <Router>
@@ -22,7 +23,7 @@ function App() {
             {/*Route di Login*/}
           <Route path="/loginpage" element = {<LoginPage/>}/> 
           
-          <Route path ="/loginpage/<type>" /*element = {<LoginForm/>}*/ />
+          <Route path ="/loginpage/:type" element = {<LoginForm/>} />
             {/*Route di Registrazione*/}
           <Route path="/sign-in" /*element = {</>}*/
           />

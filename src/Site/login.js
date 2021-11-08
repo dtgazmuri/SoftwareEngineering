@@ -1,9 +1,16 @@
 import { Form, Button, Alert, Container} from 'react-bootstrap';
 import { useState } from 'react';
+import { useLocation } from 'react-router';
 function LoginForm(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('') ;
+  const [errorMessage, setErrorMessage] = useState('');
+
+
+  const typeofaccess = useLocation().pathname.split("/")[2]; //salvo il tipo di accesso per selezionare il db corretto
+
+
+
   const handleSubmit = (event) => {
       event.preventDefault();
       setErrorMessage('');
@@ -23,7 +30,7 @@ function LoginForm(props) {
         valid.reason=valid.reason.concat("Password cannot be Less than 6 characters! ")
       }
       if (valid.value) {
-        props.login(credentials);
+        props.login(credentials, typeofaccess); //passo alla funzione login il tipo di accesso
       }
       else {
         // show a better error message...

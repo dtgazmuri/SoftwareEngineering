@@ -5,7 +5,7 @@ function LoginPage() {
     return(
         <Container className="below-nav justify-content-center">
             <Row>
-            <h1>Please select the type of account you held</h1>
+            <h1>Please select the type of account you want to login:</h1>
             </Row>
             <Row className ="my-3" align="center">
                 <Col className="py-3" >
@@ -15,7 +15,7 @@ function LoginPage() {
                     </Link>
                 </Col>
                 <Col className="py-3">
-                    <Link to="/loginpage/shopemp/" className="nolink">
+                    <Link to="/loginpage/shopemployee/" className="nolink">
                         {shopemployee}
                         <h2>Shop Employee</h2>
                     </Link>
