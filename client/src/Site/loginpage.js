@@ -30,7 +30,6 @@ function LoginPage(props) {
 
       }
       else {
-        // show a better error message...
         setErrorMessage(valid.reason)
       }
   };
@@ -41,7 +40,7 @@ function LoginPage(props) {
     <Form>
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
       <Form.Group controlId='username'>
-          <Form.Label>email</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
       </Form.Group>
       <Form.Group controlId='password'>
