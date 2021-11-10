@@ -3,7 +3,6 @@
 const db = require('./db')
 
 
-
 // get all products (with the werehouse quantity)
 exports.listProductsAll = () => {
     return new Promise((resolve, reject) => {

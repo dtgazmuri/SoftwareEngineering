@@ -1,3 +1,6 @@
+import Product from "./Site/data/product"
+import Farmer from "./Site/data/farmer"
+import Order from "./Site/data/order"
 async function login(credentials) {
   let response = await fetch('/api/sessions', {
     method: 'POST',
@@ -67,8 +70,6 @@ async function fetchAllProducts() {
 
   const url = `${BASEURL}/products/all`;
 
-
-
   try {
     const response = await fetch(url);
 
@@ -78,8 +79,14 @@ async function fetchAllProducts() {
 
       try {
         const responseBody = await response.json();
-        return responseBody;
+        const list = []; 
+        for (const ex of responseBody){
+           const farmername =  await fetchFarmerById(ex.farmerid);
+           list.push(new Product(ex.id, ex.name, farmername, ex.quantity, ex.price))
+          };
+        return list;
       }
+      
       catch (er) {
         console.log(`error : ${er}`);
         return { error: `error ${er}` };
@@ -94,7 +101,7 @@ async function fetchAllProducts() {
   }
 }
 
-/** The function returns the info over a farmer given it's id
+/** The function returns the info over a farmer given its id
  * 
  * @param {numeric} farmer_id The unique id of the farmer to fecth
  * @returns An object containing the farmer info OR an object containing the field "error" if something went wrong. The object has the following format:
@@ -113,7 +120,7 @@ async function fetchFarmerById(farmer_id) {
 
     if (response.ok) {
       const responseBody = await response.json();
-      return responseBody;
+      return Farmer.from(responseBody);
     }
     else {
       return { error: ` error code ${response.status}` };

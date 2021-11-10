@@ -12,12 +12,14 @@ import { LoginForm } from './Site/login';
 import { useState, useEffect } from 'react';
 import API from "./API.js"
 import MyPage from './Site/mypage';
+import ProductList from './Site/ProductList';
 
 function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
   const [message, setMessage] = useState({type:"", msg:""})
-    
+  const [products, setProducts] = useState();
+
   
   //AUTH LOGIN LOGOUT 
 
@@ -60,6 +62,19 @@ function App() {
     setMessage({type:"success", msg:"Logout effettuato correttamente"})
   }
   
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const products = await API.fetchAllProducts();
+        console.log(products);
+        setProducts(products);
+      } catch (err) {
+        setLogged(false)
+        console.log(err.error);
+      }
+    };
+    getProducts();
+  }, []);
 
   return (
   <Router>
@@ -79,8 +94,9 @@ function App() {
           <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginForm login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
+          <Route path = "/products/" element = {<ProductList products = {products}/>}/>
+
           {/* BODY PER HOMEPAGE */}
-          
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
           <MyPage user = {user} />}
