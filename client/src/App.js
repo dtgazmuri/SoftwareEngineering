@@ -19,7 +19,7 @@ function App() {
   const [message, setMessage] = useState({type:"", msg:""})
     
   
-  //LOGIN LOGOUT
+  //AUTH LOGIN LOGOUT 
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -37,7 +37,6 @@ function App() {
 
 
   }, []);
-
 
   const doLogin = async (credentials) => {
     try {   
