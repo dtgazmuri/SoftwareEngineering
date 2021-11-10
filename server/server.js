@@ -1,8 +1,4 @@
-
-
-/*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
-const userDao = ""; 
-
+const userDao = require('./dbusers.js');
 
 const {check, validationResult} = require('express-validator'); // validation middleware
 const express = require('express');
@@ -53,12 +49,9 @@ app.use(passport.session());
 
 
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
-  // Format express-validate errors as strings
   return `${location}[${param}]: ${msg}`;
 };
-                            /* ############## USER API ############## */
 
-// Login
 app.post('/api/sessions', function (req, res, next) {
   passport.authenticate('local', (err, user, info) => {
     if (err)

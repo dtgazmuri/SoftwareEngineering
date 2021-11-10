@@ -26,7 +26,7 @@ return (
                 </Link>                
             </Col>
             <Col id="signin-col" className= "v-100 d-sm-block">
-                <Link to="/loginpage">
+                <Link to="/sign-in">
                     {/*<Button variant="outline-success">Log in</Button>*/}
                     <Container fluid className = "LoginButton border border-dark rounded nolink" align="center">
                     {signin}

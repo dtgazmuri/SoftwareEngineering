@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import {Navbar } from 'react-bootstrap';
+import {Col, Navbar } from 'react-bootstrap';
+import Button from '@restart/ui/esm/Button';
 
 function MyNavbar(props) {
     
@@ -21,14 +22,25 @@ function MyNavbar(props) {
                         <span> SPG </span> 
                 </Link>
                 </Navbar.Brand>
-                <Navbar.Text>
+                {props.isLogged?
+                <LogoutButton logout = {props.logout}/>
+                :<Navbar.Text>
                     About Us
                 </Navbar.Text>
+                }
                
 
             </Navbar>
         
     )
 }
+
+function LogoutButton(props) {
+    return(
+      <Col>
+        <Button variant="outline-light" onClick={props.logout}>Logout</Button>
+      </Col>
+    )
+  }
 
 export default MyNavbar;
