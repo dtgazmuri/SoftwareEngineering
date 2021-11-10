@@ -4,6 +4,9 @@
 const userDao = ""; 
 
 
+const employeeDAO = require('./employeeDBAccess'); // module for accessing the DB
+
+
 const {check, validationResult} = require('express-validator'); // validation middleware
 const express = require('express');
 const morgan = require('morgan'); // logging middleware
@@ -94,6 +97,34 @@ app.get('/api/sessions/current', (req, res) => {
 });
 
 
+
+
+
+
+
+
+/* SERVER SIDE FOR THE STORIES NUMBER 1, 2, 3 */
+
+// GET /api/products/all
+app.get('/api/products/all', async (req, res) => {
+
+  //Devo aspettare che la promise sia risolta! Metto await
+  try {
+
+      //1) Get the products from the table
+      const productsList = await employeeDAO.listProductsAll();
+
+      //devo gestire la reject (di dao.listProductsAll())! Uso try-check
+      res.status(200).json(productsList);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  }
+  catch (err) {
+      res.status(404).end();  //Mando errore!
+  }
+});
+
+
+
+/* END */
 
 
 
