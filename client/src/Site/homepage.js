@@ -30,7 +30,7 @@ return (
                     {/*<Button variant="outline-success">Log in</Button>*/}
                     <Container fluid className = "LoginButton border border-dark rounded nolink" align="center">
                     {signin}
-                    <h3>SignIn</h3>
+                    <h3>Sign Up</h3>
                     </Container> 
                 </Link> 
             </Col>

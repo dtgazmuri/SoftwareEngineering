@@ -3,13 +3,17 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./App.css";
-import MyBody from "./Site/homepage";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import MyNavbar from "./Site/navbar";
 import { Container } from "react-bootstrap";
+
+//MY PAGES
+import MyBody from "./Site/homepage";
+import MyNavbar from "./Site/navbar";
 import LoginPage from "./Site/loginpage";
 import { LoginForm } from "./Site/login";
+import Employee from "./Site/employee";
+
 function App() {
   return (
     <Router>
@@ -29,6 +33,9 @@ function App() {
           <Route path="/sign-in" /*element = {</>}*/ />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/employee" element={<Employee />} />
+          
         </Routes>
       </Container>
     </Router>
