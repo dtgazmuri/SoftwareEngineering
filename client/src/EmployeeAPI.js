@@ -10,6 +10,17 @@ async function getOrders() {
     }
 }
 
+async function getCustomers() {
+    let response = await fetch('/api/customers/all');
+    let responseBody = await response.json();
+    if(response.ok) {
+        return responseBody;
+    }
+    else {
+        throw responseBody;
+    }
+}
 
-const API = { getOrders };
+
+const API = { getOrders, getCustomers };
 export default API;

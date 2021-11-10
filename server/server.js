@@ -5,6 +5,7 @@ const userDao = "";
 
 
 const employeeDAO = require('./employeeDBAccess'); // module for accessing the DB
+const farmerDAO = require('./farmerDAO'); //module for accessing db from farmer
 
 
 const { check, validationResult } = require('express-validator'); // validation middleware
@@ -196,6 +197,23 @@ app.get('/api/orders/all', async (req, res) => {
   }
 });
 
+app.get('/api/customers/all', async (req, res) => {
+
+  /***** DA FARE */
+  //Devo aspettare che la promise sia risolta! Metto await
+  try {
+
+    //1) Get the products from the table
+    const productsList = await employeeDAO.listProductsAll();
+
+    //devo gestire la reject (di dao.listProductsAll())! Uso try-check
+    res.status(200).json(productsList);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  }
+  catch (err) {
+    res.status(404).end();  //Mando errore!
+  }
+});
+
 
 // TODO : the customer if FOR NOW is passed in the request, for the client side we need to get it from the cookie, so we probably need another route!
 // NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie
@@ -265,6 +283,42 @@ app.post('/api/order/employee', [
 
 
 //SERVER SIDE FOR THE STORIES NUMBER 4-5-9
+
+
+
+//STORY NUMBER 9
+//getting the list of products selled by a specific farmer
+// GET /api/farmer/:id
+app.get('/api/farmer/:id/products', (req, res) => {
+  farmerDAO.getFarmerProducts(req.params.id)
+  .then(products => {
+    res.json(products);       
+  })
+  .catch(() => res.status(500).end());
+});
+
+//setting the expected amount of availability for a specific product
+//it's an insert inside the warehouse table
+//POST /api/warehouse
+app.post('/api/warehouse', [
+  //validation on product (which is the product id) and quantity. Both have to be integers
+  check('product').isInt(),
+  check('quantity').isInt() 
+], async (req, res) => {
+    const errors = validationResult(req); //looking for errors thrown by the validation
+    if(!errors.isEmpty())
+        return res.status(422).json({errors: errors.array()}); //unprocessable entity in case of errors
+  
+    const product = req.body;
+    try{
+      let result = await farmerDAO.addProductExpectedAmount(product);
+      return res.status(200).json(result);
+    }
+    catch(err){
+      console.log(err);
+      return res.status(500).json({error: 'DB error during the add/update of a product availability'});
+    }
+});
 
 
 /* END */

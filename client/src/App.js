@@ -13,6 +13,7 @@ import MyNavbar from "./Site/navbar";
 import LoginPage from "./Site/loginpage";
 import { LoginForm } from "./Site/login";
 import Employee from "./Site/employee";
+import Farmer from "./Site/farmer";
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
           <Route exact path="/home" element={<MyBody />} />
           {/**Route for the main page of the shop employee */}
           <Route exact path="/employee" element={<Employee />} />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/farmer" element={<Farmer />} />
           
         </Routes>
       </Container>
