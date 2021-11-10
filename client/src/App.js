@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
@@ -8,7 +7,7 @@ import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
 import { Container } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
-import { LoginForm } from './Site/login';
+import { LoginPage } from './Site/login';
 import { useState, useEffect } from 'react';
 import API from "./API.js"
 import MyPage from './Site/mypage';
@@ -75,7 +74,7 @@ function App() {
             {/*Route di Login*/}
           <Route path="/sign-in" element = {<SigninPage/>}/> 
           
-          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginForm login = {doLogin}/>} />
+          <Route path ="/loginpage" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
           {/* BODY PER HOMEPAGE */}

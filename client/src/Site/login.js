@@ -1,13 +1,9 @@
 import { Form, Button, Alert, Container} from 'react-bootstrap';
 import { useState } from 'react';
-import { useLocation } from 'react-router';
-function LoginForm(props) {
+function LoginPage(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-
-  const typeofaccess = useLocation().pathname.split("/")[2]; //salvo il tipo di accesso per selezionare il db corretto 
 
 
 
@@ -59,4 +55,4 @@ function LoginForm(props) {
 
 
 
-export { LoginForm };
+export { LoginPage };

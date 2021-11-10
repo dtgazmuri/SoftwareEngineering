@@ -20,6 +20,25 @@
   color: black;
   
 }
+.loginContainer {
+  margin-top: 20px !important;
+}
+
+.loginLable{
+  padding: 8px !important;
+}
+
+#loginCard {
+  margin: 0 auto;  
+  float: none;  
+  margin-bottom: 10px; 
+} 
+
+#loginSquare{
+  margin-top: 16px;
+  justify-content: center;
+  text-align: center;
+}
 
 .LoginButton {
   width: 200px;

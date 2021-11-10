@@ -1,24 +1,40 @@
-import {Container, Button, Col, Row, InputGroup, Form } from 'react-bootstrap';
+import {Container, Button, Col, Row, InputGroup, Form, Modal } from 'react-bootstrap';
 import { Formik  } from 'formik';
+import { signin } from './icons';
  import * as yup from 'yup';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 function MyPage(props) {
-    
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
     return (
             <>
         
 
             <Container fluid className ="below-nav vh-100">
                <h1> Benvenuto, {props.user.username} </h1>
-               <Container>
-                  {/*  <FormExample/> */}
+               <Container fluid className="LoginButton">
+               <Col id="signin-col" className= "v-100 d-sm-block">
+             
+                    {/*<Button variant="outline-success">Log in</Button>*/}
+                    <Container fluid className = "LoginButton border border-dark rounded nolink" align="center" onClick={handleShow}> 
+                    {signin}
+                    <h3>Create new Client</h3>
+                    </Container> 
+                
+                </Col>
+                
+                  <FormExample show={show} handleShow={handleShow} handleClose={handleClose}/>
                </Container>
             </Container>
             </>
     )
 }
     
-function FormExample() {
+function FormExample(props) {
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
@@ -28,8 +44,10 @@ const schema = yup.object().shape({
   .oneOf([yup.ref('password'), null], 'Passwords must match'),
 });
   return (
+
     <Formik
     validationSchema={schema}
+
     onSubmit={console.log}
     autoComplete="off"
     initialValues={{
@@ -43,12 +61,16 @@ const schema = yup.object().shape({
       {({
           handleSubmit,
           handleChange,
-          handleBlur,
         values,
         touched,
         errors,
     }) => (
-        <Form noValidate autoComplete ="off" onSubmit={handleSubmit}>
+     <Modal show={props.show}>
+      <Modal.Header closeButton>
+        <Modal.Title>Create new client</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form noValidate autoComplete ="off" onSubmit={handleSubmit} >
           <Row className="mb-3">
             <Form.Group as={Col} md="4" controlId="validationFormik01">
               <Form.Label>First name</Form.Label>
@@ -94,7 +116,7 @@ const schema = yup.object().shape({
             </Form.Group>
           </Row>
           <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationFormikPassword">
+            <Form.Group as={Col} md="4" controlId="validationFormikPassword">
               <Form.Label>Password</Form.Label>
               <InputGroup hasValidation>
                 <Form.Control
@@ -130,13 +152,19 @@ const schema = yup.object().shape({
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
-            </Row>
-          <Button type="submit" onClick={handleSubmit(values)}>Submit form</Button>
+          </Row>  
         </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.handleClose}> Close</Button>
+          
+          <Button type="submit" onClick={handleSubmit}>Submit form</Button>
+        </Modal.Footer>
+        </Modal>
       )}
     </Formik>
-  );
-}
+  )
+};
 
 
 
