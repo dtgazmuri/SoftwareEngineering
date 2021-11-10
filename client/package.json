@@ -6,7 +6,15 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+<<<<<<< HEAD
     "bcrypt": "^5.0.1",
+=======
+<<<<<<<< HEAD:client/package.json
+    "bootstrap": "^4.6.0",
+========
+    "bcrypt": "^5.0.1",
+>>>>>>>> c23fd517c2f19990aed79fb0f037c9ae3f25cb8e:package.json
+>>>>>>> c23fd517c2f19990aed79fb0f037c9ae3f25cb8e
     "dayjs": "^1.10.7",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
@@ -16,6 +24,10 @@
     "morgan": "^1.10.0",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
+<<<<<<< HEAD
+=======
+    "popper.js": "^1.16.1",
+>>>>>>> c23fd517c2f19990aed79fb0f037c9ae3f25cb8e
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.2",
     "react-dom": "^17.0.2",
