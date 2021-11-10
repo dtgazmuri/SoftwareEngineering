@@ -169,3 +169,33 @@ exports.getOrderByCustomer = (customer_id) => {
         });
     });
 };
+
+//Add a new client order
+exports.createClientOrder = (order) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL) VALUES(?, ?, ?, ?)';
+      
+      db.run(sql, [order.customerid, order.state, order.delivery, order.total], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
+      });
+    });
+  };
+
+//Add a new order item
+exports.createOrderItem = (item) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'INSERT INTO orderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?, ?)';
+      
+      db.run(sql, [item.orderid, item.productid, item.quantity, item.price], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
+      });
+    });
+  };
