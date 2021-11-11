@@ -257,6 +257,78 @@ async function postOrderByEmployee(order_obj) {
 
 
 
+/** The function returns true if the username is already oresent, false otherwise
+ * 
+ * @param {string} username The username to check
+ * @returns true if the username is already oresent, false otherwise
+ */
+ async function isUsernameAlreadyPresent(username) {
+
+  const url = `${BASEURL}/username/present/${username}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (response.ok) {
+      const responseBody = await response.json();
+      return responseBody.present;
+    }
+    else {
+      return { error: ` error code ${response.status}` };
+    }
+  }
+  catch (err) {
+    return { error: `${err}` };
+  }
+}
+
+
+
+/** The function stores a new customer on the DB
+ * 
+ * @param {object} customer_obj The object containing the data of the customer, in the format:
+ * 
+ *      {
+ *          "name": "marcello", 
+ *          "surname": "fumagalli", 
+ *          "username": "marcello.fumagalli@polito.it", 
+ *          "hash": "hash_tarocco"
+ *      }
+ * 
+ * @returns an object with the userid, if it's created right, or an ojbect with the error field if something went wrong
+ */
+ async function postNewCustomer(customer_obj) {
+
+  const url = `${BASEURL}/customer`;
+
+  const data = customer_obj;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+
+    if (response.ok) {
+      return {};
+    }
+    else {
+      return { error: ` error code ${response.status}` };
+    }
+
+
+  }
+  catch (error) {
+    return { error: `${error}` };
+  }
+}
+
+
+
+
 /*** EXPORTS ***/
 
 
@@ -268,6 +340,9 @@ const API = {
   fetchAllProducts,
   fetchFarmerById,
   fetchAllOrders,
-  postOrderByEmployee
+  postOrderByEmployee,
+
+  isUsernameAlreadyPresent,
+  postNewCustomer
 }
 export default API;

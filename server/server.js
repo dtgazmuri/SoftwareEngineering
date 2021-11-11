@@ -256,6 +256,75 @@ app.post('/api/order/employee', [
 
 
 
+// GET /api/username/present
+app.get('/api/username/present/:id', async (req, res) => {
+
+  //Devo aspettare che la promise sia risolta! Metto await
+  try {
+      
+      //Get the username
+      const username = req.params.id;
+
+      console.log(username);
+
+      //0) Get the orders from the table
+      const obj = await employeeDAO.isUsernamePresent(username);
+
+      //devo gestire la reject (di dao.listCourses())! Uso try-check
+      res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  }
+  catch (err) {
+      res.status(404).end();  //Mando errore!
+  }
+});
+
+
+
+
+
+// POST /api/customer
+app.post('/api/customer', [
+  check('name').isString().isLength({ min: 1 }).withMessage("customer name is incorrect"),
+  check('surname').isString().isLength({ min: 1 }).withMessage("customer surname is incorrect"),
+  
+  check('username').isString().isLength({ min: 1 }).withMessage("customer username is incorrect"),
+  check('hash').isString().isLength({ min: 1 }).withMessage("customer password's hash is incorrect"),
+  ],
+  async (req, res) => {
+
+  //Check the result of the validation
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
+  }
+
+    
+  //Devo aspettare che la promise sia risolta! Metto await
+  try {
+      
+      //0) Create the object instance for the customer
+      const customerINST = {name: req.body.name, surname: req.body.surname }
+
+      //2) post on DB and get the new Customer ID back
+      const customer_id = await employeeDAO.createNewCustomer(customerINST);
+
+
+      //3) create the new user instance
+      const userINST = {userid: customer_id, username: req.body.username, hash: req.body.hash, role: "customer" }
+
+      //4) Post it on the DB
+      const user_id = await employeeDAO.createNewUser(userINST);
+      
+      res.status(200).json({ userid : user_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  }
+  catch (err) {
+      res.status(500).end();  //Mando errore!
+  }
+});
+
+
+
 /* END */
 
 
