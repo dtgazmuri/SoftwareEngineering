@@ -8,47 +8,56 @@ function Employee() {
     // CAMBIARE EMPLOYEE NAME
     var shopEmployeeName = "Diego";
     const [selectedFunction, setSelectedFunction] = useState("");
-    const [orderNumber, setOrderNumber] = useState("");
-    const [orderList, setOrderList] = useState([
-        {id: 0, customer:1, state:"pending", delivery:"no", total: 31 },
-        {id: 1, customer:1, state:"hanged out", delivery:"no", total: 26 },
-        {id: 2, customer:2, state:"pending", delivery:"no", total: 12 }
-    ]);
+    const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
+    const [orderList, setOrderList] = useState([]);
+    /*
     const [customerList, setCustomerList] = useState([
         {id: 0, name: "Guglielmo", surname: "!!!", username: "Gugli 69!", hash: "123456", wallet: 420},
         {id: 1, name: "Diego", surname: "!!!", username: "dg", hash: "123456", wallet: 100},
         {id: 2, name: "Lorenzo", surname: "!!!", username: "Lorenzo1", hash: "123456", wallet: 0}
-    ])
+    ])*/
+    const [customerList, setCustomerList] = useState([]);
 
      // show error message in toast
     const handleErrors = (err) => {
         console.log(err);
     }
 
-    
+
     useEffect(() => {
         if (selectedFunction === "HandOut") {
           API.getOrders()
             .then(orders => {
                 console.log(orders);
-              //setOrderList(orders);
+                setOrderList(orders);
             })
             .catch(e => handleErrors(e));
         } 
         
         else if (selectedFunction === "WalletTopUp") {
             API.getCustomers()
-            //API.getOrders()
                 .then(customers => {
                     console.log(customers);
-                    // setCustomerList(customers);
+                    setCustomerList(customers);
                 })
                 .catch(e => handleErrors(e));
         }
       }, [selectedFunction])
 
-    const handleSubmit = (event) => { 
-    }
+    useEffect(() => {
+        if (walletUpdated.status === true) {
+            console.log("Qua");
+            API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
+                .then(res => {
+                    console.log("Qua2");
+                    setCustomerList(res);
+                    console.log("Qua3");
+                })
+                .catch(e => handleErrors(e));
+                console.log("Qua5");
+                setWalletUpdated({status: false, id: -1, value: 0});
+        }
+    }, [walletUpdated])
 
     return(
         <Container className="below-nav justify-content-center">
@@ -61,7 +70,8 @@ function Employee() {
                     <OrderList orders = {orderList} setOrderList = {setOrderList}/>
                 }
                 { selectedFunction === "WalletTopUp" && 
-                    <CustomerList customers = {customerList} setCustomerList = {setCustomerList}/>
+                    <CustomerList customers = {customerList} setCustomerList = {setCustomerList}
+                    setWalletUpdated = {setWalletUpdated}/>
                 }
             </Row>
 
@@ -87,6 +97,7 @@ function EmployeeSidebar (props) {
 }
 
 function CustomerList(props) {
+    /*
     function walletTopUp(id, amount) {
         var value = Number(amount);
         var tmp = []
@@ -100,7 +111,7 @@ function CustomerList(props) {
             }
         })
         props.setCustomerList(tmp);
-    }
+    }*/
 
     return (
         <Col>
@@ -117,7 +128,8 @@ function CustomerList(props) {
                                         <h5>Amount in Wallet: {customer.wallet} </h5>
                                     </Col>
                                     <Col>
-                                        <CustomerForm id = {customer.id} customers = {props.customers} setCustomerList = {props.setCustomerList} />
+                                        <CustomerForm id = {customer.id} customers = {props.customers}
+                                        setCustomerList = {props.setCustomerList} setWalletUpdated = {props.setWalletUpdated} />
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -134,12 +146,13 @@ function CustomerList(props) {
 
 function CustomerForm(props) {
     const [amount, setAmount] = useState("");
+
     function walletTopUp(id, amount) {
-        console.log(id);
-        console.log(amount);
-        
+
         var value = Number(amount);
-        var tmp = [];
+        //var tmp = [];
+        props.setWalletUpdated({status: true, id: id, value: value});
+        /*
         props.customers.forEach((customer) => {
             if (customer.id === id) {
                 customer.wallet += value;
@@ -149,7 +162,7 @@ function CustomerForm(props) {
                 tmp.push(customer);
             }
         })
-        props.setCustomerList(tmp);
+        props.setCustomerList(tmp);*/
     }
 
     return (
@@ -163,12 +176,14 @@ function CustomerForm(props) {
 }
 
 function OrderList(props) {
+    const [updateOrder, setUpdateOrder] = useState(-1);
+    const [updated, setUpdated] = useState({});
     function handOutOrder(id) {
         var tmp = [];
-        //console.log(props.orders);
+
         props.orders.forEach((order) => {
             if(order.id === id){
-                order.state = "hanged out";
+                order.state = "delivered";
                 tmp.push(order);
             }
             else {
@@ -176,8 +191,21 @@ function OrderList(props) {
             }
         });
         props.setOrderList(tmp);
-        
+        setUpdateOrder(id);
     }
+
+    useEffect(() => {
+        if (updateOrder !== -1) {
+            API.handOutOrder(updateOrder)
+                .then(res => {
+                    setUpdated({id: updateOrder, variant: "success", msg: `Order number ${updateOrder} was updated successfully.`});
+                })
+                .catch(e => 
+                    setUpdated({id: updateOrder, variant: "danger", msg: `Unable to update order number ${updateOrder}.`})
+                );
+                setUpdateOrder(-1);
+           }
+    }, [updateOrder])
 
     return (
         <Col>
@@ -186,16 +214,20 @@ function OrderList(props) {
                     props.orders.map(order => {
                         return (
                             <ListGroup.Item id = {order.id} key = {order.id}>
-                                <h5>{order.id}</h5>
+                                <h5>Order number: {order.id}</h5>
                                 <Row>
                                 <Col>
-                                    <Row>Customer id: {order.customer} </Row>
+                                    <Row>Customer id: {order.customerid} </Row>
                                     <Row>Order state: {order.state} </Row>
                                     <Row>Order total: {order.total}</Row>
                                 </Col>
                                 <Col>
                                     {   order.state === "pending" &&
                                         <Button onClick = {() => handOutOrder(order.id)}>Hand out order</Button>
+                                    }
+                                    {
+                                        (updated !== {} && updated.id === order.id) &&
+                                            <Alert variant = {updated.variant} >{updated.msg}</Alert>
                                     }
                                 </Col>
                                 </Row>
