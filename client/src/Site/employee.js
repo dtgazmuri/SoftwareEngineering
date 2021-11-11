@@ -49,9 +49,8 @@ function Employee() {
             console.log("Qua");
             API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
                 .then(res => {
-                    console.log("Qua2");
-                    setCustomerList(res);
-                    console.log("Qua3");
+                    console.log(res);
+                    //setCustomerList(res);
                 })
                 .catch(e => handleErrors(e));
                 console.log("Qua5");
@@ -97,21 +96,6 @@ function EmployeeSidebar (props) {
 }
 
 function CustomerList(props) {
-    /*
-    function walletTopUp(id, amount) {
-        var value = Number(amount);
-        var tmp = []
-        props.customers.forEach((customer) => {
-            if (customer.id === id) {
-                customer.wallet += value;
-                tmp.push(customer);
-            }
-            else {
-                tmp.push(customer);
-            }
-        })
-        props.setCustomerList(tmp);
-    }*/
 
     return (
         <Col>
@@ -151,18 +135,19 @@ function CustomerForm(props) {
 
         var value = Number(amount);
         //var tmp = [];
-        props.setWalletUpdated({status: true, id: id, value: value});
-        /*
         props.customers.forEach((customer) => {
             if (customer.id === id) {
-                customer.wallet += value;
-                tmp.push(customer);
+                // customer.wallet += value;
+                var valore = customer.wallet + value;
+                props.setWalletUpdated({status: true, id: id, value: valore});
+                //tmp.push(customer);
             }
+            /*
             else {
                 tmp.push(customer);
-            }
+            }*/
         })
-        props.setCustomerList(tmp);*/
+        //props.setCustomerList(tmp);
     }
 
     return (
