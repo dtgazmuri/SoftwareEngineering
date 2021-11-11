@@ -1,10 +1,14 @@
 import Product from "./product"
 import Customer from "./customer"
 class Order {
-    contructor(id,customer,state,delivery,total, listitems){
+    constructor(id,customer,state,delivery,total, listitems){
         this.id = id;
         this.customer = customer;
-        this.state = state
+        this.state = state;
+        this.delivery=delivery;
+        this.total = total;
+        this.listitems=listitems
+
     }
 
     static from(json){

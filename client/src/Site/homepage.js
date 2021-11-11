@@ -7,19 +7,20 @@ function MyBody()
     {
 
 return (
-    <Container fluid>
-        <Row sm={5} className="justify-content-center">
-            <h1>SPG</h1>
+    <Container fluid className="align-items-center">
+        <Container id="title" className="align-items-center">
+        <Row sm={5} className="justify-content-center" >
+            <h1>SolidarityPurchaseGroup</h1>
         </Row>
         <Row sm={5} className="justify-content-center">
-        <h6>The best blabla</h6>
+        <h6>Near you, for you.</h6>
         </Row>
-            
+        </Container>   
         <Row key ="main" id="main-row" className="vh-100 justify-content-center">
             <Col id="signup-col" className = "v-100 d-sm-block">
                 <Link to="/loginpage">
                     {/*<Button variant="outline-success">Log in</Button>*/}
-                    <Container className = "LoginButton border border-dark rounded nolink" align="center">
+                    <Container className = "LoginButton shadow border border-dark rounded nolink" align="center">
                     {login}
                     <h3>Login</h3>
                     </Container> 

@@ -1,57 +1,58 @@
-import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import {shopemployee,customer,farmer,delivery, warehouse, manager } from "./icons.js"
-function SigninPage() {
-    return(
-        <Container className="below-nav justify-content-center">
-            <Row>
-            <h1>Please select the type of account you want to create:</h1>
-            </Row>
-            <Row className ="my-3" align="center">
-                <Col className="py-3" >
-                    {/** TO-DO: UPDATE ROUTE WITH SIGN IN**/}
-                    <Link to="/loginpage/customer/" className="nolink">
-                        {customer}
-                        <h2>Customer</h2>
-                    </Link>
-                </Col>
-                <Col className="py-3">
-                    <Link to="/loginpage/shopemployee/" className="nolink">
-                        {shopemployee}
-                        <h2>Shop Employee</h2>
-                    </Link>
-                </Col>
-                <Col className="py-3">
-                    <Link to="/loginpage/farmer/" className="nolink">
-                        {farmer}
-                        <h2>Farmer</h2>
-                    </Link>
-                </Col>
-                </Row>
-                <Row  className="my-3" align="center">
-                <Col className="py-3">
-                <Link to="/loginpage/delivery/" className="nolink">
-                {delivery}
-                <h2>Delivery</h2>
-                </Link>
-                </Col>
-                <Col className="py-3">
-                <Link to="/loginpage/warehouse/" className="nolink">
-                {warehouse}
-                <h2>Warehouse</h2>
-                </Link>
-                </Col>
-                <Col className="py-3">
-                <Link to="/loginpage/manager/" className="nolink">
-                {manager}
-                <h2>Manager</h2>
-                </Link>
-                </Col>
-            </Row>
+import { Form, Button, Alert, Container} from 'react-bootstrap';
+import { useState } from 'react';
+
+function LoginPage(props) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('')
 
 
+  const handleSubmit = (event) => {
+      event.preventDefault();
+      setErrorMessage('');
+      const credentials = { username, password };
+      
+      let valid = {value: true, reason: "Attenzione! "}
+      if (username === ''){
+        valid.value = false
+        valid.reason=valid.reason.concat("Username cannot be empty! ")
+      }
+      if (password === ''){
+        valid.value = false
+        valid.reason=valid.reason.concat("Password cannot be empty! ")
+      }
+      if (password.length < 6){
+        valid.value = false
+        valid.reason=valid.reason.concat("Password cannot be Less than 6 characters! ")
+      }
+      if (valid.value) {
+        props.login(credentials); //passo alla funzione login il tipo di accesso
 
-        </Container>
-    )
+      }
+      else {
+        // show a better error message...
+        setErrorMessage(valid.reason)
+      }
+  };
+
+  return (
+    
+    <Container className="fluid below-nav">
+    <Form>
+      {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
+      <Form.Group controlId='username'>
+          <Form.Label>email</Form.Label>
+          <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
+      </Form.Group>
+      <Form.Group controlId='password'>
+          <Form.Label>Password</Form.Label>
+          <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
+      </Form.Group>
+      <Button onClick={handleSubmit}>Login</Button>
+    </Form>
+    </Container>)
 }
-export default SigninPage;
+
+
+
+export default LoginPage;

@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -21,11 +22,39 @@
   
 }
 
+
+.table-prod{
+  background-color: white;
+
+}
+
 .LoginButton {
   width: 200px;
   height: 200px;
-  
+  background-color: white;
+  align-items: center;
+  background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
+  background: rgba(204, 204, 204, 0.5);
+  position:relative;
 }
+
+.backg {
+  background-image: url(https://www.helvetia.com/it/web/it/chi-siamo/blog/articoli-piu-consultati/viaggi/langhe/_jcr_content/teaserimage/image.1603704741882.transform-fp/1920x1080/langhe.jpg);
+}
+.loginContainer {
+  margin-top: 20px !important;
+}
+
+.loginLable{
+  padding: 8px !important;
+}
+
+#loginCard {
+  margin: 0 auto;  
+  float: none;  
+  margin-bottom: 10px; 
+} 
+
 .buttonslog {
   border-radius: 25%;
   border-color: black;

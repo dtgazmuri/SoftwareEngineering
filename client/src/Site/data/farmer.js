@@ -12,7 +12,7 @@ class Farmer {
     }
 
     static from(json){
-        return new Farmer(json.id, json.surname, json.name)
+        return new Farmer(json.id, json.name, json.surname)
     }
 }
 export default Farmer;

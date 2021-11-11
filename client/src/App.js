@@ -8,7 +8,8 @@ import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
 import { Container } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
-import { LoginForm } from './Site/login';
+import { Login } from './Site/login';
+import LoginPage from './Site/loginpage'
 import { useState, useEffect } from 'react';
 import API from "./API.js"
 import MyPage from './Site/mypage';
@@ -17,7 +18,7 @@ import ProductList from './Site/ProductList';
 function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
-  const [message, setMessage] = useState({type:"", msg:""})
+  const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
   const [products, setProducts] = useState();
 
   
@@ -62,6 +63,7 @@ function App() {
     setMessage({type:"success", msg:"Logout effettuato correttamente"})
   }
   
+  //PRODUCTS FETCH
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -79,7 +81,7 @@ function App() {
   return (
   <Router>
       <MyNavbar logout={doLogout} isLogged = {isLogged}/>
-      <Container fluid className="below-nav vh-100">
+      <Container fluid className="below-nav vh-100 backg">
       <Routes>
         <Route path="/" element={<Navigate replace to="/home" />} />          
               
@@ -91,7 +93,7 @@ function App() {
             {/*Route di Login*/}
           <Route path="/sign-in" element = {<SigninPage/>}/> 
           
-          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginForm login = {doLogin}/>} />
+          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
           <Route path = "/products/" element = {<ProductList products = {products}/>}/>

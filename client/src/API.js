@@ -104,12 +104,7 @@ async function fetchAllProducts() {
 /** The function returns the info over a farmer given its id
  * 
  * @param {numeric} farmer_id The unique id of the farmer to fecth
- * @returns An object containing the farmer info OR an object containing the field "error" if something went wrong. The object has the following format:
- *      {
- *          "id":1,
- *          "name":"Tunin",
- *          "surname":"Lamiera"
- *      }
+ * @returns A Farmer object containing the farmer info 
  */
 async function fetchFarmerById(farmer_id) {
 
@@ -135,55 +130,31 @@ async function fetchFarmerById(farmer_id) {
 
 /** The function returns an array filled with json object, one for each order stored in the DB
  * 
- * @returns an array of json objects in this format:
- *      [
- *          {
- *              "id":1,
- *              "customerid":1,
- *              "state":"pending",
- *              "delivery":"no",
- *              "total":72.25,
- *              "listitems":
- *                  [
- *                      {
- *                          "id":1,
- *                          "orderid":1,
- *                          "productid":1,
- *                          "quantity":10,
- *                          "price":19
- *                      },
- *                      {
- *                          "id":2,
- *                          "orderid":1,
- *                          "productid":2,  
- *                          "quantity":15,
- *                          "price":53.25
- *                      }
- *                  ]
- *          },
- *          {},
- *          {},
- *          ...
- *      ]     
- * 
+ * @returns an array of Order objects:
  *      or an ojbect with the error field if something went wrong   
  */
 async function fetchAllOrders() {
 
   const url = `${BASEURL}/orders/all`;
-
-
-
   try {
     const response = await fetch(url);
 
     if (response.ok) {
 
       console.log("ok");
-
+      const orders = []
       try {
         const responseBody = await response.json();
-        return responseBody;
+        for (let order in responseBody){
+          const productlist = []
+          for(let product in responseBody.listitems){
+            productlist.push(Product.from(product))
+          }
+        //const customer = await getCustomerByID(responseBody.customerid)  
+        orders.push(Order.from(order.id, order.customer, order.state, order.delivery, order.total, productlist))
+          
+        }
+        return orders;
       }
       catch (er) {
         console.log(`error : ${er}`);
