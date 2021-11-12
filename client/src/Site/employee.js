@@ -10,6 +10,7 @@ function Employee() {
     const [selectedFunction, setSelectedFunction] = useState("");
     const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
     const [orderList, setOrderList] = useState([]);
+    const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
     /*
     const [customerList, setCustomerList] = useState([
         {id: 0, name: "Guglielmo", surname: "!!!", username: "Gugli 69!", hash: "123456", wallet: 420},
@@ -50,9 +51,21 @@ function Employee() {
             API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
                 .then(res => {
                     console.log(res);
-                    //setCustomerList(res);
+                    //read all the customer list and set the new wallet balance (the one passed in walletUpdated.value)
+                    const tmp = customerList.map((customer) => {
+                        if(customer.id === walletUpdated.id)
+                        {
+                            customer.wallet =walletUpdated.value;
+                        }
+                        return customer
+                    });
+                    setCustomerList(tmp);
+                    setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
                 })
-                .catch(e => handleErrors(e));
+                .catch(e =>  {
+                    handleErrors(e);
+                    setAlertWalletUpdated({id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.`});
+                });
                 console.log("Qua5");
                 setWalletUpdated({status: false, id: -1, value: 0});
         }
@@ -70,7 +83,7 @@ function Employee() {
                 }
                 { selectedFunction === "WalletTopUp" && 
                     <CustomerList customers = {customerList} setCustomerList = {setCustomerList}
-                    setWalletUpdated = {setWalletUpdated}/>
+                    setWalletUpdated = {setWalletUpdated} alertWalletUpdated = {alertWalletUpdated}/>
                 }
             </Row>
 
@@ -112,7 +125,7 @@ function CustomerList(props) {
                                         <h5>Amount in Wallet: {customer.wallet} </h5>
                                     </Col>
                                     <Col>
-                                        <CustomerForm id = {customer.id} customers = {props.customers}
+                                        <CustomerForm id = {customer.id} customers = {props.customers} alertWalletUpdated = {props.alertWalletUpdated}
                                         setCustomerList = {props.setCustomerList} setWalletUpdated = {props.setWalletUpdated} />
                                     </Col>
                                 </Row>
@@ -152,6 +165,9 @@ function CustomerForm(props) {
 
     return (
         <Form>
+            {props.alertWalletUpdated.id === props.id &&
+                <Alert variant = {props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
+            }
             <Form.Group controlId={props.id} className = "mb-3">
                 <Form.Control size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
             </Form.Group>
