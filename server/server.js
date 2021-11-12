@@ -1,6 +1,10 @@
+
+/*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
+//const userDao = "";
 const userDao = require('./dbusers.js');
 
 const employeeDAO = require('./employeeDBAccess'); // module for accessing the DB
+const farmerDAO = require('./farmerDAO'); //module for accessing db from farmer
 
 
 const { check, validationResult } = require('express-validator'); // validation middleware
@@ -54,6 +58,8 @@ app.use(passport.session());
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
 };
+
+/* ############## USER API ############## */
 
 app.post('/api/sessions', function (req, res, next) {
   passport.authenticate('local', (err, user, info) => {
@@ -161,8 +167,6 @@ app.get('/api/orders/all', async (req, res) => {
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll();
 
-      console.log(orders);
-
       //1) Then, for each order I need to get the orderitems!
       let i = 0;
       for (i = 0; i < orders.length; i++) {
@@ -189,6 +193,163 @@ app.get('/api/orders/all', async (req, res) => {
   }
 });
 
+// TODO : the customer if FOR NOW is passed in the request, for the client side we need to get it from the cookie, so we probably need another route!
+// NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie
+
+// POST /api/order/employee
+app.post('/api/order/employee', [
+  check('customerid').isNumeric().withMessage("customer id is incorrect"),
+  check('state').isString().isLength({ min: 1 }).withMessage("state is incorrect"),
+  check('delivery').isString().isLength({ min: 1 }).withMessage("delivery is incorrect"),
+  check('total').isNumeric().withMessage("total is incorrect"),
+  check('listitems').isArray().withMessage("listitems array is incorrect"),
+  /* Check the parameters of the array */
+  check('listitems.*.productid').isNumeric().withMessage("listitems : productid field is incorrect"),
+  check('listitems.*.quantity').isNumeric().withMessage("listitems : quantity field is incorrect"),
+  check('listitems.*.price').isNumeric().withMessage("listitems : price field is incorrect")
+  ],
+  async (req, res) => {
+
+  //Check the result of the validation
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
+  }
+
+    
+  //Devo aspettare che la promise sia risolta! Metto await
+  try {
+      
+      //1) We need to add the order to the clientorder tabel first
+      const orderINST = { customerid: req.body.customerid, state: req.body.state, delivery: req.body.delivery, total: req.body.total};
+
+      //2) post on DB and get the new Order ID back
+      const order_id = await employeeDAO.createClientOrder(orderINST);
+
+      //3) now I have the Order ID; I need now to store the orderitems
+
+      //3.1) Get items
+      const itemArray = req.body.listitems;
+      
+      //Check the length
+      let i = 0;
+      if (itemArray.length > 0){
+          //Post them
+          for (i = 0; i < itemArray.length; i++){
+              const el = itemArray[i];
+
+              const itemINST = {orderid : order_id, productid : el.productid, quantity : el.quantity, price : el.price}; 
+
+              console.log(`item instance : ${itemINST}`);
+
+              //POST IT
+              const id_item = await employeeDAO.createOrderItem(itemINST);
+
+          }
+      }
+      
+      
+      res.status(200).json({ orderid : order_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  }
+  catch (err) {
+      res.status(500).end();  //Mando errore!
+  }
+});
+
+
+//SERVER SIDE FOR THE STORIES NUMBER 4-5-9
+//STORY NUMBER 4
+
+//api for handing out the order number <id>.
+// POST /api/orders/:id
+app.post('/api/orders/:id/handOut', [
+  check('id').isInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+    }
+    try {
+      const id = req.params.id;
+      let result = await employeeDAO.handOutOrder(id);
+      return res.status(200).json(result);
+    }
+    catch(err) {
+      return res.status(500).json({error: 'DB error while handing out order'});
+    }
+
+});
+
+
+// STORY NUMBER 5
+app.get('/api/customers/all', async (req, res) => {
+
+  try {
+    const productsList = await employeeDAO.listCustomersAll();
+    res.status(200).json(productsList);
+  }
+  catch (err) {
+    res.status(404).end();
+  }
+});
+
+app.post('/api/customers/wallet/:id/:value', [
+  check('id').isInt(),
+  check('value').isInt()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+    }
+    try {
+      const id = req.params.id;
+      const value = req.params.value;
+      
+      let result = await employeeDAO.updateCustomerWallet(id, value);
+      return res.status(200).json(result);
+    }
+    catch(err) {
+      console.log("44");
+      return res.status(500).json({error: 'DB error when updating wallet'});
+    }
+
+})
+
+//STORY NUMBER 9
+//getting the list of products selled by a specific farmer
+// GET /api/farmer/:id
+app.get('/api/farmer/:id/products', (req, res) => {
+  farmerDAO.getFarmerProducts(req.params.id)
+  .then(products => {
+    res.json(products);       
+  })
+  .catch(() => res.status(500).end());
+});
+
+//setting the expected amount of availability for a specific product
+//it's an insert inside the warehouse table
+//POST /api/warehouse
+app.post('/api/warehouse', [
+  //validation on product (which is the product id) and quantity. Both have to be integers
+  check('product').isInt(),
+  check('quantity').isInt() 
+], async (req, res) => {
+    const errors = validationResult(req); //looking for errors thrown by the validation
+    if(!errors.isEmpty())
+        return res.status(422).json({errors: errors.array()}); //unprocessable entity in case of errors
+  
+    const product = req.body;
+    try{
+      let result = await farmerDAO.addProductExpectedAmount(product);
+      return res.status(200).json(result);
+    }
+    catch(err){
+      console.log(err);
+      return res.status(500).json({error: 'DB error during the add/update of a product availability'});
+    }
+});
 
 // TODO : the customer if FOR NOW is passed in the request, for the client side we need to get it from the cookie, so we probably need another route!
 // NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie

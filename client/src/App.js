@@ -1,17 +1,24 @@
-import logo from './logo.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import './App.css';
-import MyBody from './Site/homepage'
-import { BrowserRouter as Router } from 'react-router-dom';
-import {Routes, Route, Link, Navigate} from 'react-router-dom'
-import MyNavbar from './Site/navbar';
-import { Container } from 'react-bootstrap';
-import SigninPage from './Site/signinpage';
-import { LoginForm } from './Site/login';
+import logo from "./logo.svg";
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
+import "./App.css";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+
+//MY PAGES
+import MyBody from "./Site/homepage";
+import MyNavbar from "./Site/navbar";
+import LoginPage from "./Site/loginpage";
+import { LoginForm } from "./Site/login";
+import Employee from "./Site/employee";
+import Farmer from "./Site/farmer";
+import SigninPage from './Site/signinpage';
 import API from "./API.js"
 import MyPage from './Site/mypage';
+
 
 function App() {
   const [user, setUser] = useState("");
@@ -79,15 +86,19 @@ function App() {
             {/*Route di Registrazione*/}
           
           {/* BODY PER HOMEPAGE */}
-          
+
+          //<Route exact path="/home" element={<MyBody />} />
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
           <MyPage user = {user} />}
           />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/employee" element={<Employee />} />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/farmer" element={<Farmer />} />
           
-          
-        
-      </Routes>
+        </Routes>
+
       </Container>
     </Router>
     
