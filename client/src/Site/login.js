@@ -7,7 +7,7 @@ function LoginForm(props) {
   const [errorMessage, setErrorMessage] = useState('');
 
 
-  const typeofaccess = useLocation().pathname.split("/")[2]; //salvo il tipo di accesso per selezionare il db corretto
+  const typeofaccess = useLocation().pathname.split("/")[2]; //salvo il tipo di accesso per selezionare il db corretto 
 
 
 
@@ -30,7 +30,8 @@ function LoginForm(props) {
         valid.reason=valid.reason.concat("Password cannot be Less than 6 characters! ")
       }
       if (valid.value) {
-        props.login(credentials, typeofaccess); //passo alla funzione login il tipo di accesso
+        props.login(credentials); //passo alla funzione login il tipo di accesso
+
       }
       else {
         // show a better error message...
@@ -39,6 +40,7 @@ function LoginForm(props) {
   };
 
   return (
+    
     <Container className="fluid below-nav">
     <Form>
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
