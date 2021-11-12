@@ -10,6 +10,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy; // username+psw
 const session = require("express-session");
 const userDao = require("./userDao");
+const customerDao = require("./customerDao");
 
 passport.use(
   new LocalStrategy(function (username, password, done) {
@@ -232,6 +233,20 @@ app.post("/api/users/registration", registerValidation, (req, res) => {
     });
 });
 
+app.get(
+  "/api/customers/:id",
+  /*isLoggedIn ,*/ (req, res) => {
+    // shoud we check the role of the requester?  (req.user.role)  v
+    customerDao
+      .getCustomerByUserId(req.params.id)
+      .then((cusomer) => {
+        res.status(200).json(cusomer);
+      })
+      .catch((error) => {
+        res.status(error.code).json(error);
+      });
+  }
+);
 /* END of STORIES NUMBER 6, 7, 8 */
 
 app.listen(port, () => {
