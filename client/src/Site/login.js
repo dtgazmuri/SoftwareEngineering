@@ -1,5 +1,4 @@
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -7,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
 import { useState } from 'react';
-import {Link} from 'react-router-dom';
 
 
 function Login(props)
@@ -19,23 +17,6 @@ function Login(props)
   );
 }
 
-function LoginNavbar() {
-    return (<Container fluid className="topBar">
-        <Nav className="navbar navbar-dark bg-primary">
-        <Nav.Item className="NavbarPad center d-none d-sm-block">
-            <Link className="manager navbar-brand" to="/home"> Survey </Link>
-        </Nav.Item>
-        <Nav.Item className="NavbarPad center d-block d-sm-none">
-            <Link className="manager navbar-brand" to="/home"> Survey </Link>
-        </Nav.Item>
-        <Nav.Item className="NavbarPad">
-            <Link to="/home">
-            <Button type="submit" variant="outline-light">Go Home</Button>
-            </Link>
-        </Nav.Item>
-        </Nav>
-  </Container>);
-}
 
 function matchExact(r, str) {
    var match = str.match(r);

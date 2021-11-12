@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
@@ -8,19 +7,17 @@ import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
 import { Container } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
-import { Login } from './Site/login';
 import LoginPage from './Site/loginpage'
 import { useState, useEffect } from 'react';
 import API from "./API.js"
-import MyPage from './Site/mypage';
+import MyPage from './Site/shopemployeepage';
 import ProductList from './Site/ProductList';
 
 function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
   const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
-  const [products, setProducts] = useState();
-
+  const [products, setProducts] = useState([]);
   
   //AUTH LOGIN LOGOUT 
 
@@ -47,14 +44,23 @@ function App() {
       setUser(user);
       setLogged(true);
       console.log(user);
-      setMessage({type:"success", msg:`Benvenuto, ${user.name} `})
+      setMessage({type:"success", msg:`Welcome, ${user.name} `})
     }
     catch (err) {
-      setMessage({type:"danger", msg:`Login non effettuato. ${err}`})
+      setMessage({type:"danger", msg:`Login failed. ${err}`})
       throw err;
     }
   }
   
+  const addClient = async (cust) => {
+    try{
+      await API.postNewCustomer(cust);
+    }
+    catch(err) {
+      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`})  
+    }
+  }
+
   const doLogout = async () => {
     await API.logout()
     //Inizializzo gli stati
@@ -77,6 +83,10 @@ function App() {
     };
     getProducts();
   }, []);
+/*
+
+
+*/
 
   return (
   <Router>
@@ -96,12 +106,12 @@ function App() {
           <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
-          <Route path = "/products/" element = {<ProductList products = {products}/>}/>
+          <Route path = "/products/" element = {<ProductList products = {products} />}/>
 
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
-          <MyPage user = {user} />}
+          <MyPage user = {user} addClient = {addClient} />}
           />
           
           

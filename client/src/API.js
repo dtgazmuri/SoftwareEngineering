@@ -1,6 +1,7 @@
 import Product from "./Site/data/product"
 import Farmer from "./Site/data/farmer"
 import Order from "./Site/data/order"
+import Customer from "./Site/data/customer";
 async function login(credentials) {
   let response = await fetch('/api/sessions', {
     method: 'POST',
@@ -140,9 +141,7 @@ async function fetchAllOrders() {
     const response = await fetch(url);
 
     if (response.ok) {
-
-      console.log("ok");
-      const orders = []
+     const orders = []
       try {
         const responseBody = await response.json();
         for (let order in responseBody){
@@ -254,6 +253,32 @@ async function postOrderByEmployee(order_obj) {
 }
 
 
+async function fetchAllCustomers() {
+   const url = `${BASEURL}/customerlist`
+   const response = await fetch(url);
+
+   if (response.ok) {
+    try {
+       const responseBody = await response.json();
+       const customerlist = []
+       for (let customer in responseBody){
+          
+          customerlist.push(Customer.from(customer.id, customer.name, customer.surname, customer.wallet))
+         
+       }
+       return customerlist;
+     }
+     catch (er) {
+       console.log(`error : ${er}`);
+       return { error: ` error code ${er}` };
+     }
+  }
+  else {
+    return { error: `${response.status}` };
+  }
+
+}
+
 
 /** The function stores a new customer on the DB
  * 
@@ -272,7 +297,17 @@ async function postOrderByEmployee(order_obj) {
 
   const url = `${BASEURL}/customer`;
 
+  
+  //  const hash = "pippo";
+
   const data = customer_obj;
+  
+  
+  const isPresent = await isUsernameAlreadyPresent(data.username);
+
+  if (isPresent){
+    return {error : "username is already present"};
+  }
 
   try {
     const response = await fetch(url, {
@@ -307,11 +342,12 @@ const API = {
   login,
   logout,
   getAdmin,
-  
   fetchAllProducts,
   fetchFarmerById,
   fetchAllOrders,
+  fetchAllCustomers,
   postOrderByEmployee,
+
 
   isUsernameAlreadyPresent,
   postNewCustomer

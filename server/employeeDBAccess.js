@@ -2,6 +2,23 @@
 
 const db = require('./db')
 
+exports.getCustomers = () =>{
+    return new Promise((resolve, reject) => {
+
+        const sql = "SELECT * FROM customer"
+        db.all(sql, [], (err, rows) => {
+
+            if (err) {
+                reject(err);
+                return;
+            }
+        const customers = rows.map((e) => ({id: e.ID, name: e.NAME, surname:e.SURNAME, wallet:e.WALLET}));
+        resolve(customers);
+
+
+    });
+})
+}
 
 // get all products (with the werehouse quantity)
 exports.listProductsAll = () => {
