@@ -1,6 +1,6 @@
 import {Container, Button, Col, Row, InputGroup, Form } from 'react-bootstrap';
 import { Formik  } from 'formik';
- import * as yup from 'yup';
+import * as yup from 'yup';
 
 function MyPage(props) {
     
