@@ -17,7 +17,7 @@ function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
   const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
-  const [products, setProducts] = useState([]);
+  
   
   //AUTH LOGIN LOGOUT 
 
@@ -69,20 +69,7 @@ function App() {
     setMessage({type:"success", msg:"Logout effettuato correttamente"})
   }
   
-  //PRODUCTS FETCH
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const products = await API.fetchAllProducts();
-        console.log(products);
-        setProducts(products);
-      } catch (err) {
-        setLogged(false)
-        console.log(err.error);
-      }
-    };
-    getProducts();
-  }, []);
+  
 /*
 
 
@@ -106,7 +93,7 @@ function App() {
           <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
-          <Route path = "/products/" element = {<ProductList products = {products} />}/>
+          <Route path = "/products/" element = {isLogged?<ProductList/>:<Navigate replace to="/home"/> }/>
 
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element = {!isLogged? <MyBody/>

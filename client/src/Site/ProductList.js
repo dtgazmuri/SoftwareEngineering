@@ -29,6 +29,22 @@ function CustomerSelection(customers, handleCustomer) {
 function ProductList(props) {
     const [customer, setCustomer] = useState();
     const [customerlist, setList] = useState([]);
+    const [products, setProducts] = useState([]);
+
+    //PRODUCTS FETCH
+    useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const products = await API.fetchAllProducts();
+        console.log(products);
+        setProducts(products);
+      } catch (err) {
+        //setLogged(false)
+        console.log(err.error);
+      }
+    };
+    getProducts();
+    }, []);
 
     useEffect(() =>{
         const getCustomers = async () => {
@@ -49,7 +65,7 @@ function ProductList(props) {
 
     //const selection = CustomerSelection(customerlist, handleCustomer);
     const addbutton = <Button onClick={{/*add product to the cart*/ }}>+</Button>
-    const productlist = props.products.map((prod, id) => {
+    const productlist = products.map((prod, id) => {
         return <tr>
             <td>{prod.id}</td>
             <td>{prod.name}</td>
