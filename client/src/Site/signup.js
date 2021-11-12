@@ -2,6 +2,8 @@ import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link, Navigate } from "react-router-dom";
 import { shopemployee, customer, farmer, delivery, warehouse, manager } from "./icons.js"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignupForm() {
     const [submitted, setSubmitted] = useState(false);
@@ -46,6 +48,8 @@ function SignupForm() {
         }
         setValidated(true);
     };
+
+    const notify=()=>toast("Success!");
 
     return (
         <> {submitted ? <Navigate replace to="/home" /> :
