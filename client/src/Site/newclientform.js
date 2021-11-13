@@ -4,7 +4,10 @@ import { Link, Navigate } from "react-router-dom";
 
 function SignupForm(props) {
     const [submitted, setSubmitted] = useState(false);
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
     const [validated, setValidated] = useState(false);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -13,40 +16,66 @@ function SignupForm(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setValidated(false);
+
+        //Set error to nothing before the check
+        setIsError(false);
         setErrorMessage('');
+
+        //Set the validation to false
+        setValidated(false);
+        
         let valid = true;
         if (name === undefined || name === '') {
             valid = false;
             setErrorMessage("Please, enter the required fields");
+            setIsError(true);
         }
         else if (surname === undefined || surname === '') {
             valid = false;
             setErrorMessage("Please, enter the required fields");
+            setIsError(true);
         }
         else if (username === undefined || username === '') {
             valid = false;
             setErrorMessage("Please, enter the required fields");
+            setIsError(true);
         }
         else if (password === undefined || password === '') {
             valid = false;
             setErrorMessage("Please, enter the required fields");
+            setIsError(true);
         }
 
 
         if (valid) {
             const newcust = {name:name, surname:surname, username:username, password:password}
-            console.log(newcust)
+            
+            console.log(newcust);
+            
             try {
-                props.addClient(newcust);
-            setSubmitted(true);
+                props.addClient(newcust).then((res) =>{
+                    console.log(res);
+
+                    if (res.error){
+                        setErrorMessage(`${res.error}`);
+                        setIsError(true);
+
+                        setSubmitted(false);
+                    }
+                    else{
+                        setSubmitted(true);
+                        setValidated(true);
+
+                        props.handleClose();
+                    }
+                });
+
+                
             }
             catch(e){
                 console.log(e)
             }
         }
-        setValidated(true);
-        props.handleClose();
     };
 
     return (
@@ -58,7 +87,7 @@ function SignupForm(props) {
             <Modal.Title>Add new Client</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-                    {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
+                    {isError ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
                     <Form noValidate validated={validated}>
                         <Form.Group className="mb-3">
                             <Form.Label>Name</Form.Label>

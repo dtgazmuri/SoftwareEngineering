@@ -53,11 +53,17 @@ function App() {
   }
   
   const addClient = async (cust) => {
-    try{
-      await API.postNewCustomer(cust);
+    try {
+      const resp = await API.postNewCustomer(cust);
+
+      console.log(`response : ${resp}`);
+
+      return resp;
     }
     catch(err) {
-      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`})  
+      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`});
+
+      return {error : err };
     }
   }
 

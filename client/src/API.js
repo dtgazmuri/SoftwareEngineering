@@ -302,7 +302,10 @@ async function fetchAllCustomers() {
   
   const isPresent = await isUsernameAlreadyPresent(data.username);
 
-  if (isPresent){
+  if (isPresent.error){
+    return { error : isPresent.error };
+  }
+  else if (isPresent){
     return { error : "username is already present" };
   }
 
