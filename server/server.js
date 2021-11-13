@@ -2,6 +2,7 @@ const userDao = require('./dbusers.js');
 
 const employeeDAO = require('./employeeDBAccess'); // module for accessing the DB
 
+const bcrypt = require('bcrypt');
 
 const { check, validationResult } = require('express-validator'); // validation middleware
 const express = require('express');
@@ -53,15 +54,15 @@ app.use(passport.session());
 
 
 const isLogged = (req, res, next) => {
-  if (req.isAuthenticated()){
+  if (req.isAuthenticated()) {
     return next();
   }
   return res.status(401).json({ error: 'Not authenticated' });
 }
 
 
-const isEmployee= (req, res, next)=>{
-  if(req.user.role == "shopemployee"){
+const isEmployee = (req, res, next) => {
+  if (req.user.role == "shopemployee") {
     return next();
   }
   return res.status(401).json({ error: 'Unauthorized action' });
@@ -116,10 +117,10 @@ app.get('/api/products/all', async (req, res) => {
 
     //1) Get the products from the table
     const productsList = await employeeDAO.listProductsAll();
-    res.status(200).json(productsList);  
+    res.status(200).json(productsList);
   }
   catch (err) {
-    res.status(404).end();  
+    res.status(404).end();
   }
 });
 
@@ -132,10 +133,10 @@ app.get('/api/farmer/:id', async (req, res) => {
     const farmerID = Number(req.params.id);
 
     //Check if it's an integer
-    if (!Number.isInteger(farmerID)){
+    if (!Number.isInteger(farmerID)) {
       res.status(500).end();  //Mando errore!
     }
-    else{
+    else {
 
       //1) Get the farmer from the table
       const farmer = await employeeDAO.getFarmerById(farmerID);
@@ -153,36 +154,36 @@ app.get('/api/farmer/:id', async (req, res) => {
 app.get('/api/orders/all', isLogged, isEmployee, async (req, res) => {
 
   try {
-      //0) Create an empty array as an anwere
-      const resultArray = [];
+    //0) Create an empty array as an anwere
+    const resultArray = [];
 
-      //0) Get the orders from the table
-      const orders = await employeeDAO.getOrderAll();
+    //0) Get the orders from the table
+    const orders = await employeeDAO.getOrderAll();
 
-      console.log(orders);
+    console.log(orders);
 
-      //1) Then, for each order I need to get the orderitems!
-      let i = 0;
-      for (i = 0; i < orders.length; i++) {
+    //1) Then, for each order I need to get the orderitems!
+    let i = 0;
+    for (i = 0; i < orders.length; i++) {
 
-          //Get the i-th order
-          const orderid = orders[i].id;
+      //Get the i-th order
+      const orderid = orders[i].id;
 
-          //Get the orderitems from the DB
-          let items = await employeeDAO.getOrderItems(orderid);
+      //Get the orderitems from the DB
+      let items = await employeeDAO.getOrderItems(orderid);
 
-          //Create the order object
-          const order = ({ id: orderid, customerid: orders[i].customerid, state: orders[i].state, delivery: orders[i].delivery, total: orders[i].total, listitems: items});
+      //Create the order object
+      const order = ({ id: orderid, customerid: orders[i].customerid, state: orders[i].state, delivery: orders[i].delivery, total: orders[i].total, listitems: items });
 
-          //Add it to the res array
-          resultArray.push(order);
+      //Add it to the res array
+      resultArray.push(order);
 
-      }
+    }
 
-      res.status(200).json(resultArray);  
+    res.status(200).json(resultArray);
   }
   catch (err) {
-      res.status(404).end();  
+    res.status(404).end();
   }
 });
 
@@ -200,21 +201,21 @@ app.post('/api/order/employee', isLogged, isEmployee, [
   check('listitems.*.productid').isNumeric().withMessage("listitems : productid field is incorrect"),
   check('listitems.*.quantity').isNumeric().withMessage("listitems : quantity field is incorrect"),
   check('listitems.*.price').isNumeric().withMessage("listitems : price field is incorrect")
-  ],
+],
   async (req, res) => {
 
-  //Check the result of the validation
-  const errors = validationResult(req);
+    //Check the result of the validation
+    const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
-  }
+    }
 
-    
-  try {
-      
+
+    try {
+
       //1) We need to add the order to the clientorder tabel first
-      const orderINST = { customerid: req.body.customerid, state: req.body.state, delivery: req.body.delivery, total: req.body.total};
+      const orderINST = { customerid: req.body.customerid, state: req.body.state, delivery: req.body.delivery, total: req.body.total };
 
       //2) post on DB and get the new Order ID back
       const order_id = await employeeDAO.createClientOrder(orderINST);
@@ -223,31 +224,31 @@ app.post('/api/order/employee', isLogged, isEmployee, [
 
       //3.1) Get items
       const itemArray = req.body.listitems;
-      
+
       //Check the length
       let i = 0;
-      if (itemArray.length > 0){
-          //Post them
-          for (i = 0; i < itemArray.length; i++){
-              const el = itemArray[i];
+      if (itemArray.length > 0) {
+        //Post them
+        for (i = 0; i < itemArray.length; i++) {
+          const el = itemArray[i];
 
-              const itemINST = {orderid : order_id, productid : el.productid, quantity : el.quantity, price : el.price}; 
+          const itemINST = { orderid: order_id, productid: el.productid, quantity: el.quantity, price: el.price };
 
-              console.log(`item instance : ${itemINST}`);
+          console.log(`item instance : ${itemINST}`);
 
-              //POST IT
-              const id_item = await employeeDAO.createOrderItem(itemINST);
+          //POST IT
+          const id_item = await employeeDAO.createOrderItem(itemINST);
 
-          }
+        }
       }
-      
-      
-      res.status(200).json({ orderid : order_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
-  }
-  catch (err) {
+
+
+      res.status(200).json({ orderid: order_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+    }
+    catch (err) {
       res.status(500).end();  //Mando errore!
-  }
-});
+    }
+  });
 
 
 // GET /api/username/present
@@ -255,31 +256,31 @@ app.get('/api/username/present/:id', async (req, res) => {
 
   //Devo aspettare che la promise sia risolta! Metto await
   try {
-      
-      //Get the username
-      const username = req.params.id;
 
-      console.log(username);
+    //Get the username
+    const username = req.params.id;
 
-      //0) Get the orders from the table
-      const obj = await employeeDAO.isUsernamePresent(username);
+    console.log(username);
 
-      //devo gestire la reject (di dao.listCourses())! Uso try-check
-      res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+    //0) Get the orders from the table
+    const obj = await employeeDAO.isUsernamePresent(username);
+
+    //devo gestire la reject (di dao.listCourses())! Uso try-check
+    res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
   }
   catch (err) {
-      res.status(404).end();  //Mando errore!
+    res.status(404).end();  //Mando errore!
   }
 });
 
 app.get('/api/customerlist', isLogged, isEmployee, async (req, res) => {
 
-  try {      
-      const obj = await employeeDAO.getCustomers();
-      res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+  try {
+    const obj = await employeeDAO.getCustomers();
+    res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
   }
   catch (err) {
-      res.status(404).end()
+    res.status(404).end();
   }
 });
 
@@ -289,36 +290,64 @@ app.post('/api/customer', [
   check('surname').isString().isLength({ min: 1 }).withMessage("customer surname is incorrect"),
   check('username').isString().isLength({ min: 1 }).withMessage("customer username is incorrect"),
   check('password').isString().isLength({ min: 1 }).withMessage("customer password's hash is incorrect"),
-  ],
+],
   async (req, res) => {
 
-  //Check the result of the validation
-  const errors = validationResult(req);
+    //Check the result of the validation
+    const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
-  }
+    }
 
-      try {
-      
-      //0) Create the object instance for the customer
-      const customerINST = {name: req.body.name, surname: req.body.surname }
+    try {
 
-      //2) post on DB and get the new Customer ID back
-      const customer_id = await employeeDAO.createNewCustomer(customerINST);
 
-      //3) create the new user instance
-      const userINST = {userid: customer_id, username: req.body.username, hash: req.body.password, role: "customer" }
+      //0) Convert the password into an hash
+      const hashPassword = async (password, saltRounds = 10) => {
+        try {
+            // Generate a salt
+            const salt = await bcrypt.genSalt(saltRounds);
+    
+            // Hash password
+            return await bcrypt.hash(password, salt);
+        } catch (error) {
+            console.log(error);
+        }
+    
+        // Return null if error
+        return null;
+    };
 
-      //4) Post it on the DB
-      const user_id = await employeeDAO.createNewUser(userINST);
-      
-      res.status(200).json({ userid : user_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
-  }
-  catch (err) {
-      res.status(500).end();  //Mando errore!
-  }
-});
+
+
+      const tmp_hash = await hashPassword(req.body.password);
+
+      if (!tmp_hash.err){
+
+        //0) Create the object instance for the customer
+        const customerINST = { name: req.body.name, surname: req.body.surname }
+
+        //2) post on DB and get the new Customer ID back
+        const customer_id = await employeeDAO.createNewCustomer(customerINST);
+
+        //3) create the new user instance
+        const userINST = { userid: customer_id, username: req.body.username, hash: tmp_hash, role: "customer" }
+
+        //4) Post it on the DB
+        const user_id = await employeeDAO.createNewUser(userINST);
+
+        res.status(200).json({ userid: user_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+
+      }
+      else{
+        res.status(500).end();
+      }
+    }
+    catch (err) {
+      res.status(500).end();
+    }
+  });
 
 
 

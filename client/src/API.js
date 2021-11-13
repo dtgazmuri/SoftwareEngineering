@@ -297,16 +297,13 @@ async function fetchAllCustomers() {
 
   const url = `${BASEURL}/customer`;
 
-  
-  //  const hash = "pippo";
-
   const data = customer_obj;
   
   
   const isPresent = await isUsernameAlreadyPresent(data.username);
 
   if (isPresent){
-    return {error : "username is already present"};
+    return { error : "username is already present" };
   }
 
   try {
