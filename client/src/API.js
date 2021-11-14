@@ -1,3 +1,7 @@
+import Product from "./Site/data/product"
+import Farmer from "./Site/data/farmer"
+import Order from "./Site/data/order"
+import Customer from "./Site/data/customer";
 async function login(credentials) {
   let response = await fetch('/api/sessions', {
     method: 'POST',
@@ -67,8 +71,6 @@ async function fetchAllProducts() {
 
   const url = `${BASEURL}/products/all`;
 
-
-
   try {
     const response = await fetch(url);
 
@@ -78,8 +80,14 @@ async function fetchAllProducts() {
 
       try {
         const responseBody = await response.json();
-        return responseBody;
+        const list = []; 
+        for (const ex of responseBody){
+           const farmername =  await fetchFarmerById(ex.farmerid);
+           list.push(new Product(ex.id, ex.name, farmername, ex.quantity, ex.price))
+          };
+        return list;
       }
+      
       catch (er) {
         console.log(`error : ${er}`);
         return { error: `error ${er}` };
@@ -113,7 +121,7 @@ async function fetchFarmerById(farmer_id) {
 
     if (response.ok) {
       const responseBody = await response.json();
-      return responseBody;
+      return Farmer.from(responseBody);
     }
     else {
       return { error: ` error code ${response.status}` };
@@ -128,55 +136,29 @@ async function fetchFarmerById(farmer_id) {
 
 /** The function returns an array filled with json object, one for each order stored in the DB
  * 
- * @returns an array of json objects in this format:
- *      [
- *          {
- *              "id":1,
- *              "customerid":1,
- *              "state":"pending",
- *              "delivery":"no",
- *              "total":72.25,
- *              "listitems":
- *                  [
- *                      {
- *                          "id":1,
- *                          "orderid":1,
- *                          "productid":1,
- *                          "quantity":10,
- *                          "price":19
- *                      },
- *                      {
- *                          "id":2,
- *                          "orderid":1,
- *                          "productid":2,  
- *                          "quantity":15,
- *                          "price":53.25
- *                      }
- *                  ]
- *          },
- *          {},
- *          {},
- *          ...
- *      ]     
- * 
+ * @returns an array of Order objects:
  *      or an ojbect with the error field if something went wrong   
  */
 async function fetchAllOrders() {
 
   const url = `${BASEURL}/orders/all`;
-
-
-
   try {
     const response = await fetch(url);
 
     if (response.ok) {
-
-      console.log("ok");
-
+     const orders = []
       try {
         const responseBody = await response.json();
-        return responseBody;
+        for (let order in responseBody){
+          const productlist = []
+          for(let product in responseBody.listitems){
+            productlist.push(Product.from(product))
+          }
+        //const customer = await getCustomerByID(responseBody.customerid)  
+        orders.push(Order.from(order.id, order.customer, order.state, order.delivery, order.total, productlist))
+          
+        }
+        return orders;
       }
       catch (er) {
         console.log(`error : ${er}`);
@@ -250,6 +232,113 @@ async function postOrderByEmployee(order_obj) {
 
 
 
+/** The function returns true if the username is already oresent, false otherwise
+ * 
+ * @param {string} username The username to check
+ * @returns true if the username is already oresent, false otherwise
+ */
+ async function isUsernameAlreadyPresent(username) {
+
+  const url = `${BASEURL}/username/present/${username}`;
+
+  try {
+    const response = await fetch(url);
+
+    if (response.ok) {
+      const responseBody = await response.json();
+      return responseBody.present;
+    }
+    else {
+      return { error: ` error code ${response.status}` };
+    }
+  }
+  catch (err) {
+    return { error: `${err}` };
+  }
+}
+
+async function fetchAllCustomers() {
+   const url = `${BASEURL}/customerlist`
+   const response = await fetch(url);
+
+   if (response.ok) {
+    try {
+       const responseBody = await response.json();
+       const customerlist = []
+       for (let customer in responseBody){
+          
+          customerlist.push(Customer.from(customer.id, customer.name, customer.surname, customer.wallet))
+         
+       }
+       return customerlist;
+     }
+     catch (er) {
+       console.log(`error : ${er}`);
+       return { error: ` error code ${er}` };
+     }
+  }
+  else {
+    return { error: `${response.status}` };
+  }
+
+}
+
+
+/** The function stores a new customer on the DB
+ * 
+ * @param {object} customer_obj The object containing the data of the customer, in the format:
+ * 
+ *      {
+ *          "name": "marcello", 
+ *          "surname": "fumagalli", 
+ *          "username": "marcello.fumagalli@polito.it", 
+ *          "hash": "hash_tarocco"
+ *      }
+ * 
+ * @returns an object with the userid, if it's created right, or an ojbect with the error field if something went wrong
+ */
+ async function postNewCustomer(customer_obj) {
+
+  const url = `${BASEURL}/customer`;
+
+  const data = customer_obj;
+  
+  
+  const isPresent = await isUsernameAlreadyPresent(data.username);
+
+  if (isPresent.error){
+    return { error : isPresent.error };
+  }
+  else if (isPresent){
+    return { error : "username is already present" };
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+
+    if (response.ok) {
+      return {};
+    }
+    else {
+      return { error: ` error code ${response.status}` };
+    }
+
+
+  }
+  catch (error) {
+    return { error: `${error}` };
+  }
+}
+
+
+
+
 /*** EXPORTS ***/
 
 
@@ -257,10 +346,14 @@ const API = {
   login,
   logout,
   getAdmin,
-  
   fetchAllProducts,
   fetchFarmerById,
   fetchAllOrders,
-  postOrderByEmployee
+  fetchAllCustomers,
+  postOrderByEmployee,
+
+
+  isUsernameAlreadyPresent,
+  postNewCustomer
 }
 export default API;

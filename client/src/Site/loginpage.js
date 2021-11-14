@@ -30,7 +30,8 @@ function LoginPage(props) {
 
       }
       else {
-        setErrorMessage(valid.reason)
+        // show a better error message...
+        setErrorMessage(valid.reason);
       }
   };
 
@@ -40,7 +41,7 @@ function LoginPage(props) {
     <Form>
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
       <Form.Group controlId='username'>
-          <Form.Label>Email</Form.Label>
+          <Form.Label>email</Form.Label>
           <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
       </Form.Group>
       <Form.Group controlId='password'>
@@ -54,4 +55,4 @@ function LoginPage(props) {
 
 
 
-export { LoginPage };
+export default LoginPage;

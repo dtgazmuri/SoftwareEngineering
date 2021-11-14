@@ -1,11 +1,9 @@
-import logo from "./logo.svg";
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import "./App.css";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import './App.css';
+import { BrowserRouter as Router } from 'react-router-dom';
+import {Routes, Route, Link, Navigate} from 'react-router-dom'
+import { Container } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
 //MY PAGES
@@ -17,16 +15,17 @@ import Employee from "./Site/employee";
 import Farmer from "./Site/farmer";
 import SigninPage from './Site/signinpage';
 import API from "./API.js"
-import MyPage from './Site/mypage';
+import MyPage from './Site/shopemployeepage';
+import ProductList from './Site/ProductList';
 
 
 function App() {
   const [user, setUser] = useState("");
   const [isLogged, setLogged] = useState(false);
-  const [message, setMessage] = useState({type:"", msg:""})
-    
+  const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
   
-  //LOGIN LOGOUT
+  
+  //AUTH LOGIN LOGOUT 
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -44,20 +43,35 @@ function App() {
 
   }, []);
 
-
   const doLogin = async (credentials) => {
     try {   
       const user = await API.login(credentials);
       setUser(user);
       setLogged(true);
       console.log(user);
+      setMessage({type:"success", msg:`Welcome, ${user.name} `})
     }
     catch (err) {
-      setMessage({type:"danger", msg:`Login non effettuato. ${err}`})
+      setMessage({type:"danger", msg:`Login failed. ${err}`})
       throw err;
     }
   }
   
+  const addClient = async (cust) => {
+    try {
+      const resp = await API.postNewCustomer(cust);
+
+      console.log(`response : ${resp}`);
+
+      return resp;
+    }
+    catch(err) {
+      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`});
+
+      return {error : err };
+    }
+  }
+
   const doLogout = async () => {
     await API.logout()
     //Inizializzo gli stati
@@ -66,11 +80,16 @@ function App() {
     setMessage({type:"success", msg:"Logout effettuato correttamente"})
   }
   
+  
+/*
+
+
+*/
 
   return (
   <Router>
       <MyNavbar logout={doLogout} isLogged = {isLogged}/>
-      <Container fluid className="below-nav vh-100">
+      <Container fluid className="below-nav vh-100 backg">
       <Routes>
         <Route path="/" element={<Navigate replace to="/home" />} />          
               
@@ -82,23 +101,24 @@ function App() {
             {/*Route di Login*/}
           <Route path="/sign-in" element = {<SigninPage/>}/> 
           
-          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginForm login = {doLogin}/>} />
+          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
             {/*Route di Registrazione*/}
           
-          {/* BODY PER HOMEPAGE */}
+          <Route path = "/products/" element = {isLogged?<ProductList/>:<Navigate replace to="/home"/> }/>
 
-          //<Route exact path="/home" element={<MyBody />} />
+          {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
-          <MyPage user = {user} />}
+          <MyPage user = {user} addClient = {addClient} />}
           />
           {/**Route for the main page of the shop employee */}
           <Route exact path="/employee" element={<Employee />} />
           {/**Route for the main page of the shop employee */}
           <Route exact path="/farmer" element={<Farmer />} />
           
-        </Routes>
-
+          
+        
+      </Routes>
       </Container>
     </Router>
     
