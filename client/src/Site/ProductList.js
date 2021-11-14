@@ -63,6 +63,13 @@ function ProductList(props) {
         setCustomer(c);
     }
 
+    const handleSubmit = async (order) =>{
+        try {
+            const res = await API.postOrderByEmployee();
+        } catch (err) {
+            console.log(err.error);
+        }
+    }
     //const selection = CustomerSelection(customerlist, handleCustomer);
     const addbutton = <Button onClick={{/*add product to the cart*/ }}>+</Button>
     const productlist = products.map((prod, id) => {
@@ -94,14 +101,24 @@ function ProductList(props) {
                 <tbody>
                     {productlist}
                 </tbody>
+                <SubmitOrder handleSubmit={handleSubmit}/>
             </Table>
+        </>
+    )
+
+}
+
+function SubmitOrder(props){
+    return(
+
+        <>
+        <Button variant="success" onClick={props.handleSubmit}>
+                Submit Order!
+        </Button>
         </>
     )
 
 
 
-
-
 }
-
 export default ProductList;
