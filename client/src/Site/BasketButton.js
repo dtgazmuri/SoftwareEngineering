@@ -16,7 +16,9 @@ function BasketButton(props) {
       quantity: 1,
     };
     let isExist = false;
+    let total = 0;
     for (let i = 0; i < basketItems.length; i++) {
+      total = total + basketItems[i].price;
       if (basketItems[i].id === newItem.id) {
         if (mode == "add") basketItems[i].quantity++;
         if (mode == "delete" && basketItems[i].quantity >= 1) {
@@ -33,6 +35,8 @@ function BasketButton(props) {
         return false;
       }
     }
+    if(total<props.wallet)
+      props.notifyBalance();
     if (mode == "add") {
       if (isExist === false) {
         basketItems.push(newItem);

@@ -33,7 +33,7 @@ function CustomerHome(props) {
                         <h3>Amout on your wallet: {customer.wallet} €</h3>
                         <Button onClick={<Navigate replace to={`/customer/${customer.id}/basket`} />}>Basket</Button>
                     </Row>
-                    <ProductList notifyBalance={props.notifyBalance}/>
+                    <ProductList notifyBalance={props.notifyBalance} wallet={customer.wallet}/>
                 </>
                 :
                 <h1>Loading</h1>
