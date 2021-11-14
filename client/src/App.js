@@ -11,6 +11,9 @@ import MyNavbar from "./Site/navbar";
 import { Container } from "react-bootstrap";
 import LoginPage from "./Site/loginpage";
 import { LoginForm } from "./Site/login";
+import { CustomerHome }  from "./Site/customer"
+
+
 function App() {
   return (
     <Router>
@@ -30,6 +33,8 @@ function App() {
           <Route path="/sign-up" element = {<SignupForm/>} />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
+          {/* Customer homepage route */}
+          <Route exact path="/try" element={<CustomerHome/>}/>
         </Routes>
       </Container>
     </Router>

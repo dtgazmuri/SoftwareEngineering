@@ -60,6 +60,14 @@ const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   // Format express-validate errors as strings
   return `${location}[${param}]: ${msg}`;
 };
+
+// custom middleware: check if a given request is coming from an authenticated user
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+
+  return res.status(401).json({ error: "not authenticated" });
+};
+
 /* ############## USER API ############## */
 
 // Login
@@ -233,20 +241,17 @@ app.post("/api/users/registration", registerValidation, (req, res) => {
     });
 });
 
-app.get(
-  "/api/customers/:id",
-  /*isLoggedIn ,*/ (req, res) => {
-    // shoud we check the role of the requester?  (req.user.role)  v
-    customerDao
-      .getCustomerByUserId(req.params.id)
-      .then((cusomer) => {
-        res.status(200).json(cusomer);
-      })
-      .catch((error) => {
-        res.status(error.code).json(error);
-      });
-  }
-);
+app.get("/api/customers/:id", isLoggedIn, (req, res) => {
+  // shoud we check the role of the requester?  (req.user.role)  v
+  customerDao
+    .getCustomerByUserId(req.params.id)
+    .then((cusomer) => {
+      res.status(200).json(cusomer);
+    })
+    .catch((error) => {
+      res.status(error.code).json(error);
+    });
+});
 /* END of STORIES NUMBER 6, 7, 8 */
 
 app.listen(port, () => {
