@@ -4,13 +4,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./App.css";
 import MyBody from "./Site/homepage";
-import {SignupForm} from "./Site/signup";
+import { SignupForm } from "./Site/signup";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import MyNavbar from "./Site/navbar";
 import { Container } from "react-bootstrap";
 import LoginPage from "./Site/loginpage";
 import { LoginForm } from "./Site/login";
+import Basket from "./Site/Basket";
 function App() {
   return (
     <Router>
@@ -27,9 +28,10 @@ function App() {
 
           <Route path="/loginpage/:type" element={<LoginForm />} />
           {/*Route di Registrazione*/}
-          <Route path="/sign-up" element = {<SignupForm/>} />
+          <Route path="/sign-up" element={<SignupForm />} />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
+          <Route exact path="/customer/:id/basket" element={<Basket />} />
         </Routes>
       </Container>
     </Router>
