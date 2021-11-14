@@ -13,7 +13,7 @@ import LoginPage from "./Site/loginpage";
 import { useEffect, useState } from "react";
 import API from "./API.js"
 import { LoginForm } from "./Site/login";
-import { CustomerHome }  from "./Site/customer"
+import { CustomerHome } from "./Site/customer"
 import Basket from "./Site/Basket";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,18 +22,18 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
-  const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
-  
-  
+  const [message, setMessage] = useState({ type: "", msg: "" }) //for messages interface!
+
+
   //AUTH LOGIN LOGOUT 
 
   useEffect(() => {
     const checkAuth = async () => {
-      try {        
+      try {
         const user = await API.getAdmin();
         setUser(user);
         setLogged(true);
-        setMessage({type:"success", msg:`Bentornato, ${user.name}`})
+        setMessage({ type: "success", msg: `Bentornato, ${user.name}` })
       } catch (err) {
         setLogged(false)
         console.log(err.error);
@@ -45,19 +45,19 @@ function App() {
   }, []);
 
   const doLogin = async (credentials) => {
-    try {   
+    try {
       const user = await API.login(credentials);
       setUser(user);
       setLogged(true);
       console.log(user);
-      setMessage({type:"success", msg:`Welcome, ${user.name} `})
+      setMessage({ type: "success", msg: `Welcome, ${user.name} ` })
     }
     catch (err) {
-      setMessage({type:"danger", msg:`Login failed. ${err}`})
+      setMessage({ type: "danger", msg: `Login failed. ${err}` })
       throw err;
     }
   }
-  
+
   const addClient = async (cust) => {
     try {
       const resp = await API.postNewCustomer(cust);
@@ -66,10 +66,10 @@ function App() {
 
       return resp;
     }
-    catch(err) {
-      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`});
+    catch (err) {
+      setMessage({ type: "error", msg: `Error in adding customer! Error ${err}` });
 
-      return {error : err };
+      return { error: err };
     }
   }
 
@@ -78,34 +78,43 @@ function App() {
     //Inizializzo gli stati
     setLogged(false);
     setUser("");
-    setMessage({type:"success", msg:"Logout effettuato correttamente"})
+    setMessage({ type: "success", msg: "Logout effettuato correttamente" })
   }
 
   const notifySuccess = () => toast.success('Success!', {
-    position: "top-right",
+    position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-});
-const notifyError = () => toast.error('Error: something went wrong', {
-    position: "top-right",
+  });
+  const notifyError = () => toast.error('Error: something went wrong', {
+    position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-});
+  });
+  const notifyBalance = () => toast.warn('Balance insufficient!', {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
 
+
+
+  /*
   
   
-/*
-
-
-*/
+  */
 
   return (
     <Router>
@@ -122,24 +131,24 @@ const notifyError = () => toast.error('Error: something went wrong', {
 
           <Route path="/loginpage/:type" element={<LoginForm />} />
           {/*Route di Registrazione*/}
-          <Route path="/sign-up" element={<SignupForm notifySuccess={notifySuccess} notifyError={notifyError}/>} />
+          <Route path="/sign-up" element={<SignupForm notifySuccess={notifySuccess} notifyError={notifyError} />} />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
           {/* Customer homepage route */}
-          <Route exact path="/customer" element={<CustomerHome user={user}/>}/>
+          <Route exact path="/customer" element={<CustomerHome user={user} notifyBalance={notifyBalance} />} />
           <Route exact path="/customer/:id/basket" element={<Basket />} />
         </Routes>
       </Container>
-      <ToastContainer 
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover/>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover />
     </Router>
   );
 }

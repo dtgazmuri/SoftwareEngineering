@@ -1,11 +1,10 @@
-import Button from "@restart/ui/esm/Button";
 import { useEffect, useState } from "react";
-import { Form, InputGroup, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import BasketButton from "./BasketButton";
 
 import API from "../API";
 
-function ProductList() {
+function ProductList(props) {
     const [products, setProducts] = useState([]);
 
     //PRODUCTS FETCH
@@ -24,7 +23,7 @@ function ProductList() {
     }, []);
 
     //const selection = CustomerSelection(customerlist, handleCustomer);
-    const productlist = products.map((prod/*, id*/) => {
+    const productlist = products.map((prod, id) => {
         return <tr>
             <td>{prod.id}</td>
             <td>{prod.name}</td>
