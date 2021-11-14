@@ -229,7 +229,21 @@ async function addNewUser(user) {
     });
 }
 
-//async function 
+async function fetchCustomerById(id) {
+  const url = `${BASEURL}/customers/${id}`;
+  try {
+    const response = await fetch(url);
+
+    if (response.ok) {
+      const responseBody = await response.json();
+      return responseBody;
+    } else {
+      return { error: ` error code ${response.status}` };
+    }
+  } catch (err) {
+    return { error: `${err}` };
+  }
+}
 
 /*** EXPORTS ***/
 
@@ -243,5 +257,6 @@ const API = {
   fetchAllOrders,
   postOrderByEmployee,
   addNewUser,
+  fetchCustomerById,
 };
 export default API;

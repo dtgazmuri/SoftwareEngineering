@@ -1,34 +1,11 @@
 import Button from "@restart/ui/esm/Button";
 import { useEffect, useState } from "react";
 import { Form, InputGroup, Table } from "react-bootstrap";
+import BasketButton from "./BasketButton";
 
 import API from "../API";
 
-/*
-
-function CustomerSelection(customers, handleCustomer) {
-    return (
-        <>
-            <Form>
-                <Form.Select aria-label="Please select a client" onChange={ev => handleCustomer(ev.target.value)}>
-                    <option>Open this select menu</option>
-                    {customers.map((c) => {
-                        return c.name + " " + c.surname;
-                    })
-                    }
-                </Form.Select>
-            </Form>
-
-
-        </>
-    )
-
-}
-*/
-
-function ProductList(props) {
-    const [customer, setCustomer] = useState();
-    const [customerlist, setList] = useState([]);
+function ProductList() {
     const [products, setProducts] = useState([]);
 
     //PRODUCTS FETCH
@@ -46,35 +23,21 @@ function ProductList(props) {
     getProducts();
     }, []);
 
-    useEffect(() =>{
-        const getCustomers = async () => {
-        try {
-            const customer = await API.getCustomer();
-            setCustomer(customer);
-        } catch (err) {
-            console.log(err.error);
-        }
-    };
-        getCustomers();
-    }, []);
-
     //const selection = CustomerSelection(customerlist, handleCustomer);
-    const addbutton = <Button onClick={{/*add product to the cart*/ }}>+</Button>
-    const productlist = products.map((prod, id) => {
+    const productlist = products.map((prod/*, id*/) => {
         return <tr>
             <td>{prod.id}</td>
             <td>{prod.name}</td>
             <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
             <td>{prod.price}</td>
             <td>{prod.quantity}</td>
-            <td>{addbutton}</td>
+            <td><BasketButton product={prod} mode={"add"}></BasketButton>{" "}</td>
+            <td><BasketButton product={prod} mode={"delete"}></BasketButton>{" "}</td>
         </tr>
     });
 
     return (
         <>
-
-            {customer}
             <Table responsive className="table-prod">
                 <thead>
                     <tr>

@@ -10,10 +10,8 @@ import {
     manager,
 } from "./icons.js";
 import API from "../API";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-function SignupForm() {
+function SignupForm(props) {
     const [submitted, setSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [validated, setValidated] = useState(false);
@@ -21,6 +19,7 @@ function SignupForm() {
     const [surname, setSurname] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [rpassword, setRPassword] = useState("");
     const [role, setRole] = useState("");
 
     const handleSubmit = (event) => {
@@ -40,10 +39,16 @@ function SignupForm() {
         } else if (password === undefined || password === "") {
             valid = false;
             setErrorMessage("Please, enter the required fields");
+        } else if (rpassword === undefined || rpassword === "") {
+            valid = false;
+            setErrorMessage("Please, enter the required fields");
+        } else if(password !== rpassword){
+            valid=false;
+            setErrorMessage("The password need to be the same");
         } else if (role === undefined || role === "") {
             valid = false;
             setErrorMessage("Please, enter the required fields");
-        }
+        } 
 
         if (valid) {
             console.log("adding new user");
@@ -53,13 +58,13 @@ function SignupForm() {
                 username: username,
                 password: password,
                 role: role,
-            });
+            }).then(()=>{
+                props.notifySuccess();
+            }).catch(()=>{props.notifyError();});
             setSubmitted(true);
         }
         setValidated(true);
     };
-
-    const notify = () => toast("Success!");
 
     return (
         <> {submitted ? <Navigate replace to="/home" /> :
@@ -93,7 +98,7 @@ function SignupForm() {
                             <Form.Label>Username</Form.Label>
                             <Form.Control
                                 required
-                                type="text"
+                                type="email"
                                 value={username}
                                 onChange={ev => setUsername(ev.target.value)}
                             />
@@ -104,9 +109,20 @@ function SignupForm() {
                             <Form.Label>Password</Form.Label>
                             <Form.Control
                                 required
-                                type="text"
+                                type="password"
                                 value={password}
                                 onChange={ev => setPassword(ev.target.value)}
+                            />
+                            <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
+                            <Form.Control.Feedback type='valid' />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Repeat Password</Form.Label>
+                            <Form.Control
+                                required
+                                type="password"
+                                value={rpassword}
+                                onChange={ev => setRPassword(ev.target.value)}
                             />
                             <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
                             <Form.Control.Feedback type='valid' />
@@ -154,6 +170,7 @@ function SignupForm() {
                                     </Button>
                                 )}
                             </Col>
+                            {/*
                             <Col className="py-3">
                                 {role === "farmer" ? (
                                     <Button
@@ -232,6 +249,7 @@ function SignupForm() {
                                     </Button>
                                 )}
                             </Col>
+                            */}
                         </Row>
                         <Row className="buttonRow d-flex justify-content-around">
                             <Form.Group as={Col} xs={1} className="mb-5">
