@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { CartPlus, CartDash, Code } from "react-bootstrap-icons";
 
-// props.product => { id, name, price}   , props.mode {add or delete}
+// props.product => { id, name, price}   , props.mode {add or delete} , changeFlag
 function BasketButton(props) {
   const addOrDeleteBasketItem = (product, mode) => {
     const basketItems = JSON.parse(
@@ -28,6 +28,8 @@ function BasketButton(props) {
           JSON.stringify(basketItems.filter((x) => x != null))
         );
         console.log(sessionStorage.getItem("shopping-basket"));
+        if (typeof props.setChangeBasket === "function")
+          props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
         return false;
       }
     }
@@ -37,10 +39,13 @@ function BasketButton(props) {
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
       }
     }
+    if (typeof props.setChangeBasket === "function")
+      props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
   };
 
   return (
     <Button
+      size="sm"
       variant="success"
       onClick={() => addOrDeleteBasketItem(props.product, props.mode)}
     >
