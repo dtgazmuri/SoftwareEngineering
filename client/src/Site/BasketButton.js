@@ -17,14 +17,16 @@ function BasketButton(props) {
     };
     let isExist = false;
     for (let i = 0; i < basketItems.length; i++) {
-      if (basketItems[i] == null) continue;
       if (basketItems[i].id === newItem.id) {
         if (mode == "add") basketItems[i].quantity++;
         if (mode == "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
-        sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
+        sessionStorage.setItem(
+          "shopping-basket",
+          JSON.stringify(basketItems.filter((x) => x != null))
+        );
         console.log(sessionStorage.getItem("shopping-basket"));
         return false;
       }
