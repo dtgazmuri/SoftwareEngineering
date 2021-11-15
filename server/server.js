@@ -77,6 +77,13 @@ const isEmployee = (req, res, next) => {
   return res.status(401).json({ error: "Unauthorized action" });
 };
 
+// custom middleware: check if a given request is coming from an authenticated user
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+
+  return res.status(401).json({ error: "not authenticated" });
+};
+
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   // Format express-validate errors as strings
   return `${location}[${param}]: ${msg}`;
@@ -365,11 +372,9 @@ app.post(
       return res.status(200).json(result);
     } catch (err) {
       console.log(err);
-      return res
-        .status(500)
-        .json({
-          error: "DB error during the add/update of a product availability",
-        });
+      return res.status(500).json({
+        error: "DB error during the add/update of a product availability",
+      });
     }
   }
 );
