@@ -5,20 +5,25 @@ import MyBody from './Site/homepage'
 import { BrowserRouter as Router } from 'react-router-dom';
 import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
-import { Container } from 'react-bootstrap';
+import { Alert, Container } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
+<<<<<<< HEAD
 import { LoginPage } from './Site/login';
+=======
+import LoginPage from './Site/loginpage'
+>>>>>>> story-1-2-3
 import { useState, useEffect } from 'react';
 import API from "./API.js"
-import MyPage from './Site/mypage';
+import MyPage from './Site/shopemployeepage';
+import ProductList from './Site/ProductList';
 
 function App() {
   const [user, setUser] = useState("");
   const [isLogged, setLogged] = useState(false);
-  const [message, setMessage] = useState({type:"", msg:""})
-    
+  const [message, setMessage] = useState({type:"", msg:""}) //for messages interface!
   
-  //LOGIN LOGOUT
+  
+  //AUTH LOGIN LOGOUT 
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -26,6 +31,10 @@ function App() {
         const user = await API.getAdmin();
         setUser(user);
         setLogged(true);
+<<<<<<< HEAD
+=======
+        setMessage({type:"success", msg:`Welcome back, ${user.username}`})
+>>>>>>> story-1-2-3
       } catch (err) {
         setLogged(false)
         console.log(err.error);
@@ -36,20 +45,38 @@ function App() {
 
   }, []);
 
-
   const doLogin = async (credentials) => {
     try {   
       const user = await API.login(credentials);
       setUser(user);
       setLogged(true);
       console.log(user);
+<<<<<<< HEAD
+=======
+      setMessage({type:"success", msg:`Welcome, ${user.username} `})
+>>>>>>> story-1-2-3
     }
     catch (err) {
-      setMessage({type:"danger", msg:`Login non effettuato. ${err}`})
+      setMessage({type:"danger", msg:`Login failed. ${err}`})
       throw err;
     }
   }
   
+  const addClient = async (cust) => {
+    try {
+      const resp = await API.postNewCustomer(cust);
+
+      console.log(`response : ${resp}`);
+
+      return resp;
+    }
+    catch(err) {
+      setMessage({type:"error", msg:`Error in adding customer! Error ${err}`});
+
+      return {error : err };
+    }
+  }
+
   const doLogout = async () => {
     await API.logout()
     //Inizializzo gli stati
@@ -58,11 +85,19 @@ function App() {
     setMessage({type:"success", msg:"Logout effettuato correttamente"})
   }
   
+  
+/*
+
+
+*/
 
   return (
   <Router>
       <MyNavbar logout={doLogout} isLogged = {isLogged}/>
-      <Container fluid className="below-nav vh-100">
+      
+      <Container fluid className="below-nav vh-100 backg">
+      {message.msg!==""?<Alert className = "" variant = {message.type}>{message.msg}</Alert>:""}
+          
       <Routes>
         <Route path="/" element={<Navigate replace to="/home" />} />          
               
@@ -74,14 +109,19 @@ function App() {
             {/*Route di Login*/}
           <Route path="/sign-in" element = {<SigninPage/>}/> 
           
+<<<<<<< HEAD
           <Route path ="/loginpage" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
+=======
+          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin} setMessage={setMessage}/>} />
+>>>>>>> story-1-2-3
             {/*Route di Registrazione*/}
           
+          <Route path = "/products/" element = {isLogged?<ProductList setMessage={setMessage}/>:<Navigate replace to="/home"/> }/>
+
           {/* BODY PER HOMEPAGE */}
-          
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
-          <MyPage user = {user} />}
+          <MyPage user = {user} addClient = {addClient} setMessage={setMessage}/>}
           />
           
           

@@ -15,7 +15,11 @@ function MyPage(props) {
         
 
             <Container fluid className ="below-nav vh-100">
+<<<<<<< HEAD
                <h1> Benvenuto, {props.user.username} </h1>
+=======
+               <h1> Welcome, {props.user.username} </h1>
+>>>>>>> story-1-2-3
                <Container fluid className="LoginButton">
                <Col id="signin-col" className= "v-100 d-sm-block">
              
