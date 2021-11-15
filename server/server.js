@@ -619,8 +619,8 @@ app.get("/api/customers/:id", isLoggedIn, (req, res) => {
   // shoud we check the role of the requester?  (req.user.role)  v
   customerDao
     .getCustomerByUserId(req.params.id)
-    .then((cusomer) => {
-      res.status(200).json(cusomer);
+    .then((customer) => {
+      res.status(200).json(customer);
     })
     .catch((error) => {
       res.status(error.code).json(error);

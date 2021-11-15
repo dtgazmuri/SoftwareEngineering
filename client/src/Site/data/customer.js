@@ -8,7 +8,7 @@ class Customer {
 
     static from(json){
         console.log(json.id)
-        return new Customer(json.id, json.name, json.surname, json.wallet)
+        return new Customer(json.ID, json.NAME, json.SURNAME, json.WALLET)
     }
 }
 export default Customer;
