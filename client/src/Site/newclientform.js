@@ -83,7 +83,7 @@ function SignupForm(props) {
         {submitted ? <></>
         :
         <Modal show = {props.show}>
-          <Modal.Header closeButton>
+          <Modal.Header closeButton={props.handleClose}>
             <Modal.Title>Add new Client</Modal.Title>
         </Modal.Header>
         <Modal.Body>

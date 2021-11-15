@@ -13,8 +13,8 @@ function MyPage(props) {
     <>
 
 
-      <Container fluid className="below-nav vh-100">
-        <Container fluid>
+      <Container fluid className="below-nav vh-100 align-items-center">
+        
           <Col id="signin-col" >
             <Container fluid className="LoginButton border border-dark rounded nolink" align="center" onClick={handleShow}>
               {signin}
@@ -30,9 +30,10 @@ function MyPage(props) {
               </Container>
             </Link>
           </Col>
+
+          
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />
         </Container>
-      </Container>
     </>
   )
 }

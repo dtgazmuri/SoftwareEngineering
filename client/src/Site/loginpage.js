@@ -1,10 +1,13 @@
-import { Form, Button, Alert, Container} from 'react-bootstrap';
+import { Form, Button, Alert, Container, Col, Card, Row, Nav} from 'react-bootstrap';
 import { useState } from 'react';
+
+
+
 
 function LoginPage(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
 
 
   const handleSubmit = (event) => {
@@ -26,12 +29,11 @@ function LoginPage(props) {
         valid.reason=valid.reason.concat("Password cannot be Less than 6 characters! ")
       }
       if (valid.value) {
-        props.login(credentials); //passo alla funzione login il tipo di accesso
+        props.login(credentials);
 
       }
       else {
-        // show a better error message...
-        setErrorMessage(valid.reason)
+        setErrorMessage(valid.reason);
       }
   };
 
