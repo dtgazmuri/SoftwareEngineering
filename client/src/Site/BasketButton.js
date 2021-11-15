@@ -18,11 +18,14 @@ function BasketButton(props) {
     let isExist = false;
     let total = 0;
     for (let i = 0; i < basketItems.length; i++) {
-      total = total + basketItems[i].price;
       if (basketItems[i].id === newItem.id) {
-        if (mode == "add") basketItems[i].quantity++;
+        if (mode == "add") {
+          basketItems[i].quantity++;
+          total = total + basketItems[i].price;
+        }
         if (mode == "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
+          total = total - basketItems[i].price;
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
         sessionStorage.setItem(
