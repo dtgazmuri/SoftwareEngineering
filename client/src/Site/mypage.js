@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 import {Container, Button, Col, Row, InputGroup, Form, Modal } from 'react-bootstrap';
 import { Formik  } from 'formik';
 import { signin } from './icons';
  import * as yup from 'yup';
-import { Link } from 'react-router-dom';
+
 import { useState } from 'react';
-=======
-import {Container, Button, Col, Row, InputGroup, Form } from 'react-bootstrap';
-import { Formik  } from 'formik';
-import * as yup from 'yup';
->>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
 
 function MyPage(props) {
   const [show, setShow] = useState(false);
@@ -21,12 +15,7 @@ function MyPage(props) {
         
 
             <Container fluid className ="below-nav vh-100">
-<<<<<<< HEAD
-               <h1> Benvenuto, {props.user.username} </h1>
-<<<<<<< HEAD
-=======
                <h1> Welcome, {props.user.username} </h1>
->>>>>>> story-1-2-3
                <Container fluid className="LoginButton">
                <Col id="signin-col" className= "v-100 d-sm-block">
              
@@ -39,10 +28,6 @@ function MyPage(props) {
                 </Col>
                 
                   <FormExample show={show} handleShow={handleShow} handleClose={handleClose}/>
-=======
-               <Container>
-                  {/*  <FormExample/> */}
->>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
                </Container>
             </Container>
             </>

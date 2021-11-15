@@ -12,14 +12,8 @@ exports.getCustomers = () => {
                 reject(err);
                 return;
             }
-<<<<<<< HEAD
-            const customers = rows.map((e) => ({id: e.ID, name: e.NAME, surname:e.SURNAME, wallet:e.WALLET}));
-            console.log(customers)
-        resolve(customers);
-=======
             const customers = rows.map((e) => ({ id: e.ID, name: e.NAME, surname: e.SURNAME, wallet: e.WALLET }));
             resolve(customers);
->>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
 
 
         });
