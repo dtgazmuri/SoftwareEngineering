@@ -225,7 +225,13 @@ function App() {
           <Route
             exact
             path="/customer"
-            element={<CustomerHome user={user} notifyBalance={notifyBalance} />}
+            element={
+              isLogged ? (
+                <CustomerHome user={user} notifyBalance={notifyBalance} />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
           />
           <Route exact path="/customer/:id/basket" element={<Basket />} />
         </Routes>

@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function CustomerHome(props) {
   const [customer, setCustomer] = useState({});
+  // const [customerId, setId] = useState(props.user.userid)
 
   useEffect(() => {
     const getCustomer = async (id) => {
@@ -18,8 +19,8 @@ function CustomerHome(props) {
         console.log(err.error);
       }
     };
-    getCustomer(props.user.id);
-  }, [props.user.id]);
+    getCustomer(props.user.userid);
+  }, [props.user.userid]);
 
   return (
     <>
