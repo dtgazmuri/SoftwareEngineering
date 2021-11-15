@@ -116,7 +116,6 @@ function App() {
       draggable: true,
       progress: undefined,
     });
-<<<<<<< HEAD
   const notifyQuantity = () =>
     toast.warn("Maximum quantity reached!", {
       position: "bottom-right",
@@ -127,8 +126,6 @@ function App() {
       draggable: true,
       progress: undefined,
     });
-=======
->>>>>>> 6d679c6c35123743f9e0ad229671d1f200facf71
 
   /*
 

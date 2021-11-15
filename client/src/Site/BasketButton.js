@@ -38,7 +38,9 @@ function BasketButton(props) {
           "shopping-basket",
           JSON.stringify(basketItems.filter((x) => x != null))
         );
-        console.log(sessionStorage.getItem("shopping-basket"));
+        console.log(
+          JSON.parse(sessionStorage.getItem("shopping-basket") || "[]")
+        );
         if (typeof props.setChangeBasket === "function")
           props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
         if (total > props.wallet) props.notifyBalance();
