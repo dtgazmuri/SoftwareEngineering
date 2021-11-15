@@ -62,7 +62,14 @@ function ProductListEmployee(props) {
         setCustomer({ id: cust.id, name: cust.name, surname: cust.surname, wallet: cust.wallet })
     }
     //SET DELIVERY BOOL
-    const handleDelivery = () => setDelivery(true);
+    const handleDelivery = (() => {
+        if (delivery) {
+            setDelivery(false);
+        }
+        else {
+            setDelivery(true);
+        }
+    });
 
     const addOrder = (prod) => {
         //check if product is already present (+1) or absent (1)
@@ -82,11 +89,11 @@ function ProductListEmployee(props) {
         props.setMessage({ type: "success", msg: `Product ${prod.name} added correctly` })
 
     }
-    
+
     const removeOrder = (prod) => {
         if (order.some(o => o.id === prod.id)) {
             const neworder = order.map(o => {
-                if (o.id === prod.id)
+                if (o.id === prod.id && o.quantity >= 1)
                     return { id: prod.id, name: prod.name, price: prod.price, quantity: o.quantity - 1 }
                 else
                     return o;
@@ -118,9 +125,21 @@ function ProductListEmployee(props) {
         }
     }
 
+    const getBookedProduct = ((prod_id) => {
+        let i = 0;
+        for (i = 0; i < order.length; i++){
+            if (order[i].id == prod_id){
+                return order[i].quantity;
+            }
+        }
+
+        return 0;
+    });
 
     const productlist = products.map((prod, id) => {
-        return <tr key={"prod" + id}>
+        
+        if (getBookedProduct(prod.id) > 0){
+            return <tr key={"prod" + id} bgcolor="#99ff99">
             <td>{prod.id}</td>
             <td>{prod.name}</td>
             <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
@@ -128,9 +147,24 @@ function ProductListEmployee(props) {
             <td>{prod.quantity}</td>
             <td><Button onClick={() => addOrder(prod)}>+</Button></td>
             <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
-             {/* <td>{getBookedProduct(prod.id)}</td>*/}
+            <td>{getBookedProduct(prod.id)}</td>
 
-        </tr>
+            </tr>
+        }
+        else{
+        
+            return <tr key={"prod" + id}>
+                <td>{prod.id}</td>
+                <td>{prod.name}</td>
+                <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
+                <td>{prod.price}</td>
+                <td>{prod.quantity}</td>
+                <td><Button onClick={() => addOrder(prod)}>+</Button></td>
+                <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
+                <td>{getBookedProduct(prod.id)}</td>
+
+            </tr>
+        }
     });
 
     return (
@@ -158,21 +192,34 @@ function ProductListEmployee(props) {
                             {productlist}
                             <tr key="delivery-row">
                                 <th>
-                                    <Form.Group controlId="delivery"> Do you want the order to be delivered at your home?
+                                    Do you want the order to be delivered at your home?
+                                </th>
+                                <th>
+                                    <Form.Group controlId="delivery">
                                         <Form.Control
                                             type="checkbox"
                                             label="delivery"
                                             onChange={handleDelivery}
+                                            inline
                                         />
                                     </Form.Group>
-                                    {delivery ?
+                                </th>
+                                <th></th><th></th><th></th><th></th><th></th><th></th>
+                            </tr>
+
+                            {delivery ?
+                                <tr>
+                                    <td>
                                         <Form.Group className="mb-3" controlId="delivery">
                                             <Form.Label>Please insert your delivery address</Form.Label>
                                             <Form.Control type="address" placeholder="Enter Address" onChange={ev => setAddress(ev.target.value)} />
                                         </Form.Group>
-                                        : ""}
-                                </th>
-                            </tr>
+                                    </td>
+                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                </tr>
+
+                                : <></>}
+
                             <tr id="submrow">
                                 <th>
                                     <Button variant="success" onClick={handleShow}>Submit Order!</Button>
