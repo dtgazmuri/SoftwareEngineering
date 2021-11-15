@@ -12,13 +12,11 @@ function Basket(props) {
     setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
     //console.log(items);
   }, [changeBasket]);
-/*
   const product = {
     id: 12,
     name: "Orange",
     price: "10",
   };
-*/
   return (
     <Container className="below-nav justify-content-center">
       {items && (

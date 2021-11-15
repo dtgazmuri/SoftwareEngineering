@@ -15,6 +15,13 @@ import ProductList from './Site/Employee/ProductList';
 import {CustomerList, OrderList } from './Site/Employee/employee';
 import Farmer from './Site/data/farmer';
 //import MyPage from './Site/mypage';
+import { SignupForm } from "./Site/signup";
+import { LoginForm } from "./Site/login";
+import { CustomerHome } from "./Site/customer"
+import Basket from "./Site/Basket";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const [user, setUser] = useState();
@@ -126,11 +133,28 @@ function App() {
              <Route exact path="/shopemployee/" element={isLogged?<EmployeePage addClient = {addClient}/>:<Navigate replace to ="/"/>} />
           {/**Route for the main page of the shop employee */}
             <Route exact path="/farmer/" element={<Farmer />} />
-          
-          
+
+            <Route path="/sign-up" element={<SignupForm notifySuccess={notifySuccess} notifyError={notifyError} />} />
+          {/* BODY PER HOMEPAGE */}
+          <Route exact path="/home" element={<MyBody />} />
+          {/* Customer homepage route */}
+          <Route exact path="/customer" element={<CustomerHome user={user} notifyBalance={notifyBalance} />} />
+          <Route exact path="/customer/:id/basket" element={<Basket />} />
+            
+     
         
       </Routes>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover />
     </Router>
     
   );

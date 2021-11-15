@@ -16,14 +16,16 @@ function BasketButton(props) {
       quantity: 1,
     };
     let isExist = false;
+    let total = 0;
     for (let i = 0; i < basketItems.length; i++) {
       if (basketItems[i].id === newItem.id) {
-        // eslint-disable-next-line eqeqeq
-        if (mode == "add") basketItems[i].quantity++;
-        // eslint-disable-next-line eqeqeq
+        if (mode == "add") {
+          basketItems[i].quantity++;
+          total = total + basketItems[i].price;
+        }
         if (mode == "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
-          // eslint-disable-next-line eqeqeq
+          total = total - basketItems[i].price;
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
         sessionStorage.setItem(
@@ -36,12 +38,12 @@ function BasketButton(props) {
         return false;
       }
     }
-    // eslint-disable-next-line eqeqeq
+    if(total<props.wallet)
+      props.notifyBalance();
     if (mode == "add") {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
-        console.log(sessionStorage.getItem)
       }
     }
     if (typeof props.setChangeBasket === "function")

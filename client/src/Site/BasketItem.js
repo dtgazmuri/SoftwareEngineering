@@ -33,25 +33,3 @@ function BasketItem(props) {
   );
 }
 export default BasketItem;
-/*
-        <Card>
-          <Card.Body>
-            <Card.Title>{props.product.name}</Card.Title>
-            <Card.Text style={{ position: "right" }}>
-              {props.product.price}
-            </Card.Text>
-            <BasketButton
-              product={props.product}
-              mode={"add"}
-              setChangeBasket={props.setChangeBasket}
-            ></BasketButton>{" "}
-            {props.product.quantity}{" "}
-            <BasketButton
-              product={props.product}
-              mode={"delete"}
-              setChangeBasket={props.setChangeBasket}
-            ></BasketButton>{" "}
-          </Card.Body>
-        </Card>
-
-*/
