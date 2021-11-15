@@ -16,12 +16,16 @@ function BasketItem(props) {
               product={props.product}
               mode={"add"}
               setChangeBasket={props.setChangeBasket}
+              notifyBalance={props.notifyBalance}
+              notifyQuantity={props.notifyQuantity}
             ></BasketButton>{" "}
             {props.product.quantity}{" "}
             <BasketButton
               product={props.product}
               mode={"delete"}
               setChangeBasket={props.setChangeBasket}
+              notifyBalance={props.notifyBalance}
+              notifyQuantity={props.notifyQuantity}
             ></BasketButton>{" "}
           </div>
           <Badge pill bg="light" text="dark">

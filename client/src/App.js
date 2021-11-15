@@ -116,7 +116,7 @@ function App() {
       draggable: true,
       progress: undefined,
     });
-    const notifyQuantity = () =>
+  const notifyQuantity = () =>
     toast.warn("Maximum quantity reached!", {
       position: "bottom-right",
       autoClose: 5000,
@@ -237,13 +237,26 @@ function App() {
             path="/customer"
             element={
               isLogged ? (
-                <CustomerHome user={user} notifyBalance={notifyBalance} notifyQuantity={notifyQuantity} />
+                <CustomerHome
+                  user={user}
+                  notifyBalance={notifyBalance}
+                  notifyQuantity={notifyQuantity}
+                />
               ) : (
                 <Navigate replace to="/home" />
               )
             }
           />
-          <Route exact path="/customer/:id/basket" element={<Basket />} />
+          <Route
+            exact
+            path="/customer/:id/basket"
+            element={
+              <Basket
+                notifyBalance={notifyBalance}
+                notifyQuantity={notifyQuantity}
+              />
+            }
+          />
         </Routes>
       </Container>
       <ToastContainer

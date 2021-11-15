@@ -12,14 +12,20 @@ function Basket(props) {
     setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
     //console.log(items);
   }, [changeBasket]);
-  
+
   return (
     <Container className="below-nav justify-content-center">
       {items && (
         <ListGroup>
           {" "}
           {items.map((item) => (
-            <BasketItem product={item} setChangeBasket={setChangeBasket} basket={true}/>
+            <BasketItem
+              product={item}
+              setChangeBasket={setChangeBasket}
+              basket={true}
+              notifyBalance={props.notifyBalance}
+              notifyQuantity={props.notifyQuantity}
+            />
           ))}{" "}
         </ListGroup>
       )}

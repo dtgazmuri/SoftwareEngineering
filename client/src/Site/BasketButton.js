@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { CartPlus, CartDash } from "react-bootstrap-icons";
 
-// props.product => { id, name, price}   , props.mode {add or delete} , changeFlag
+// props.product => { id, name, price, quantity}   , props.mode {add or delete} , changeFlag
 function BasketButton(props) {
   const addOrDeleteBasketItem = (product, mode) => {
     const basketItems = JSON.parse(
@@ -14,19 +14,24 @@ function BasketButton(props) {
       name: product.name,
       price: product.price,
       quantity: 1,
+      whQuantity: product.quantity,
     };
     let isExist = false;
     let total = 0;
-    
+
     for (let i = 0; i < basketItems.length; i++) {
       if (basketItems[i].id === newItem.id) {
         if (mode === "add") {
+          if (basketItems[i].quantity + 1 > basketItems[i].whQuantity) {
+            props.notifyQuantity();
+            return false;
+          }
           basketItems[i].quantity++;
-          total = total + (basketItems[i].price*basketItems[i].quantity);
+          total = total + basketItems[i].price * basketItems[i].quantity;
         }
         if (mode === "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
-          total = total -(basketItems[i].price*basketItems[i].quantity);
+          total = total - basketItems[i].price * basketItems[i].quantity;
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
         sessionStorage.setItem(
@@ -36,21 +41,18 @@ function BasketButton(props) {
         console.log(sessionStorage.getItem("shopping-basket"));
         if (typeof props.setChangeBasket === "function")
           props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
-        if(total>props.wallet)
-          props.notifyBalance();
+        if (total > props.wallet) props.notifyBalance();
         return false;
       }
     }
-    
-    if (mode == "add") {
+
+    if (mode === "add") {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
-        total=newItem.price;
-        if(total>props.wallet)
-          props.notifyBalance();
+        total += newItem.price;
+        if (total > props.wallet) props.notifyBalance();
       }
-      
     }
     if (typeof props.setChangeBasket === "function")
       props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
