@@ -121,7 +121,7 @@ function ProductForm(props){
                 <Alert variant='warning'>{error}</Alert>
             }
             {props.updatedQuantity.product === props.id && 
-                <Alert dismissable variant = 'success'>Product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
+                <Alert variant = 'success'>Product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
             }
             <Button onClick={() => handleSetAmount(props.id, amount)}>Set amount</Button>
         </Form>
