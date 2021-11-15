@@ -40,6 +40,7 @@ function CustomerHome(props) {
           <ProductList
             notifyBalance={props.notifyBalance}
             wallet={customer.wallet}
+            notifyQuantity={props.notifyQuantity}
           />
         </>
       ) : (

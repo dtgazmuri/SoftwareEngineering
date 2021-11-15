@@ -29,8 +29,8 @@ function ProductList(props) {
             <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
             <td>{prod.price}</td>
             <td>{prod.quantity}</td>
-            <td><BasketButton product={prod} mode={"add"} notifyBalance={props.notifyBalance} wallet={props.wallet}></BasketButton>{" "}</td>
-            <td><BasketButton product={prod} mode={"delete"} notifyBalance={props.notifyBalance} wallet={props.wallet}></BasketButton>{" "}</td>
+            <td><BasketButton product={prod} mode={"add"} notifyBalance={props.notifyBalance} wallet={props.wallet} notifyQuantity={props.notifyQuantity}></BasketButton>{" "}</td>
+            <td><BasketButton product={prod} mode={"delete"} notifyBalance={props.notifyBalance} wallet={props.wallet} notifyQuantity={props.notifyQuantity}></BasketButton>{" "}</td>
         </tr>
     });
 

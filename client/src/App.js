@@ -116,6 +116,16 @@ function App() {
       draggable: true,
       progress: undefined,
     });
+    const notifyQuantity = () =>
+    toast.warn("Maximum quantity reached!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   /*
 
@@ -227,7 +237,7 @@ function App() {
             path="/customer"
             element={
               isLogged ? (
-                <CustomerHome user={user} notifyBalance={notifyBalance} />
+                <CustomerHome user={user} notifyBalance={notifyBalance} notifyQuantity={notifyQuantity} />
               ) : (
                 <Navigate replace to="/home" />
               )
