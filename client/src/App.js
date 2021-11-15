@@ -13,7 +13,7 @@ import API from "./API.js";
 import EmployeePage from "./Site/Employee/shopemployeepage";
 import ProductList from "./Site/Employee/ProductList";
 import { CustomerList, OrderList } from "./Site/Employee/employee";
-import Farmer from "./Site/data/farmer";
+import Farmer from "./Site/farmer";
 //import MyPage from './Site/mypage';
 import { SignupForm } from "./Site/signup";
 import { LoginForm } from "./Site/loginpage";
@@ -116,6 +116,7 @@ function App() {
       draggable: true,
       progress: undefined,
     });
+<<<<<<< HEAD
   const notifyQuantity = () =>
     toast.warn("Maximum quantity reached!", {
       position: "bottom-right",
@@ -126,6 +127,8 @@ function App() {
       draggable: true,
       progress: undefined,
     });
+=======
+>>>>>>> 6d679c6c35123743f9e0ad229671d1f200facf71
 
   /*
 
@@ -235,6 +238,7 @@ function App() {
           <Route
             exact
             path="/customer"
+<<<<<<< HEAD
             element={
               isLogged ? (
                 <CustomerHome
@@ -246,6 +250,9 @@ function App() {
                 <Navigate replace to="/home" />
               )
             }
+=======
+            element={<CustomerHome user={user} notifyBalance={notifyBalance} />}
+>>>>>>> 6d679c6c35123743f9e0ad229671d1f200facf71
           />
           <Route
             exact
