@@ -39,7 +39,6 @@ function ProductList(props) {
             notifyQuantity={props.notifyQuantity}
           ></BasketButton>{" "}
         </td>
-        {JSON.parse(sessionStorage.getItem("shopping-basket") || "[]")}
         <td>
           <BasketButton
             product={prod}
