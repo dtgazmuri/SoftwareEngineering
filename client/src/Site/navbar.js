@@ -38,7 +38,9 @@ function MyNavbar(props) {
 function LogoutButton(props) {
     return(
       <Col>
+      <Link to="/">
         <Button variant="outline-light" onClick={props.logout}>Logout</Button>
+      </Link>
       </Col>
     )
   }

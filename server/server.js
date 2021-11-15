@@ -195,14 +195,14 @@ app.get('/api/orders/all', isLogged, isEmployee, async (req, res) => {
 // NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie
 
 // POST /api/order/employee
-app.post('/api/order/employee', [
+app.post('/api/order/employee',  isLogged, isEmployee, [
   check('customerid').isNumeric().withMessage("customer id is incorrect"),
   check('state').isString().isLength({ min: 1 }).withMessage("state is incorrect"),
   check('delivery').isString().isLength({ min: 1 }).withMessage("delivery is incorrect"),
   check('total').isNumeric().withMessage("total is incorrect"),
   check('listitems').isArray().withMessage("listitems array is incorrect"),
   /* Check the parameters of the array */
-  check('listitems.*.productid').isNumeric().withMessage("listitems : productid field is incorrect"),
+  check('listitems.*.id').isNumeric().withMessage("listitems : productid field is incorrect"),
   check('listitems.*.quantity').isNumeric().withMessage("listitems : quantity field is incorrect"),
   check('listitems.*.price').isNumeric().withMessage("listitems : price field is incorrect")
   ],
@@ -237,7 +237,7 @@ app.post('/api/order/employee', [
           for (i = 0; i < itemArray.length; i++){
               const el = itemArray[i];
 
-              const itemINST = {orderid : order_id, productid : el.productid, quantity : el.quantity, price : el.price}; 
+              const itemINST = {orderid : order_id, productid : el.id, quantity : el.quantity, price : el.price}; 
 
               console.log(`item instance : ${itemINST}`);
 
@@ -261,7 +261,7 @@ app.post('/api/order/employee', [
 
 //api for handing out the order number <id>.
 // POST /api/orders/:id
-app.post('/api/orders/:id/handOut', [
+app.post('/api/orders/:id/handOut',  isLogged, isEmployee,  [
   check('id').isInt()
   ],
   async (req, res) => {
@@ -282,7 +282,7 @@ app.post('/api/orders/:id/handOut', [
 
 
 // STORY NUMBER 5
-app.get('/api/customers/all', async (req, res) => {
+app.get('/api/customers/all' ,  isLogged, isEmployee, async (req, res) => {
 
   try {
     const productsList = await employeeDAO.listCustomersAll();
@@ -293,7 +293,7 @@ app.get('/api/customers/all', async (req, res) => {
   }
 });
 
-app.post('/api/customers/wallet/:id/:value', [
+app.post('/api/customers/wallet/:id/:value',  isLogged, isEmployee, [
   check('id').isInt(),
   check('value').isInt()],
   async (req, res) => {
@@ -413,7 +413,7 @@ app.post('/api/order/employee', isLogged, isEmployee, [
 
 
 // GET /api/username/present
-app.get('/api/username/present/:id', async (req, res) => {
+app.get('/api/username/present/:id',  isLogged, isEmployee,  async (req, res) => {
 
   try {
 

@@ -1,6 +1,6 @@
-import { Container, Col } from 'react-bootstrap';
+import { Container, Col, Row } from 'react-bootstrap';
 import { SignupForm } from "./newclientform.js"
-import { signin, shopemployee } from './icons';
+import { signin, shopemployee, wallet, deliverybig, shopemployeebig } from '../icons';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ function MyPage(props) {
 
 
       <Container fluid className="below-nav vh-100 align-items-center">
-        
+        <Row id="first">
           <Col id="signin-col" >
             <Container fluid className="LoginButton border border-dark rounded nolink" align="center" onClick={handleShow}>
               {signin}
@@ -23,14 +23,33 @@ function MyPage(props) {
 
           </Col>
           <Col id="products-col">
-            <Link to="/products">
+            <Link to="/shopemployee/products">
               <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
-                {shopemployee}
+                {shopemployeebig}
                 <h3>Show products</h3>
               </Container>
             </Link>
           </Col>
+          </Row>
 
+          <Row id="second">
+          <Col id="topup-col">
+            <Link to = "/shopemployee/topupwallet/" >
+              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+                {wallet}
+                <h3>Top Up Wallet</h3>
+              </Container>
+              </Link>
+          </Col>
+          <Col id="handout-col">
+            <Link to ="/shopemployee/handout">
+              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+                {deliverybig}
+                <h3>Handout Order</h3>
+              </Container>
+              </Link>
+          </Col>
+          </Row>
           
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />
         </Container>

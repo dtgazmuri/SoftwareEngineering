@@ -23,7 +23,7 @@ async function getCustomers() {
 
 async function updateCustomerWallet(value, id) {
     const valore = value;
-    const response = await fetch('api/customers/wallet/'+id+'/'+value, {
+    const response = await fetch('/api/customers/wallet/'+id+'/'+value, {
         method: 'POST',
         headers: {
             'Content-Type': 'application.json',
@@ -43,7 +43,7 @@ async function updateCustomerWallet(value, id) {
 
 async function handOutOrder(id) {
     const aa = "handOut";
-    let response = await fetch('api/orders/'+id+'/handOut', {
+    let response = await fetch('/api/orders/'+id+'/handOut', {
         method: 'POST',
         headers: {
             'Content-Type': 'application.json',

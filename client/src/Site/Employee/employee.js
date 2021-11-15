@@ -1,76 +1,17 @@
 import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import API from '../EmployeeAPI'
+import API from '../../EmployeeAPI'
 
 
+/*
 function Employee() {
     // CAMBIARE EMPLOYEE NAME
     var shopEmployeeName = "Diego";
     const [selectedFunction, setSelectedFunction] = useState("");
-    const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
     const [orderList, setOrderList] = useState([]);
-    const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
-    /*
-    const [customerList, setCustomerList] = useState([
-        {id: 0, name: "Guglielmo", surname: "!!!", username: "Gugli 69!", hash: "123456", wallet: 420},
-        {id: 1, name: "Diego", surname: "!!!", username: "dg", hash: "123456", wallet: 100},
-        {id: 2, name: "Lorenzo", surname: "!!!", username: "Lorenzo1", hash: "123456", wallet: 0}
-    ])*/
-    const [customerList, setCustomerList] = useState([]);
 
-     // show error message in toast
-    const handleErrors = (err) => {
-        console.log(err);
-    }
-
-
-    useEffect(() => {
-        if (selectedFunction === "HandOut") {
-          API.getOrders()
-            .then(orders => {
-                console.log(orders);
-                setOrderList(orders);
-            })
-            .catch(e => handleErrors(e));
-        } 
-        
-        else if (selectedFunction === "WalletTopUp") {
-            API.getCustomers()
-                .then(customers => {
-                    console.log(customers);
-                    setCustomerList(customers);
-                })
-                .catch(e => handleErrors(e));
-        }
-      }, [selectedFunction])
-
-    useEffect(() => {
-        if (walletUpdated.status === true) {
-            console.log("Qua");
-            API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
-                .then(res => {
-                    console.log(res);
-                    //read all the customer list and set the new wallet balance (the one passed in walletUpdated.value)
-                    const tmp = customerList.map((customer) => {
-                        if(customer.id === walletUpdated.id)
-                        {
-                            customer.wallet =walletUpdated.value;
-                        }
-                        return customer
-                    });
-                    setCustomerList(tmp);
-                    setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
-                })
-                .catch(e =>  {
-                    handleErrors(e);
-                    setAlertWalletUpdated({id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.`});
-                });
-                console.log("Qua5");
-                setWalletUpdated({status: false, id: -1, value: 0});
-        }
-    }, [walletUpdated])
-
+ 
     return(
         <Container className="below-nav justify-content-center">
             <Row>
@@ -90,7 +31,6 @@ function Employee() {
         </Container>
     )
 }
-
 function EmployeeSidebar (props) {
     return( 
         <Col className="d-sm-block col-12 bg-light" sm= {4} id="employee-sidebar">
@@ -108,13 +48,56 @@ function EmployeeSidebar (props) {
     
 }
 
-function CustomerList(props) {
+*/
+function CustomerList() {
+    const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
+    const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
+    const [customers, setCustomerList] = useState([]);
+    
+        // show error message in toast
+        const handleErrors = (err) => {
+            console.log(err);
+        }
+    
+    useEffect(() =>  {
+            API.getCustomers()
+                .then(customers => {
+                    console.log(customers);
+                    setCustomerList(customers);
+                })
+                .catch(e => handleErrors(e));
+    
+      }, [])
 
+    useEffect(() => {
+        if (walletUpdated.status === true) {
+            console.log("Qua");
+            API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
+                .then(res => {
+                    console.log(res);
+                    //read all the customer list and set the new wallet balance (the one passed in walletUpdated.value)
+                    const tmp = customers.map((customer) => {
+                        if(customer.id === walletUpdated.id)
+                        {
+                            customer.wallet =walletUpdated.value;
+                        }
+                        return customer
+                    });
+                    setCustomerList(tmp);
+                    setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
+                })
+                .catch(e =>  {
+                    handleErrors(e);
+                    setAlertWalletUpdated({id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.`});
+                });
+                console.log("Qua5");
+                setWalletUpdated({status: false, id: -1, value: 0});
+        }
+    }, [walletUpdated, customers])
     return (
-        <Col>
             <ListGroup variant="primary">
-                {props.customers.length ?
-                    props.customers.map(customer => {
+                {customers.length ?
+                    customers.map(customer => {
                         return (
                             <ListGroup.Item id = {customer.id} key = {customer.id}>
                                 <Row>
@@ -125,8 +108,8 @@ function CustomerList(props) {
                                         <h5>Amount in Wallet: {customer.wallet} </h5>
                                     </Col>
                                     <Col>
-                                        <CustomerForm id = {customer.id} customers = {props.customers} alertWalletUpdated = {props.alertWalletUpdated}
-                                        setCustomerList = {props.setCustomerList} setWalletUpdated = {props.setWalletUpdated} />
+                                        <CustomerForm id = {customer.id} customers = {customers} alertWalletUpdated = {alertWalletUpdated}
+                                        setCustomerList = {setCustomerList} setWalletUpdated = {setWalletUpdated} />
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -137,7 +120,6 @@ function CustomerList(props) {
                     : <Alert variant = "danger"> No customers found </Alert>
                 }
             </ListGroup>
-        </Col>
     )
 }
 
@@ -176,13 +158,32 @@ function CustomerForm(props) {
     );
 }
 
-function OrderList(props) {
+function OrderList() {
     const [updateOrder, setUpdateOrder] = useState(-1);
     const [updated, setUpdated] = useState({});
+    const [orders, setOrderList] = useState([]);
+
+
+     // show error message in toast
+    const handleErrors = (err) => {
+        console.log(err);
+    }
+
+
+    useEffect(() => {
+          API.getOrders()
+            .then(orders => {
+                console.log(orders);
+                setOrderList(orders);
+            })
+            .catch(e => handleErrors(e));
+      }, [])
+
+   
     function handOutOrder(id) {
         var tmp = [];
 
-        props.orders.forEach((order) => {
+        orders.forEach((order) => {
             if(order.id === id){
                 order.state = "delivered";
                 tmp.push(order);
@@ -191,7 +192,7 @@ function OrderList(props) {
                 tmp.push(order);
             }
         });
-        props.setOrderList(tmp);
+        setOrderList(tmp);
         setUpdateOrder(id);
     }
 
@@ -211,8 +212,8 @@ function OrderList(props) {
     return (
         <Col>
             <ListGroup variant = "primary"> 
-                {props.orders.length ?
-                    props.orders.map(order => {
+                {orders.length ?
+                    orders.map(order => {
                         return (
                             <ListGroup.Item id = {order.id} key = {order.id}>
                                 <h5>Order number: {order.id}</h5>
@@ -242,4 +243,4 @@ function OrderList(props) {
         </Col>
     )
 }
-export default Employee;
+export {CustomerList,OrderList};

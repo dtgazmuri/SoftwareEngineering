@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Form, Button, Table, Modal, Row, Col } from "react-bootstrap";
-import API from "../API";
+import API from "../../API";
 
 
-function ProductList(props) {
-    const [customer, setCustomer] = useState({ id: "", name: "", surname: "", wallet: "" });
+function ProductListEmployee(props) {
+    const [customer, setCustomer] = useState({ id: "", name: "", surname: "", wallet: "" }); //<- 
     const [customerlist, setList] = useState([]);
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]); //list of available products
     const [delivery, setDelivery] = useState(false);
     const [address, setAddress] = useState("");
-    const [order, setOrder] = useState([])
+    const [order, setOrder] = useState([]) //order<-
     const [show, setShow] = useState(false)
 
     const handleClose = () => {
@@ -22,7 +22,7 @@ function ProductList(props) {
     }
 
     useEffect(() => { }
-        , [delivery,customer])
+        , [delivery, customer])
     //PRODUCTS FETCH
     useEffect(() => {
         const getProducts = async () => {
@@ -82,26 +82,32 @@ function ProductList(props) {
         props.setMessage({ type: "success", msg: `Product ${prod.name} added correctly` })
 
     }
-    /*
-    const newItem = {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-      };
-    */
+    
+    const removeOrder = (prod) => {
+        if (order.some(o => o.id === prod.id)) {
+            const neworder = order.map(o => {
+                if (o.id === prod.id)
+                    return { id: prod.id, name: prod.name, price: prod.price, quantity: o.quantity - 1 }
+                else
+                    return o;
+            })
+            setOrder(neworder)
+
+        }
+    }
+
     const handleSubmit = async () => {
+
+        let total = 0;
+        let deladd = "shop"
+        if (delivery)
+            deladd = address;
+
+        let customerid = customer.id;
+        for (let o of order) {
+            total += o.price * o.quantity;
+        }
         try {
-
-            let total = 0;
-            let deladd = "false"
-            if (delivery)
-                deladd = address;
-
-            let customerid = customer.id;
-            for (let o of order) {
-                total += o.price * o.quantity;
-            }
             await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: deladd, total: total, listitems: order });
             props.setMessage({ type: "success", msg: `Order added correctly` })
 
@@ -112,6 +118,7 @@ function ProductList(props) {
         }
     }
 
+
     const productlist = products.map((prod, id) => {
         return <tr key={"prod" + id}>
             <td>{prod.id}</td>
@@ -120,6 +127,8 @@ function ProductList(props) {
             <td>{prod.price}</td>
             <td>{prod.quantity}</td>
             <td><Button onClick={() => addOrder(prod)}>+</Button></td>
+            <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
+
         </tr>
     });
 
@@ -140,6 +149,8 @@ function ProductList(props) {
                                 <th>Price</th>
                                 <th>Expected Quantity</th>
                                 <th>Add to the cart</th>
+                                <th>Remove from the cart</th>
+                                <th>Booked quantity</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,7 +202,7 @@ function RecapCart(props) {
             <th>{item.id}</th>
             <th>{item.name}</th>
             <th>{item.quantity}</th>
-            <th>{item.price * item.quantity} €</th>
+            <th>{(item.price * item.quantity).toFixed(2)} €</th>
         </tr>
     })
 
@@ -202,7 +213,7 @@ function RecapCart(props) {
                 <Modal.Title>Your cart</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {props.order.length == 0 ?<>
+                {props.order.length == 0 ? <>
                     <Row id="empty">Your cart is empty!</Row>
                     <Button variant='secondary' onClick={props.handleClose}>Cancel</Button></>
                     :
@@ -218,7 +229,7 @@ function RecapCart(props) {
                         {cartlist}
                         <tr id="total">
                             <th>
-                                Your total: {total}€
+                                Your total: {total.toFixed(2)}€
                             </th>
                         </tr>
                         <tr id="buttons" className="buttonRow d-flex justify-content-around" >
@@ -231,7 +242,7 @@ function RecapCart(props) {
 
 
                     </Table>
-                    }
+                }
             </Modal.Body>
 
         </Modal>
@@ -248,8 +259,8 @@ function CustomerSelection(props) {
     return (
         <Form align-items="center">
             <Form.Label>Please select a client for the order:</Form.Label>
-            <Form.Control as="select" aria-label="Please select a client" value="-- select an option --" onChange={ev => props.handleCustomer(ev.target.value)}>
-
+            <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
+                <option key={`customerdefault`} selected disabled hidden >---select---</option>
                 {customerlist}
 
             </Form.Control>
@@ -261,4 +272,4 @@ function CustomerSelection(props) {
 }
 
 
-export default ProductList;
+export default ProductListEmployee;

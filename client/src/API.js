@@ -102,7 +102,7 @@ async function fetchAllProducts() {
   }
 }
 
-/** The function returns the info over a farmer given it's id
+/** The function returns the info over a farmer given its id
  * 
  * @param {numeric} farmer_id The unique id of the farmer to fecth
  * @returns An object containing the farmer info OR an object containing the field "error" if something went wrong. The object has the following format:
@@ -190,7 +190,7 @@ async function fetchAllOrders() {
  *          "listitems":
  *              [
  *                  {
- *                      "productid":3,
+ *                      "id":3,
  *                      "quantity":10, 
  *                      "price":9.90
  *                  }
@@ -202,7 +202,7 @@ async function fetchAllOrders() {
  * @returns an object with the order id, if it's created right, or an ojbect with the error field if something went wrong
  */
 async function postOrderByEmployee(order_obj) {
-
+  console.log(order_obj)
   const url = `${BASEURL}/order/employee`;
 
   const data = order_obj;
@@ -338,6 +338,65 @@ async function fetchAllCustomers() {
   }
 }
 
+async function getOrders() {
+  let response = await fetch('/api/orders/all');
+  let responseBody = await response.json();
+  if(response.ok) {
+      return responseBody;
+  }
+  else {
+      throw responseBody;  // an object with the error coming from the server
+  }
+}
+
+async function getCustomers() {
+  let response = await fetch('/api/customers/all');
+  let responseBody = await response.json();
+  if(response.ok) {
+      return responseBody;
+  }
+  else {
+      throw responseBody;
+  }
+}
+
+async function updateCustomerWallet(value, id) {
+  const valore = value;
+  const response = await fetch('/api/customers/wallet/'+id+'/'+value, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application.json',
+      },
+      body: JSON.stringify(value),
+  });
+  console.log(response);
+  const responseBody = await response.json();
+  console.log("Qua12");
+  if(response.ok) {
+      return responseBody;
+  }
+  else {
+      throw responseBody;
+  }
+}
+
+async function handOutOrder(id) {
+  const aa = "handOut";
+  let response = await fetch('/api/orders/'+id+'/handOut', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application.json',
+      },
+      body: JSON.stringify(aa),
+  });
+  let responseBody = await response.json();
+  if(response.ok) {
+      return responseBody;
+  }
+  else {
+      throw responseBody;
+  }
+}
 
 
 
@@ -353,8 +412,10 @@ const API = {
   fetchAllOrders,
   fetchAllCustomers,
   postOrderByEmployee,
-
-
+  getOrders, 
+  getCustomers, 
+  updateCustomerWallet, 
+  handOutOrder, 
   isUsernameAlreadyPresent,
   postNewCustomer
 }

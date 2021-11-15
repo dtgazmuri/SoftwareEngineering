@@ -12,14 +12,8 @@ exports.getCustomers = () => {
                 reject(err);
                 return;
             }
-<<<<<<< HEAD
-            const customers = rows.map((e) => ({id: e.ID, name: e.NAME, surname:e.SURNAME, wallet:e.WALLET}));
-            console.log(customers)
-        resolve(customers);
-=======
             const customers = rows.map((e) => ({ id: e.ID, name: e.NAME, surname: e.SURNAME, wallet: e.WALLET }));
             resolve(customers);
->>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
 
 
         });
@@ -139,7 +133,7 @@ exports.getOrderAll = () => {
 
             //If not, map the answere on a const array
             const orders = rows.map((e) => ({ id: e.ID, customerid: e.CUSTOMER, state: e.STATE, delivery: e.DELIVERY, total: e.TOTAL }));
-
+            console.log(orders)
             //Return the new generated array of objects
             resolve(orders);
         });
