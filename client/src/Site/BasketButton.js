@@ -19,14 +19,14 @@ function BasketButton(props) {
     let total = 0;
     for (let i = 0; i < basketItems.length; i++) {
       if (basketItems[i].id === newItem.id) {
-        if (mode == "add") {
+        if (mode === "add") {
           basketItems[i].quantity++;
           total = total + basketItems[i].price;
         }
-        if (mode == "delete" && basketItems[i].quantity >= 1) {
+        if (mode === "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
           total = total - basketItems[i].price;
-          if (basketItems[i].quantity == 0) delete basketItems[i];
+          if (basketItems[i].quantity === 0) delete basketItems[i];
         }
         sessionStorage.setItem(
           "shopping-basket",
@@ -38,9 +38,8 @@ function BasketButton(props) {
         return false;
       }
     }
-    if(total<props.wallet)
-      props.notifyBalance();
-    if (mode == "add") {
+    if (total < props.wallet) props.notifyBalance();
+    if (mode === "add") {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
