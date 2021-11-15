@@ -14,7 +14,6 @@ async function login(credentials) {
   });
   if (response.ok) {
     const user = await response.json();
-    console.log(user);
     return user;
   } else {
     try {
@@ -67,8 +66,6 @@ async function fetchAllProducts() {
 
   try {
     const response = await fetch(url);
-
-    console.log("hello");
 
     if (response.ok) {
 
@@ -195,7 +192,6 @@ async function fetchAllOrders() {
  * @returns an object with the order id, if it's created right, or an ojbect with the error field if something went wrong
  */
 async function postOrderByEmployee(order_obj) {
-  console.log(order_obj)
   const url = `${BASEURL}/order/employee`;
 
   const data = order_obj;
@@ -252,7 +248,6 @@ async function postOrderByEmployee(order_obj) {
 /*** FUNCTIONS TO IMPLEMENTS THE STORIES 6 AND 7 ***/
 
 async function addNewUser(user) {
-  console.log("adding new user in api.js");
   return await axios
     .post(BASEURL + "/users/registration", user)
     .then((response) => {
@@ -267,10 +262,9 @@ async function fetchCustomerById(id) {
   const url = `${BASEURL}/customers/${id}`;
   try {
     const response = await fetch(url);
-
     if (response.ok) {
       const responseBody = await response.json();
-      return responseBody;
+      return Customer.from(responseBody[0]);;
     } else {
       return { error: ` error code ${response.status}` };
     }
@@ -288,12 +282,10 @@ async function fetchAllCustomers() {
        const responseBody = await response.json();
        const customerlist = []
        for (const customer of responseBody){
-          console.log(customer)
           const c = new Customer(customer.id, customer.name, customer.surname, customer.wallet)
           customerlist.push(c)
          
        }
-       console.log(customerlist)
        return customerlist;
      }
      catch (er) {
@@ -391,9 +383,7 @@ async function updateCustomerWallet(value, id) {
       },
       body: JSON.stringify(value),
   });
-  console.log(response);
   const responseBody = await response.json();
-  console.log("Qua12");
   if(response.ok) {
       return responseBody;
   }

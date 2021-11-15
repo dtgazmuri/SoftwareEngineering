@@ -1,4 +1,4 @@
-import { Button, Row } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Navigate, Link } from "react-router-dom";
 import ProductList from "./ProductList";
@@ -11,25 +11,26 @@ function CustomerHome(props) {
 
   useEffect(() => {
     const getCustomer = async (id) => {
-      try {
-        const customer = await API.fetchCustomerById(id);
-        setCustomer(customer);
-      } catch (err) {
-        console.log(err.error);
-      }
+        try {
+          const customerInfo = await API.fetchCustomerById(id);
+          setCustomer(customerInfo);
+        } catch (err) {
+          console.log(err.error);
+        }
     };
-    getCustomer(props.user.id);
-  }, [props.user.id]);
+    if (props.user) 
+      getCustomer(props.user.userid);
+    
+  }, [props.user]);
 
   return (
     <>
       {customer !== {} ? (
         <>
           <Row>
-            <h1> Benvenuto, {customer.name} </h1>
-          </Row>
-          <Row>
-            <h3>Amout on your wallet: {customer.wallet} €</h3>
+            <Col xs={11}>
+              <h3>Amout on your wallet: {customer.wallet} €</h3>
+            </Col>
 
             <Link to={`/customer/${customer.id}/basket`}>
               <Button>Basket</Button>

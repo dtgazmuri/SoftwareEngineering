@@ -17,15 +17,16 @@ function BasketButton(props) {
     };
     let isExist = false;
     let total = 0;
+    
     for (let i = 0; i < basketItems.length; i++) {
       if (basketItems[i].id === newItem.id) {
         if (mode == "add") {
           basketItems[i].quantity++;
-          total = total + basketItems[i].price;
+          total = total + (basketItems[i].price*basketItems[i].quantity);
         }
         if (mode == "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
-          total = total - basketItems[i].price;
+          total = total -(basketItems[i].price*basketItems[i].quantity);
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
         sessionStorage.setItem(
@@ -35,16 +36,21 @@ function BasketButton(props) {
         console.log(sessionStorage.getItem("shopping-basket"));
         if (typeof props.setChangeBasket === "function")
           props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
+        if(total>props.wallet)
+          props.notifyBalance();
         return false;
       }
     }
-    if(total<props.wallet)
-      props.notifyBalance();
+    
     if (mode == "add") {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
+        total=newItem.price;
+        if(total>props.wallet)
+          props.notifyBalance();
       }
+      
     }
     if (typeof props.setChangeBasket === "function")
       props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
