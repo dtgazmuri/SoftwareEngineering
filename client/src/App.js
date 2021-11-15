@@ -238,7 +238,6 @@ function App() {
           <Route
             exact
             path="/customer"
-<<<<<<< HEAD
             element={
               isLogged ? (
                 <CustomerHome
@@ -250,9 +249,6 @@ function App() {
                 <Navigate replace to="/home" />
               )
             }
-=======
-            element={<CustomerHome user={user} notifyBalance={notifyBalance} />}
->>>>>>> 6d679c6c35123743f9e0ad229671d1f200facf71
           />
           <Route
             exact
