@@ -13,8 +13,8 @@ function MyPage(props) {
   return (
     <>
 
+            <Container fluid className ="below-nav vh-100">
                <h1> Welcome, {props.user.username} </h1>
-
                <Container fluid className="LoginButton">
                <Col id="signin-col" className= "v-100 d-sm-block">
              
@@ -27,7 +27,8 @@ function MyPage(props) {
                 </Col>
                 
                   <FormExample show={show} handleShow={handleShow} handleClose={handleClose}/>
-    </Container>
+               </Container>
+            </Container>
             </>
     )
 }

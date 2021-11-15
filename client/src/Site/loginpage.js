@@ -4,7 +4,7 @@ import { useState } from 'react';
 function LoginPage(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
 
 
   const handleSubmit = (event) => {
@@ -30,8 +30,7 @@ function LoginPage(props) {
 
       }
       else {
-        // show a better error message...
-        setErrorMessage(valid.reason)
+        setErrorMessage(valid.reason);
       }
   };
 
@@ -52,7 +51,5 @@ function LoginPage(props) {
     </Form>
     </Container>)
 }
-
-
 
 export default LoginPage;

@@ -14,6 +14,7 @@ import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductList';
 import {CustomerList, OrderList } from './Site/Employee/employee';
 import Farmer from './Site/data/farmer';
+//import MyPage from './Site/mypage';
 
 function App() {
   const [user, setUser] = useState();

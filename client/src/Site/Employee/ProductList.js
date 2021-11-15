@@ -128,6 +128,7 @@ function ProductListEmployee(props) {
             <td>{prod.quantity}</td>
             <td><Button onClick={() => addOrder(prod)}>+</Button></td>
             <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
+             {/* <td>{getBookedProduct(prod.id)}</td>*/}
 
         </tr>
     });
