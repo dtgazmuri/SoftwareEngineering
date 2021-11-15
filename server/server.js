@@ -134,7 +134,7 @@ app.get('/api/farmer/:id', async (req, res) => {
 
     //Check if it's an integer
     if (!Number.isInteger(farmerID)) {
-      res.status(500).end();  //Mando errore!
+      res.status(500).end();  
     }
     else {
 
@@ -142,11 +142,11 @@ app.get('/api/farmer/:id', async (req, res) => {
       const farmer = await employeeDAO.getFarmerById(farmerID);
 
       //devo gestire la reject (di dao.listProductsAll())! Uso try-check
-      res.status(200).json(farmer);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+      res.status(200).json(farmer);  
     }
   }
   catch (err) {
-    res.status(404).end();  //Mando errore!
+    res.status(404).end();  
   }
 });
 
@@ -198,7 +198,7 @@ app.post('/api/order/employee', isLogged, isEmployee, [
   check('total').isNumeric().withMessage("total is incorrect"),
   check('listitems').isArray().withMessage("listitems array is incorrect"),
   /* Check the parameters of the array */
-  check('listitems.*.productid').isNumeric().withMessage("listitems : productid field is incorrect"),
+  check('listitems.*.id').isNumeric().withMessage("listitems : productid field is incorrect"),
   check('listitems.*.quantity').isNumeric().withMessage("listitems : quantity field is incorrect"),
   check('listitems.*.price').isNumeric().withMessage("listitems : price field is incorrect")
 ],
@@ -232,7 +232,7 @@ app.post('/api/order/employee', isLogged, isEmployee, [
         for (i = 0; i < itemArray.length; i++) {
           const el = itemArray[i];
 
-          const itemINST = { orderid: order_id, productid: el.productid, quantity: el.quantity, price: el.price };
+          const itemINST = { orderid: order_id, productid: el.id, quantity: el.quantity, price: el.price };
 
           console.log(`item instance : ${itemINST}`);
 
@@ -243,10 +243,10 @@ app.post('/api/order/employee', isLogged, isEmployee, [
       }
 
 
-      res.status(200).json({ orderid: order_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+      res.status(200).json({ orderid: order_id });  
     }
     catch (err) {
-      res.status(500).end();  //Mando errore!
+      res.status(500).end();  
     }
   });
 
@@ -254,22 +254,18 @@ app.post('/api/order/employee', isLogged, isEmployee, [
 // GET /api/username/present
 app.get('/api/username/present/:id', async (req, res) => {
 
-  //Devo aspettare che la promise sia risolta! Metto await
   try {
 
-    //Get the username
     const username = req.params.id;
 
     console.log(username);
 
-    //0) Get the orders from the table
     const obj = await employeeDAO.isUsernamePresent(username);
 
-    //devo gestire la reject (di dao.listCourses())! Uso try-check
-    res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+    res.status(200).json(obj);  
   }
   catch (err) {
-    res.status(404).end();  //Mando errore!
+    res.status(404).end();  
   }
 });
 
@@ -277,7 +273,7 @@ app.get('/api/customerlist', isLogged, isEmployee, async (req, res) => {
 
   try {
     const obj = await employeeDAO.getCustomers();
-    res.status(200).json(obj);  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+    res.status(200).json(obj); 
   }
   catch (err) {
     res.status(404).end();
@@ -337,7 +333,7 @@ app.post('/api/customer', [
         //4) Post it on the DB
         const user_id = await employeeDAO.createNewUser(userINST);
 
-        res.status(200).json({ userid: user_id });  //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+        res.status(200).json({ userid: user_id });  
 
       }
       else{

@@ -14,7 +14,6 @@ function MyPage(props) {
 
 
       <Container fluid className="below-nav vh-100">
-        <h1> Benvenuto, {props.user.username} </h1>
         <Container fluid>
           <Col id="signin-col" >
             <Container fluid className="LoginButton border border-dark rounded nolink" align="center" onClick={handleShow}>

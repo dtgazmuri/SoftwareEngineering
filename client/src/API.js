@@ -208,7 +208,7 @@ async function postOrderByEmployee(order_obj) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
+      body: JSON.stringify(data) 
     });
 
     if (response.ok) {
@@ -261,11 +261,13 @@ async function fetchAllCustomers() {
     try {
        const responseBody = await response.json();
        const customerlist = []
-       for (let customer in responseBody){
-          
-          customerlist.push(Customer.from(customer.id, customer.name, customer.surname, customer.wallet))
+       for (const customer of responseBody){
+          console.log(customer)
+          const c = new Customer(customer.id, customer.name, customer.surname, customer.wallet)
+          customerlist.push(c)
          
        }
+       console.log(customerlist)
        return customerlist;
      }
      catch (er) {

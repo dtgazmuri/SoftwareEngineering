@@ -5,7 +5,7 @@ import MyBody from './Site/homepage'
 import { BrowserRouter as Router } from 'react-router-dom';
 import {Routes, Route, Link, Navigate} from 'react-router-dom'
 import MyNavbar from './Site/navbar';
-import { Container } from 'react-bootstrap';
+import { Alert, Container } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
 import LoginPage from './Site/loginpage'
 import { useState, useEffect } from 'react';
@@ -27,7 +27,7 @@ function App() {
         const user = await API.getAdmin();
         setUser(user);
         setLogged(true);
-        setMessage({type:"success", msg:`Bentornato, ${user.name}`})
+        setMessage({type:"success", msg:`Welcome back, ${user.username}`})
       } catch (err) {
         setLogged(false)
         console.log(err.error);
@@ -44,7 +44,7 @@ function App() {
       setUser(user);
       setLogged(true);
       console.log(user);
-      setMessage({type:"success", msg:`Welcome, ${user.name} `})
+      setMessage({type:"success", msg:`Welcome, ${user.username} `})
     }
     catch (err) {
       setMessage({type:"danger", msg:`Login failed. ${err}`})
@@ -84,7 +84,10 @@ function App() {
   return (
   <Router>
       <MyNavbar logout={doLogout} isLogged = {isLogged}/>
+      
       <Container fluid className="below-nav vh-100 backg">
+      {message.msg!==""?<Alert className = "" variant = {message.type}>{message.msg}</Alert>:""}
+          
       <Routes>
         <Route path="/" element={<Navigate replace to="/home" />} />          
               
@@ -96,15 +99,15 @@ function App() {
             {/*Route di Login*/}
           <Route path="/sign-in" element = {<SigninPage/>}/> 
           
-          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin}/>} />
+          <Route path ="/loginpage/" element = {isLogged?<Navigate replace to="/home"/> : <LoginPage login = {doLogin} setMessage={setMessage}/>} />
             {/*Route di Registrazione*/}
           
-          <Route path = "/products/" element = {isLogged?<ProductList/>:<Navigate replace to="/home"/> }/>
+          <Route path = "/products/" element = {isLogged?<ProductList setMessage={setMessage}/>:<Navigate replace to="/home"/> }/>
 
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element = {!isLogged? <MyBody/>
           :
-          <MyPage user = {user} addClient = {addClient} />}
+          <MyPage user = {user} addClient = {addClient} setMessage={setMessage}/>}
           />
           
           
