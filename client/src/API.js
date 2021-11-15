@@ -102,10 +102,15 @@ async function fetchAllProducts() {
   }
 }
 
-/** The function returns the info over a farmer given its id
+/** The function returns the info over a farmer given it's id
  * 
  * @param {numeric} farmer_id The unique id of the farmer to fecth
- * @returns A Farmer object containing the farmer info 
+ * @returns An object containing the farmer info OR an object containing the field "error" if something went wrong. The object has the following format:
+ *      {
+ *          "id":1,
+ *          "name":"Tunin",
+ *          "surname":"Lamiera"
+ *      }
  */
 async function fetchFarmerById(farmer_id) {
 
@@ -251,7 +256,6 @@ async function postOrderByEmployee(order_obj) {
     return { error: `${err}` };
   }
 }
-
 
 async function fetchAllCustomers() {
    const url = `${BASEURL}/customerlist`

@@ -27,22 +27,22 @@ function SignupForm(props) {
         let valid = true;
         if (name === undefined || name === '') {
             valid = false;
-            setErrorMessage("Please, enter the required fields");
+            setErrorMessage("Please, enter the name");
             setIsError(true);
         }
         else if (surname === undefined || surname === '') {
             valid = false;
-            setErrorMessage("Please, enter the required fields");
+            setErrorMessage("Please, enter the surname");
             setIsError(true);
         }
         else if (username === undefined || username === '') {
             valid = false;
-            setErrorMessage("Please, enter the required fields");
+            setErrorMessage("Please, enter the username");
             setIsError(true);
         }
         else if (password === undefined || password === '') {
             valid = false;
-            setErrorMessage("Please, enter the required fields");
+            setErrorMessage("Please, enter the password");
             setIsError(true);
         }
 

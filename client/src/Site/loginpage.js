@@ -17,6 +17,7 @@ function LoginPage(props) {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [validated, setValidated] = useState(false);
 
 
@@ -102,6 +103,8 @@ function LoginPage(props) {
         </Container>
     )
 =======
+=======
+>>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
 
 
   const handleSubmit = (event) => {
@@ -127,6 +130,10 @@ function LoginPage(props) {
 
       }
       else {
+<<<<<<< HEAD
+=======
+        // show a better error message...
+>>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
         setErrorMessage(valid.reason);
       }
   };
@@ -153,7 +160,11 @@ function LoginPage(props) {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export {LoginPage};
 =======
 export default LoginPage;
 >>>>>>> story-1-2-3
+=======
+export default LoginPage;
+>>>>>>> 5cbd752809e454ab3c589a2bf1486cebde84076d
