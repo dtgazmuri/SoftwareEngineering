@@ -263,6 +263,12 @@ function App() {
               />
             }
           />
+          {/**if the url does not match anyone of the above, navitage to error page 
+          <Route 
+            element={
+                 <Navigate replace to="/error" />
+            }
+          />*/}
         </Routes>
       </Container>
       <ToastContainer
