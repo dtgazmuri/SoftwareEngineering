@@ -32,15 +32,21 @@ function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const u = await API.getAdmin();
-        setUser(u);
-        setURL(`/${user.role}`);
-        console.log(url);
-        setLogged(true);
-        setMessage({ type: "success", msg: `Welcome back, ${user.username}` });
+        await API.getAdmin().then((u) => {
+          setUser(u);
+          console.log(u);
+          setURL(`/${u.role}`);
+          console.log(url);
+          setLogged(true);
+          console.log("logged in user");
+          setMessage({
+            type: "success",
+            msg: `Welcome back, ${u.username}`,
+          });
+        });
       } catch (err) {
         setLogged(false);
-        console.log(err.error);
+        console.log(err);
       }
     };
     checkAuth();
