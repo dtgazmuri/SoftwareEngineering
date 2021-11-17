@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import Product from "./Site/data/product"
 import Farmer from "./Site/data/farmer"
 import Order from "./Site/data/order"
@@ -12,26 +14,23 @@ async function login(credentials) {
   });
   if (response.ok) {
     const user = await response.json();
-    console.log(user)
     return user;
-  }
-  else {
+  } else {
     try {
       const errDetail = await response.json();
       throw errDetail.message;
-    }
-    catch (err) {
+    } catch (err) {
       throw err;
     }
   }
 }
 
 async function logout() {
-  await fetch('/api/sessions/current', { method: 'DELETE' });
+  await fetch("/api/sessions/current", { method: "DELETE" });
 }
 
 async function getAdmin() {
-  const response = await fetch('/api/sessions/current');
+  const response = await fetch("/api/sessions/current");
   const userInfo = await response.json();
   if (response.ok) {
     return userInfo;
@@ -40,41 +39,33 @@ async function getAdmin() {
   }
 }
 
-
-
-
-
-
-const BASEURL = '/api';
+const BASEURL = "/api";
 
 /*** FUNCTIONS TO IMPLEMENTS THE STORIES 1 AND 3 ***/
 
 /** The function returns an array filled with json object, one for each product stored in the DB
- * 
+ *
  * @returns an array of json objects in this format:
  *      [
-    *      {
-    *          "id":1,
-    *          "name":"Red Apple",
-    *          "farmerid":1,
-    *          "price":1.9,
-    *          "quantity":100
-    *      },
-    *      {},
-    *      {},
-    *      ...
+ *      {
+ *          "id":1,
+ *          "name":"Red Apple",
+ *          "farmerid":1,
+ *          "price":1.9,
+ *          "quantity":100
+ *      },
+ *      {},
+ *      {},
+ *      ...
  *      ]
- * 
+ *
  *      or an ojbect with the error field if something went wrong
  */
 async function fetchAllProducts() {
-
   const url = `${BASEURL}/products/all`;
 
   try {
     const response = await fetch(url);
-
-    console.log("hello");
 
     if (response.ok) {
 
@@ -102,8 +93,8 @@ async function fetchAllProducts() {
   }
 }
 
-/** The function returns the info over a farmer given its id
- * 
+/** The function returns the info over a farmer given it's id
+ *
  * @param {numeric} farmer_id The unique id of the farmer to fecth
  * @returns An object containing the farmer info OR an object containing the field "error" if something went wrong. The object has the following format:
  *      {
@@ -113,7 +104,6 @@ async function fetchAllProducts() {
  *      }
  */
 async function fetchFarmerById(farmer_id) {
-
   const url = `${BASEURL}/farmer/${farmer_id}`;
 
   try {
@@ -202,7 +192,6 @@ async function fetchAllOrders() {
  * @returns an object with the order id, if it's created right, or an ojbect with the error field if something went wrong
  */
 async function postOrderByEmployee(order_obj) {
-  console.log(order_obj)
   const url = `${BASEURL}/order/employee`;
 
   const data = order_obj;
@@ -240,7 +229,6 @@ async function postOrderByEmployee(order_obj) {
  async function isUsernameAlreadyPresent(username) {
 
   const url = `${BASEURL}/username/present/${username}`;
-
   try {
     const response = await fetch(url);
 
@@ -252,7 +240,35 @@ async function postOrderByEmployee(order_obj) {
       return { error: ` error code ${response.status}` };
     }
   }
-  catch (err) {
+ catch (err) {
+  return { error: `${err}` };
+}
+}
+
+/*** FUNCTIONS TO IMPLEMENTS THE STORIES 6 AND 7 ***/
+
+async function addNewUser(user) {
+  return await axios
+    .post(BASEURL + "/users/registration", user)
+    .then((response) => {
+      return response.data;
+    })
+    .catch(function (error) {
+      throw error;
+    });
+}
+
+async function fetchCustomerById(id) {
+  const url = `${BASEURL}/customers/${id}`;
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const responseBody = await response.json();
+      return Customer.from(responseBody[0]);;
+    } else {
+      return { error: ` error code ${response.status}` };
+    }
+  } catch (err) {
     return { error: `${err}` };
   }
 }
@@ -266,12 +282,10 @@ async function fetchAllCustomers() {
        const responseBody = await response.json();
        const customerlist = []
        for (const customer of responseBody){
-          console.log(customer)
           const c = new Customer(customer.id, customer.name, customer.surname, customer.wallet)
           customerlist.push(c)
          
        }
-       console.log(customerlist)
        return customerlist;
      }
      catch (er) {
@@ -369,9 +383,7 @@ async function updateCustomerWallet(value, id) {
       },
       body: JSON.stringify(value),
   });
-  console.log(response);
   const responseBody = await response.json();
-  console.log("Qua12");
   if(response.ok) {
       return responseBody;
   }
@@ -409,14 +421,17 @@ const API = {
   getAdmin,
   fetchAllProducts,
   fetchFarmerById,
-  fetchAllOrders,
   fetchAllCustomers,
-  postOrderByEmployee,
   getOrders, 
   getCustomers, 
   updateCustomerWallet, 
   handOutOrder, 
   isUsernameAlreadyPresent,
-  postNewCustomer
+  postNewCustomer,
+  fetchAllOrders,
+  postOrderByEmployee,
+  addNewUser,
+  fetchCustomerById,
 }
+
 export default API;

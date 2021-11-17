@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { CartPlus, CartDash } from "react-bootstrap-icons";
 
-// props.product => { id, name, price}   , props.mode {add or delete} , changeFlag
+// props.product => { id, name, price, quantity}   , props.mode {add or delete} , changeFlag
 function BasketButton(props) {
   const addOrDeleteBasketItem = (product, mode) => {
     const basketItems = JSON.parse(
@@ -14,34 +14,46 @@ function BasketButton(props) {
       name: product.name,
       price: product.price,
       quantity: 1,
+      whQuantity: product.quantity,
     };
     let isExist = false;
+    let total = 0;
+
     for (let i = 0; i < basketItems.length; i++) {
       if (basketItems[i].id === newItem.id) {
-        // eslint-disable-next-line eqeqeq
-        if (mode == "add") basketItems[i].quantity++;
-        // eslint-disable-next-line eqeqeq
-        if (mode == "delete" && basketItems[i].quantity >= 1) {
+        if (mode === "add") {
+          if (basketItems[i].quantity + 1 > basketItems[i].whQuantity) {
+            props.notifyQuantity();
+            return false;
+          }
+          basketItems[i].quantity++;
+          total = total + basketItems[i].price * basketItems[i].quantity;
+        }
+        if (mode === "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
-          // eslint-disable-next-line eqeqeq
+          total = total - basketItems[i].price * basketItems[i].quantity;
           if (basketItems[i].quantity == 0) delete basketItems[i];
         }
         sessionStorage.setItem(
           "shopping-basket",
           JSON.stringify(basketItems.filter((x) => x != null))
         );
-        console.log(sessionStorage.getItem("shopping-basket"));
+        console.log(
+          JSON.parse(sessionStorage.getItem("shopping-basket") || "[]")
+        );
         if (typeof props.setChangeBasket === "function")
           props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
+        if (total > props.wallet) props.notifyBalance();
         return false;
       }
     }
-    // eslint-disable-next-line eqeqeq
-    if (mode == "add") {
+
+    if (mode === "add") {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
-        console.log(sessionStorage.getItem)
+        total += newItem.price;
+        if (total > props.wallet) props.notifyBalance();
       }
     }
     if (typeof props.setChangeBasket === "function")

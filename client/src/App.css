@@ -41,7 +41,7 @@
   text-align: center;
 }
 .title{
-  font-size: 40px;
+  font-size: 5vw;
 }
 
 .table-prod{
@@ -54,15 +54,23 @@
   height: 200px;
   background-color: white;
   display: block;
+  align-items:center;
   margin-left: auto;
   margin-right: auto  ;
   background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
   background: rgba(204, 204, 204, 0.5);
   position:relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .backg {
   background-image: url(https://www.helvetia.com/it/web/it/chi-siamo/blog/articoli-piu-consultati/viaggi/langhe/_jcr_content/teaserimage/image.1603704741882.transform-fp/1920x1080/langhe.jpg);
+  position: fixed;
+  opacity: 0.8;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
 }
 
 
@@ -85,6 +93,24 @@
 .App-link {
   color: #61dafb;
 }
+
+.signupTitle{
+  margin-top: 30px !important;
+  margin-bottom: 40px !important;
+}
+
+.spacing{
+  margin-top: 25px !important;
+  margin-bottom: 10px !important;
+}
+
+.buttonRow {
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 40px !important;
+  margin-bottom: 10px !important;
+}
+
 
 @keyframes App-logo-spin {
   from {
