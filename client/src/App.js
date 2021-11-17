@@ -1,19 +1,21 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
-import "./App.css";
-import MyBody from "./Site/homepage";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
-import MyNavbar from "./Site/navbar";
-import { Alert, Container } from "react-bootstrap";
-import SigninPage from "./Site/signinpage";
-import LoginPage from "./Site/loginpage";
-import { useState, useEffect } from "react";
-import API from "./API.js";
-import EmployeePage from "./Site/Employee/shopemployeepage";
-import ProductList from "./Site/Employee/ProductList";
-import { CustomerList, OrderList } from "./Site/Employee/employee";
-import Farmer from "./Site/farmer";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import './App.css';
+import MyBody from './Site/homepage'
+import { BrowserRouter as Router } from 'react-router-dom';
+import {Routes, Route, Link, Navigate} from 'react-router-dom'
+import MyNavbar from './Site/navbar';
+import { Alert, Container } from 'react-bootstrap';
+import SigninPage from './Site/signinpage';
+import LoginPage from './Site/loginpage'
+import { useState, useEffect } from 'react';
+import API from "./API.js"
+import EmployeePage from './Site/Employee/shopemployeepage';
+import ProductList from './Site/Employee/ProductList';
+import {CustomerList, OrderList } from './Site/Employee/employee';
+import Farmer from './Site/farmer';
+import { SignupForm } from "./Site/signup";
+//import { LoginForm } from "./Site/loginpage";
 //import MyPage from './Site/mypage';
 import { SignupForm } from "./Site/signup";
 import { LoginForm } from "./Site/loginpage";
