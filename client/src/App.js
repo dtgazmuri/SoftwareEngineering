@@ -142,7 +142,9 @@ function App() {
     <Router>
       <MyNavbar logout={doLogout} isLogged={isLogged} />
 
-      <Container fluid className="below-nav vh-100 backg">
+      <Container fluid className="below-nav vh-100 backg" />
+
+        <Container fluid >
         {message.msg !== "" ? (
           <Alert className="" variant={message.type}>
             {message.msg}
