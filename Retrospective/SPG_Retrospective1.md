@@ -1,4 +1,4 @@
-TEMPLATE FOR RETROSPECTIVE (Team ##)
+RETROSPECTIVE: Team P13
 =====================================
 
 The retrospective should include _at least_ the following
@@ -79,6 +79,7 @@ sections:
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
+
   We had estimation errors due to two main reasons. The first is that we decided to change the technology we were going to work with. In the first project we worked with Java, while we switched to JavaScript and React for this one. This meant that not all of us had used this technology recently, leading to some team members needing to re-learn or study the language before programming. Furthermore, we also had different programming speeds. The second reason was that we are still pretty inexperienced estimating, so we had a hard time estimating the time of larger stories. However, it is worth noting that not all stories were wrongly estimated; we did estimate some of them correctly.
 
 - What lessons did you learn (both positive and negative) in this sprint?
@@ -89,15 +90,15 @@ sections:
 
   Positive lessons:
 
-  Even though we changed the technologies we used for the new application, we adapted very well to the new programming language we chose and the constraints of the new project. Moreover, we agreed since the beginning on the main ideas for developing the applications, due to the fact that during this months we known each other better and we established a sort of trust to the other team members and their ideas. 
+  Even though we changed the technologies we used for the new application, we adapted very well to the new programming language we chose and the constraints of the new project. Moreover, we agreed since the beginning on the main ideas for developing the applications, due to the fact that during this months we have come to know each other better and we established a sort of trust to the other team members and their ideas. 
 
 - Which improvement goals set in the previous retrospective were you able to achieve? 
 
-  Our previous goals were to be more efficient on dividing the time into developing and testing and even if we managed quite good the division for the developing phase.
+  Our previous goals were to be more efficient on dividing the time into development, review and testing. We managed to divide the time better for the development phase.
 
 - Which ones you were not able to achieve? Why?
 
-  We actually haven't managed the division for the testing, leaving it as a technical debt on the second sprint, mostly due to the fact that we focused too much on developing a more complete application for the demo presentation.
+  We actually have not managed the properly divide the time for the review and testing phases, leaving it as a technical debt on the second sprint, mostly due to the fact that we focused too much on developing a more complete application for the demo presentation.
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
   1) We need to be more efficient in our team meetings, minimizing the time we need to coordinate ourselves and organize our work.
@@ -106,4 +107,4 @@ sections:
 
 - One thing you are proud of as a Team:
 
-  We are very proud of achieving the goals we set ourselves during the first meetings and we are pretty satisfied of the partial application we developed. We have listened to the feedbacks and we are already working to improve our work. 
+  We are very proud of achieving the goals we set ourselves during the first meetings and we are pretty satisfied of the partial application we developed. We have listened to the feedback and we are already working to improve our work. 
