@@ -177,20 +177,10 @@ function App() {
           ""
         )}
 
-<<<<<<< HEAD
-      <Routes>
-        <Route exact path="/" element={isLogged?
-        <Navigate replace to={url} />
-        :
-        <Navigate replace to="/home" />
-      }
-        />
-=======
         <Routes>
           <Route exact path="/" element={isLogged ? <Navigate replace to={url} /> : <Navigate replace to="/home" />
           }
           />
->>>>>>> b32e3c96750e735bc4aeee6491e858899e427553
 
           {/* Generic Error Page */}
           <Route path="/error" 
