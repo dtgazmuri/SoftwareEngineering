@@ -167,7 +167,7 @@ async function fetchAllOrders() {
 
 
 
-/** The function NEEDS to be called by the employee to create a new client order. The clinet needs a separate function because the client id needs to be taken from the cookie in that case.
+/** The function NEEDS to be called by the employee to create a new client order. The client needs a separate function because the client id needs to be taken from the cookie in that case.
  * 
  * @param {object} order_obj The object containing the data of the order, in the format:
  * 
@@ -401,6 +401,7 @@ async function handOutOrder(id) {
   });
   let responseBody = await response.json();
   if(response.ok) {
+    console.log(responseBody);
       return responseBody;
   }
   else {
