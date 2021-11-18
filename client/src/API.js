@@ -4,6 +4,7 @@ import Product from "./Site/data/product"
 import Farmer from "./Site/data/farmer"
 import Order from "./Site/data/order"
 import Customer from "./Site/data/customer";
+
 async function login(credentials) {
   let response = await fetch('/api/sessions', {
     method: 'POST',
@@ -13,8 +14,7 @@ async function login(credentials) {
     body: JSON.stringify(credentials),
   });
   if (response.ok) {
-    const user = await response.json();
-    return user;
+    return await response.json();
   } else {
     try {
       const errDetail = await response.json();
@@ -75,7 +75,7 @@ async function fetchAllProducts() {
         for (const ex of responseBody){
            const farmername =  await fetchFarmerById(ex.farmerid);
            list.push(new Product(ex.id, ex.name, farmername, ex.price, ex.quantity))
-          };
+          }
         return list;
       }
       
@@ -248,7 +248,8 @@ async function postOrderByEmployee(order_obj) {
 /*** FUNCTIONS TO IMPLEMENTS THE STORIES 6 AND 7 ***/
 
 async function addNewUser(user) {
-  return await axios
+  // return await axios
+  axios
     .post(BASEURL + "/users/registration", user)
     .then((response) => {
       return response.data;
@@ -264,7 +265,7 @@ async function fetchCustomerById(id) {
     const response = await fetch(url);
     if (response.ok) {
       const responseBody = await response.json();
-      return Customer.from(responseBody[0]);;
+      return Customer.from(responseBody[0]);
     } else {
       return { error: ` error code ${response.status}` };
     }

@@ -20,14 +20,16 @@ function ProductListEmployee(props) {
         setShow(true)
     }
 
-    useEffect(() => { }
+    useEffect(() => {
+        // Niente
+    }
         , [delivery, customer])
     //PRODUCTS FETCH
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const products = await API.fetchAllProducts();
-                setProducts(products);
+                const current_products = await API.fetchAllProducts();
+                setProducts(current_products);
             } catch (err) {
                 //setLogged(false)
                 console.log(err.error);
@@ -125,8 +127,7 @@ function ProductListEmployee(props) {
     }
 
     const getBookedProduct = ((prod_id) => {
-        let i = 0;
-        for (i = 0; i < order.length; i++){
+        for (let i = 0; i < order.length; i++){
             if (order[i].id == prod_id){
                 return order[i].quantity;
             }

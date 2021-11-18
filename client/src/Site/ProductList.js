@@ -11,8 +11,8 @@ function ProductList(props) {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const products = await API.fetchAllProducts();
-        setProducts(products);
+        const all_products = await API.fetchAllProducts();
+        setProducts(all_products);
       } catch (err) {
         //setLogged(false)
         console.log(err.error);

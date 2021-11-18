@@ -58,12 +58,12 @@ function App() {
 
   const doLogin = async (credentials) => {
     try {
-      const user = await API.login(credentials);
-      setUser(user);
-      setURL(`/${user.role}`);
+      const current_user = await API.login(credentials);
+      setUser(current_user);
+      setURL(`/${current_user.role}`);
       console.log(url);
       setLogged(true);
-      setMessage({ type: "success", msg: `Welcome, ${user.username} ` });
+      setMessage({ type: "success", msg: `Welcome, ${current_user.username} ` });
     } catch (err) {
       setMessage({ type: "danger", msg: `Login failed. ${err}` });
       throw err;

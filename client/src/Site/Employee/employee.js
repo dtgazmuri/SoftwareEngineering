@@ -63,10 +63,10 @@ function CustomerList() {
     
     useEffect(() =>  {
             API.getCustomers()
-                .then(customers => {
-                    console.log(customers);
-                    setCustomerList(customers);
-                    setCustomersToBeShown(customers);
+                .then(all_customers => {
+                    console.log(all_customers);
+                    setCustomerList(all_customers);
+                    setCustomersToBeShown(all_customers);
                 })
                 .catch(e => handleErrors(e));
     
@@ -152,23 +152,15 @@ function CustomerList() {
 function CustomerForm(props) {
     const [amount, setAmount] = useState("");
 
-    function walletTopUp(id, amount) {
+    function walletTopUp(id, amount_to_add) {
 
-        var value = Number(amount);
-        //var tmp = [];
+        var value = Number(amount_to_add);
         props.customers.forEach((customer) => {
             if (customer.id === id) {
-                // customer.wallet += value;
                 var valore = customer.wallet + value;
                 props.setWalletUpdated({status: true, id: id, value: valore});
-                //tmp.push(customer);
             }
-            /*
-            else {
-                tmp.push(customer);
-            }*/
         })
-        //props.setCustomerList(tmp);
     }
 
     return (
@@ -198,9 +190,9 @@ function OrderList() {
 
     useEffect(() => {
           API.getOrders()
-            .then(orders => {
-                console.log(orders);
-                setOrderList(orders);
+            .then(all_orders => {
+                console.log(all_orders);
+                setOrderList(all_orders);
             })
             .catch(e => handleErrors(e));
       }, [])

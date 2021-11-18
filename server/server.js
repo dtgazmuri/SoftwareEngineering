@@ -1,6 +1,3 @@
-/*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
-//const userDao = "";
-
 const employeeDAO = require("./employeeDBAccess"); // module for accessing the DB
 const farmerDAO = require("./farmerDAO"); //module for accessing db from farmer
 
@@ -165,9 +162,8 @@ app.get("/api/orders/all", isLogged, isEmployee, async (req, res) => {
     //0) Get the orders from the table
     const orders = await employeeDAO.getOrderAll();
 
-    //1) Then, for each order I need to get the orderitems!
-    let i = 0;
-    for (i = 0; i < orders.length; i++) {
+    //1) Then, for each order I need to get the orderitems
+    for (let i = 0; i < orders.length; i++) {
       //Get the i-th order
       const orderid = orders[i].id;
 
@@ -252,10 +248,9 @@ app.post(
       const itemArray = req.body.listitems;
 
       //Check the length
-      let i = 0;
       if (itemArray.length > 0) {
         //Post them
-        for (i = 0; i < itemArray.length; i++) {
+        for (let i = 0; i < itemArray.length; i++) {
           const el = itemArray[i];
 
           const itemINST = {
@@ -268,7 +263,7 @@ app.post(
           console.log(`item instance : ${itemINST}`);
 
           //POST IT
-          const id_item = await employeeDAO.createOrderItem(itemINST);
+          // const id_item = await employeeDAO.createOrderItem(itemINST);
         }
       }
 
@@ -435,10 +430,9 @@ app.post(
       const itemArray = req.body.listitems;
 
       //Check the length
-      let i = 0;
       if (itemArray.length > 0) {
         //Post them
-        for (i = 0; i < itemArray.length; i++) {
+        for (let i = 0; i < itemArray.length; i++) {
           const el = itemArray[i];
 
           const itemINST = {
@@ -451,7 +445,7 @@ app.post(
           console.log(`item instance : ${itemINST}`);
 
           //POST IT
-          const id_item = await employeeDAO.createOrderItem(itemINST);
+          // const id_item = await employeeDAO.createOrderItem(itemINST);
         }
       }
 

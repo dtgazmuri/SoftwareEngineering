@@ -83,4 +83,3 @@ function ModalDate(props) {
 }
 
 export  {Clock, ModalDate};
-
