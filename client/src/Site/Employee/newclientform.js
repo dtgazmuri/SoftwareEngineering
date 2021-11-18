@@ -1,6 +1,6 @@
-import { Form, Button, Alert, Container, Row, Col, Modal } from 'react-bootstrap';
+import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import { useState } from 'react';
-import { Link, Navigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 function SignupForm(props) {
     const [submitted, setSubmitted] = useState(false);

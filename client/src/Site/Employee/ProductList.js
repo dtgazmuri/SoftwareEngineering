@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Form, Button, Table, Modal, Row, Col } from "react-bootstrap";
 import API from "../../API";
@@ -165,10 +166,20 @@ function ProductListEmployee(props) {
         }
     });
 
+    const checkTime = () => {
+        let day = dayjs(props.time).get("d");
+        let hour = dayjs(props.time).get("h");
+        console.log(day, hour )
+        if(day !== 0 || (hour<23&&day===0))
+            return true
+        else 
+        return false;
+    }
+
     return (
         <>
-
-            {customer.name === "" ?
+        {checkTime()?
+            customer.name === "" ?
                 <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
                 :
                 <>
@@ -228,6 +239,7 @@ function ProductListEmployee(props) {
                     <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} />
 
                 </>
+            :<h1>We're sorry but orders close at 23 of every Sunday</h1>
             }
         </>
     )

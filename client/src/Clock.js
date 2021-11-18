@@ -14,7 +14,7 @@ function Clock(props) {
             setInterval(async () => await props.setFakeTime(dayjs(props.faketime).add(1, "m").format("dddd DD/MMMM/YYYY HH:mm")) , 60000)
         }
         
-        } ,[props.faketime]);
+        } ,[props]);
         
     return (<>
         {!props.dirty?

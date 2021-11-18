@@ -18,7 +18,6 @@ import { CustomerHome } from "./Site/customer";
 import Basket from "./Site/Basket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import dayjs from 'dayjs';
 import { Clock, ModalDate } from './Clock';
 import { Calendar } from 'react-bootstrap-icons';
 
@@ -42,7 +41,6 @@ function App() {
           setUser(u);
           console.log(u);
           setURL(`/${u.role}`);
-          console.log(url);
           setLogged(true);
           console.log("logged in user");
           setMessage({
@@ -56,7 +54,7 @@ function App() {
       }
     };
     checkAuth();
-  }, []);
+  }, [url]);
 
   const doLogin = async (credentials) => {
     try {
@@ -201,7 +199,7 @@ function App() {
           />
 
           <Route path="/shopemployee/products/"
-            element={isLogged ? <ProductList setMessage={setMessage} time={dirty ? time : faketime} />
+            element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
                : 
                 <Navigate replace to="/home" />
               
