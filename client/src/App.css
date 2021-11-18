@@ -52,7 +52,7 @@
 .LoginButton {
   width: 200px;
   height: 200px;
-  background-color: white;
+  /*background-color: white;*/
   display: block;
   align-items:center;
   margin-left: auto;

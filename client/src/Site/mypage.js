@@ -163,8 +163,7 @@ function FormExample(props) {
       )}
     </Formik>
   )
-};
-
+}
 
 
 export default MyPage;

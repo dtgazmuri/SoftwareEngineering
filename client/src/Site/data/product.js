@@ -20,8 +20,7 @@ class Product {
     }
 
     static from(json) {
-        const product = new Product(json.id, json.name, json.farmerid, json.price, json.quantity);
-        return product;
+        return new Product(json.id, json.name, json.farmerid, json.price, json.quantity);
     }
     
     
