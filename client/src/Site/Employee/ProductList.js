@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Form, Button, Table, Modal, Row, Col } from "react-bootstrap";
 import API from "../../API";
 
-
 function ProductListEmployee(props) {
     const [customer, setCustomer] = useState({ id: "", name: "", surname: "", wallet: "" }); //<- 
     const [customerlist, setList] = useState([]);
@@ -15,7 +14,6 @@ function ProductListEmployee(props) {
     const handleClose = () => {
         setShow(false)
     }
-
 
     const handleShow = () => {
         setShow(true)
@@ -157,8 +155,8 @@ function ProductListEmployee(props) {
                 <td>{prod.id}</td>
                 <td>{prod.name}</td>
                 <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                <td>{prod.price}</td>
-                <td>{prod.quantity}</td>
+                <td>{prod.price} €/kg</td>
+                <td>{prod.quantity} kg</td>
                 <td><Button onClick={() => addOrder(prod)}>+</Button></td>
                 <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
                 <td>{getBookedProduct(prod.id)}</td>
@@ -249,7 +247,7 @@ function RecapCart(props) {
         return <tr id={item.id}>
             <th>{item.id}</th>
             <th>{item.name}</th>
-            <th>{item.quantity}</th>
+            <th>{item.quantity} kg</th>
             <th>{(item.price * item.quantity).toFixed(2)} €</th>
         </tr>
     })
