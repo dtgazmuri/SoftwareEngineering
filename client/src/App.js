@@ -2,35 +2,37 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
 import MyBody from './Site/homepage'
-import { BrowserRouter as Router } from 'react-router-dom';
-import {Routes, Route, Link, Navigate} from 'react-router-dom'
+import { BrowserRouter as Router,Routes, Route, Link, Navigate } from 'react-router-dom';
 import MyNavbar from './Site/navbar';
-import { Alert, Container } from 'react-bootstrap';
+import { Alert, Container, Button } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
 import LoginPage from './Site/loginpage'
 import { useState, useEffect } from 'react';
 import API from "./API.js"
 import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductList';
-import {CustomerList, OrderList } from './Site/Employee/employee';
+import { CustomerList, OrderList } from './Site/Employee/employee';
 import Farmer from './Site/farmer';
 import { SignupForm } from "./Site/signup";
-//import { LoginForm } from "./Site/loginpage";
-//import MyPage from './Site/mypage';
-import { SignupForm } from "./Site/signup";
-import { LoginForm } from "./Site/loginpage";
 import { CustomerHome } from "./Site/customer";
 import Basket from "./Site/Basket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import dayjs from 'dayjs';
+import {Clock, ModalDate } from './Clock';
+import { Calendar } from 'react-bootstrap-icons';
 
 function App() {
   const [user, setUser] = useState();
   const [isLogged, setLogged] = useState(false);
   const [message, setMessage] = useState({ type: "", msg: "" }); //for messages interface!
   const [url, setURL] = useState("");
-  //AUTH LOGIN LOGOUT
+  const [time, setTime] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [dirty, setDirty] = useState(false)
 
+
+  //AUTH LOGIN LOGOUT
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -135,10 +137,12 @@ function App() {
       progress: undefined,
     });
 
-  /*
-
-
-*/
+  const handleOpenModal = () => {
+    setShowModal(true)
+  }
+  const handleCloseModal = () => {
+    setShowModal(false)
+  }
 
   return (
     <Router>
@@ -146,128 +150,119 @@ function App() {
 
       <Container fluid className="below-nav vh-100 backg" />
 
-        <Container fluid >
-        {message.msg !== "" ? (
-          <Alert className="" variant={message.type}>
-            {message.msg}
-          </Alert>
-        ) : (
-          ""
-        )}
+      <Container fluid className="below-nav" >
+        <Clock time={time} setTime={setTime} setDirty={setDirty} dirty={dirty} />
+        <Button onClick={handleOpenModal}><Calendar/></Button>
+        <ModalDate show={showModal} handleClose={handleCloseModal} setDirty={setDirty} dirty={dirty} setTime={setTime}/>
+      {message.msg !== ""?(
+        <Alert className="" variant={message.type }>
+      {message.msg}
+        </Alert>
+      ): (
+        ""
+      )}
 
         <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              isLogged ? (
-                <Navigate replace to={url} />
-              ) : (
-                <Navigate replace to="/home" />
-              )
-            }
-          />
+        <Route exact path="/" element={isLogged?
+        <Navigate replace to={url} />
+        :
+        <Navigate replace to="/home" />
+      }
+        />
 
-          {/* Generic Error Page */}
-          <Route path="/error" element={<ErrorPage />} />
+      {/* Generic Error Page */}
+        <Route path="/error" element={<ErrorPage />} />
 
-          {/* BODY PER HOMEPAGE */}
-          <Route
-            path="/home"
-            element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
-          />
+      {/* BODY PER HOMEPAGE */}
+        <Route path="/home" element={!isLogged?<MyBody />: <Navigate replace to={url} />}
+        />
 
-          {/*Route di Login*/}
-          <Route path="/sign-in" element={<SigninPage />} />
+      {/*Route di Login*/}
+        <Route path="/sign-in" element={<SigninPage />} />
 
-          <Route
-            path="/loginpage/"
-            element={
-              isLogged ? (
-                <Navigate replace to={url} />
-              ) : (
-                <LoginPage login={doLogin} setMessage={setMessage} />
-              )
-            }
-          />
-          {/*Route di Registrazione*/}
+        <Route path="/loginpage/" element={isLogged?
+        <Navigate replace to={url} />
+        :
+        <LoginPage login={doLogin} setMessage={setMessage} />
+      }
+        />
 
-          <Route
-            path="/shopemployee/products/"
-            element={
-              isLogged ? (
-                <ProductList setMessage={setMessage} />
-              ) : (
-                <Navigate replace to="/home" />
-              )
-            }
-          />
+        <Route
+        path="/shopemployee/products/"
+        element={
+        isLogged?(
+        <ProductList setMessage={setMessage} />
+      ): (
+        <Navigate replace to="/home" />
+      )
+      }
+        />
 
-          <Route
-            path="/shopemployee/handout/"
-            element={isLogged ? <OrderList /> : <Navigate replace to="/home" />}
-          />
+        <Route
+        path="/shopemployee/handout/"
+        element={isLogged?<OrderList />: <Navigate replace to="/home" />}
+        />
 
-          <Route
-            path="/shopemployee/topupwallet/"
-            element={
-              isLogged ? <CustomerList /> : <Navigate replace to="/home" />
-            }
-          />
+        <Route
+        path="/shopemployee/topupwallet/"
+        element={
+        isLogged?<CustomerList />: <Navigate replace to="/home" />
+      }
+        />
 
-          {/**Route for the main page of the shop employee */}
-          <Route
-            exact
-            path="/shopemployee/"
-            element={
-              isLogged ? (
-                <EmployeePage addClient={addClient} />
-              ) : (
-                <Navigate replace to="/" />
-              )
-            }
-          />
-          {/**Route for the main page of the shop employee */}
-          <Route exact path="/farmer/" element={<Farmer />} />
+      {/**Route for the main page of the shop employee */}
+        <Route
+        exact
+        path="/shopemployee/"
+        element={
+        isLogged?(
+        <EmployeePage addClient={addClient} />
+      ): (
+        <Navigate replace to="/" />
+      )
+      }
+        />
+      {/**Route for the main page of the shop employee */}
+        <Route exact path="/farmer/" element={<Farmer />} />
 
-          <Route
-            path="/sign-up"
-            element={
-              <SignupForm
-                notifySuccess={notifySuccess}
-                notifyError={notifyError}
-              />
-            }
-          />
-          {/* BODY PER HOMEPAGE */}
-          <Route exact path="/home" element={<MyBody />} />
-          {/* Customer homepage route */}
-          <Route
-            exact
-            path="/customer"
-            element={
-              isLogged ? (
-                <CustomerHome
-                  user={user}
-                  notifyBalance={notifyBalance}
-                  notifyQuantity={notifyQuantity}
-                />
-              ) : (
-                <Navigate replace to="/home" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/customer/:id/basket"
-            element={
-              <Basket
-                notifyBalance={notifyBalance}
-                notifyQuantity={notifyQuantity}
-              />
-            }
-          />
-          {/**if the url does not match anyone of the above, navitage to error page 
+        <Route
+        path="/sign-up"
+        element={
+        <SignupForm
+        notifySuccess={notifySuccess}
+        notifyError={notifyError}
+        />
+      }
+        />
+      {/* BODY PER HOMEPAGE */}
+        <Route exact path="/home" element={<MyBody />} />
+      {/* Customer homepage route */}
+        <Route
+        exact
+        path="/customer"
+        element={
+        isLogged?(
+        <CustomerHome
+        user={user}
+        notifyBalance={notifyBalance}
+        notifyQuantity={notifyQuantity}
+        />
+      ): (
+        <Navigate replace to="/home" />
+      )
+      }
+        />
+        <Route
+        exact
+        path="/customer/:id/basket"
+        element={
+        <Basket
+        notifyBalance={notifyBalance}
+        notifyQuantity={notifyQuantity}
+        />
+      }
+        />
+      {/**if the url does not match anyone of the above, navitage to error page 
           <Route 
             element={
                  <Navigate replace to="/error" />
