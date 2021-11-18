@@ -7,20 +7,32 @@ function Basket(props) {
     JSON.parse(sessionStorage.getItem("shopping-basket") || "")
   );
   const [changeBasket, setChangeBasket] = React.useState(true);
-  
+
   React.useEffect(() => {
     setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
-    
   }, [changeBasket]);
 
+  const [total, setTotal] = React.useState(0);
 
-  const [total, setTotal] = React.useState(0)
+  React.useEffect(() => {
+    const basketItems = JSON.parse(
+      sessionStorage.getItem("shopping-basket") || "[]"
+    );
+    let cost = 0;
+    for (let i = 0; i < basketItems.length; i++) {
+      cost = cost + basketItems[i].price * basketItems[i].quantity;
+    }
+    setTotal(cost);
+  }, [changeBasket]);
 
   return (
     <Container className="below-nav justify-content-center">
       {items && (
         <ListGroup>
-          <ListGroup.Item as={Row} className="d-flex justify-content-between align-items-start">
+          <ListGroup.Item
+            as={Row}
+            className="d-flex justify-content-between align-items-start"
+          >
             <Col>Product Name</Col>
             <Col>Product quantity</Col>
             <Col>Price</Col>
@@ -37,7 +49,7 @@ function Basket(props) {
           ))}
 
           <ListGroup.Item as={Row}>
-            Your total:{/* {total} */} € 
+            Your total: {total.toFixed(2)} €
           </ListGroup.Item>
         </ListGroup>
       )}
