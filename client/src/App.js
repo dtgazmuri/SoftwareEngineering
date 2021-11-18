@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
 import MyBody from './Site/homepage'
-import { BrowserRouter as Router,Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import MyNavbar from './Site/navbar';
 import { Alert, Container, Button } from 'react-bootstrap';
 import SigninPage from './Site/signinpage';
@@ -19,7 +19,7 @@ import Basket from "./Site/Basket";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
-import {Clock, ModalDate } from './Clock';
+import { Clock, ModalDate } from './Clock';
 import { Calendar } from 'react-bootstrap-icons';
 
 function App() {
@@ -30,8 +30,9 @@ function App() {
   const [time, setTime] = useState();
   const [faketime, setFakeTime] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [dirty, setDirty] = useState(false) //to see if the time is real-time or not
+  const [dirty, setDirty] = useState(false) //to see if the time is real-time or not 
 
+  //you need to add time={dirty ? time : faketime}
 
   //AUTH LOGIN LOGOUT
   useEffect(() => {
@@ -160,18 +161,23 @@ function App() {
       <Container fluid className="below-nav vh-100 backg" />
 
       <Container fluid className="below-nav" >
-        <Clock time={time} faketime = {faketime} setTime={setTime} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} />
-        <Button onClick={handleOpenModal}><Calendar/></Button>
-        <Button onClick={() => {!dirty?console.log(time):console.log(faketime)}}>log</Button>
-        <ModalDate show={showModal} handleClose={handleCloseModal} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} setTime={setTime}/>
-      {message.msg !== ""?(
-        <Alert className="" variant={message.type }>
-      {message.msg}
-        </Alert>
-      ): (
-        ""
-      )}
+        <Clock time={time} faketime={faketime} setTime={setTime} setFakeTime={setFakeTime} setDirty={setDirty} dirty={dirty} />
+        <Button onClick={handleOpenModal}><Calendar/> S</Button>
+        <ModalDate show={showModal} 
+          handleClose={handleCloseModal} 
+          setFakeTime={setFakeTime} 
+          setDirty={setDirty} 
+          dirty={dirty} 
+          setTime={setTime} />
+        {message.msg !== "" ? (
+          <Alert className="" variant={message.type}>
+            {message.msg}
+          </Alert>
+        ) : (
+          ""
+        )}
 
+<<<<<<< HEAD
       <Routes>
         <Route exact path="/" element={isLogged?
         <Navigate replace to={url} />
@@ -179,100 +185,92 @@ function App() {
         <Navigate replace to="/home" />
       }
         />
+=======
+        <Routes>
+          <Route exact path="/" element={isLogged ? <Navigate replace to={url} /> : <Navigate replace to="/home" />
+          }
+          />
+>>>>>>> b32e3c96750e735bc4aeee6491e858899e427553
 
-      {/* Generic Error Page */}
-        <Route path="/error" element={<ErrorPage />} />
+          {/* Generic Error Page */}
+          <Route path="/error" 
+          element={<ErrorPage />} />
 
-      {/* BODY PER HOMEPAGE */}
-        <Route path="/home" element={!isLogged?<MyBody />: <Navigate replace to={url} />}
-        />
+          {/* BODY PER HOMEPAGE */}
+          <Route path="/home" element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
+          />
 
-      {/*Route di Login*/}
-        <Route path="/sign-in" element={<SigninPage />} />
+          {/*Route di Login*/}
+          <Route path="/sign-in" element={<SigninPage />} />
 
-        <Route path="/loginpage/" element={isLogged?
-        <Navigate replace to={url} />
-        :
-        <LoginPage login={doLogin} setMessage={setMessage} />
-      }
-        />
+          <Route path="/loginpage/" element={isLogged ?
+            <Navigate replace to={url} />
+            :
+            <LoginPage login={doLogin} setMessage={setMessage} />
+          }
+          />
 
-        <Route
-        path="/shopemployee/products/"
-        element={
-        isLogged?(
-        <ProductList setMessage={setMessage} />
-      ): (
-        <Navigate replace to="/home" />
-      )
-      }
-        />
+          <Route path="/shopemployee/products/"
+            element={isLogged ? <ProductList setMessage={setMessage} time={dirty ? time : faketime} />
+               : 
+                <Navigate replace to="/home" />
+              
+            }
+          />
 
-        <Route
-        path="/shopemployee/handout/"
-        element={isLogged?<OrderList />: <Navigate replace to="/home" />}
-        />
+          <Route
+            path="/shopemployee/handout/"
+            element={isLogged ? <OrderList /> : <Navigate replace to="/home" />}
+          />
 
-        <Route
-        path="/shopemployee/topupwallet/"
-        element={
-        isLogged?<CustomerList />: <Navigate replace to="/home" />
-      }
-        />
+          <Route
+            path="/shopemployee/topupwallet/"
+            element={
+              isLogged ? <CustomerList  /> : <Navigate replace to="/home" />
+            }
+          />
 
-      {/**Route for the main page of the shop employee */}
-        <Route
-        exact
-        path="/shopemployee/"
-        element={
-        isLogged?(
-        <EmployeePage addClient={addClient} />
-      ): (
-        <Navigate replace to="/" />
-      )
-      }
-        />
-      {/**Route for the main page of the shop employee */}
-        <Route exact path="/farmer/" element={<Farmer />} />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/shopemployee/"
+            element={
+              isLogged ? <EmployeePage 
+                addClient={addClient} />
+               : <Navigate replace to="/" />
+            }
+          />
+          {/**Route for the main page of the shop employee */}
+          <Route exact path="/farmer/" element={<Farmer />} />
 
-        <Route
-        path="/sign-up"
-        element={
-        <SignupForm
-        notifySuccess={notifySuccess}
-        notifyError={notifyError}
-        />
-      }
-        />
-      {/* BODY PER HOMEPAGE */}
-        <Route exact path="/home" element={<MyBody />} />
-      {/* Customer homepage route */}
-        <Route
-        exact
-        path="/customer"
-        element={
-        isLogged?(
-        <CustomerHome
-        user={user}
-        notifyBalance={notifyBalance}
-        notifyQuantity={notifyQuantity}
-        />
-      ): (
-        <Navigate replace to="/home" />
-      )
-      }
-        />
-        <Route
-        exact
-        path="/customer/:id/basket"
-        element={
-        <Basket
-        notifyBalance={notifyBalance}
-        notifyQuantity={notifyQuantity}
-        />
-      }
-        />
-      {/**if the url does not match anyone of the above, navitage to error page 
+          <Route path="/sign-up" element={
+              <SignupForm
+                notifySuccess={notifySuccess}
+                notifyError={notifyError}
+              />
+            }
+          />
+          {/* BODY PER HOMEPAGE */}
+          <Route exact path="/home" element={<MyBody />} />
+          {/* Customer homepage route */}
+          <Route exact path="/customer"
+            element={
+              isLogged ? (
+                <CustomerHome
+                  user={user}
+                  notifyBalance={notifyBalance}
+                  notifyQuantity={notifyQuantity}
+                />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
+          />
+          <Route exact path="/customer/:id/basket"
+            element={<Basket 
+              notifyBalance={notifyBalance} 
+              notifyQuantity={notifyQuantity}/>
+            }
+          />
+          {/**if the url does not match anyone of the above, navitage to error page 
           <Route 
             element={
                  <Navigate replace to="/error" />
