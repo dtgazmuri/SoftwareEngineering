@@ -1,7 +1,7 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { Form, Button, Table, Modal, Row, Col } from "react-bootstrap";
 import API from "../../API";
-
 
 function ProductListEmployee(props) {
     const [customer, setCustomer] = useState({ id: "", name: "", surname: "", wallet: "" }); //<- 
@@ -15,7 +15,6 @@ function ProductListEmployee(props) {
     const handleClose = () => {
         setShow(false)
     }
-
 
     const handleShow = () => {
         setShow(true)
@@ -158,8 +157,8 @@ function ProductListEmployee(props) {
                 <td>{prod.id}</td>
                 <td>{prod.name}</td>
                 <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                <td>{prod.price}</td>
-                <td>{prod.quantity}</td>
+                <td>{prod.price} €/kg</td>
+                <td>{prod.quantity} kg</td>
                 <td><Button onClick={() => addOrder(prod)}>+</Button></td>
                 <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
                 <td>{getBookedProduct(prod.id)}</td>
@@ -168,10 +167,20 @@ function ProductListEmployee(props) {
         }
     });
 
+    const checkTime = () => {
+        let day = dayjs(props.time).get("d");
+        let hour = dayjs(props.time).get("h");
+        console.log(day, hour )
+        if(day !== 0 || (hour<23&&day===0))
+            return true
+        else 
+        return false;
+    }
+
     return (
         <>
-
-            {customer.name === "" ?
+        {checkTime()?
+            customer.name === "" ?
                 <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
                 :
                 <>
@@ -231,6 +240,7 @@ function ProductListEmployee(props) {
                     <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} />
 
                 </>
+            :<h1>We're sorry but orders close at 23 of every Sunday</h1>
             }
         </>
     )
@@ -250,7 +260,7 @@ function RecapCart(props) {
         return <tr id={item.id}>
             <th>{item.id}</th>
             <th>{item.name}</th>
-            <th>{item.quantity}</th>
+            <th>{item.quantity} kg</th>
             <th>{(item.price * item.quantity).toFixed(2)} €</th>
         </tr>
     })
@@ -300,21 +310,45 @@ function RecapCart(props) {
 
 function CustomerSelection(props) {
 
-    const customerlist = props.customers.map((e, id) => {
-        return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
+    const [customerName, setCustomerName] = useState("");
+    const [customerlist, setCustomerList] = useState(
+                props.customers.map((e, id) => {
+                return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
+    ));
+
+    //this function takes the input inside the searchbar and filters all the customers according to the value written
+    //in order to simplify the search, it is case insensitive.
+    const handleFilterCustomer = (newName) => {
+        setCustomerName(newName);
+        let newCustomerlist = props.customers.filter(customer => 
+            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()) ) )
+        .map((e, id) => {
+            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
+        }
+        );
+        setCustomerList(newCustomerlist);
     }
-    );
 
     return (
         <Form align-items="center">
-            <Form.Label>Please select a client for the order:</Form.Label>
-            <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
-                <option key={`customerdefault`} selected disabled hidden >---select---</option>
-                {customerlist}
-
-            </Form.Control>
-
-
+        <Row>
+            <Col sm = {4}>
+                <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
+                <Form.Text className="text-muted">
+                    You can first filter your research by putting his/her name.
+                </Form.Text>
+            </Col>
+            <Col sm = {3}>
+                <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+            </Col>
+            <Col sm = {5}>
+                <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
+                    <option key={`customerdefault`} selected disabled hidden >---select---</option>
+                    {customerlist}
+                </Form.Control>
+            </Col>
+            
+        </Row>
         </Form>
     )
 

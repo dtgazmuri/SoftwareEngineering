@@ -8,7 +8,7 @@ let newday;
 function Clock(props) {
     useEffect( () => {
         if(!props.dirty) {
-            setInterval(async () => await props.setTime(dayjs().format("dddd DD/MMMM/YYYY HH:mm:ss")), 1000);
+            setInterval(async () => await props.setTime(dayjs().format("dddd DD/MMMM/YYYY HH:mm")), 1000);
         }
         else{
             setInterval(async () => await props.setFakeTime(dayjs(props.faketime).add(1, "m").format("dddd DD/MMMM/YYYY HH:mm")) , 60000)

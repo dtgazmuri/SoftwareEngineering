@@ -1,4 +1,4 @@
-import { Container, ListGroup } from "react-bootstrap";
+import { Row, Col, Container, ListGroup } from "react-bootstrap";
 import React from "react";
 import BasketItem from "./BasketItem";
 
@@ -8,16 +8,28 @@ function Basket(props) {
     JSON.parse(sessionStorage.getItem("shopping-basket") || "")
   );
   const [changeBasket, setChangeBasket] = React.useState(true);
+  
   React.useEffect(() => {
     setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
-    //console.log(items);
+    
   }, [changeBasket]);
+
+
+  const [total, setTotal] = React.useState(0)
+
+  
+
 
   return (
     <Container className="below-nav justify-content-center">
       {items && (
         <ListGroup>
-          {" "}
+          <ListGroup.Item as={Row} className="d-flex justify-content-between align-items-start">
+            <Col>Product Name</Col>
+            <Col>Product quantity</Col>
+            <Col>Price</Col>
+          </ListGroup.Item>
+
           {items.map((item) => (
             <BasketItem
               product={item}
@@ -26,7 +38,11 @@ function Basket(props) {
               notifyBalance={props.notifyBalance}
               notifyQuantity={props.notifyQuantity}
             />
-          ))}{" "}
+          ))}
+
+          <ListGroup.Item as={Row}>
+            Your total:{/* {total} */} € 
+          </ListGroup.Item>
         </ListGroup>
       )}
     </Container>

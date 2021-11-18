@@ -28,8 +28,8 @@ function ProductList(props) {
         <td>{prod.id}</td>
         <td>{prod.name}</td>
         <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-        <td>{prod.price}</td>
-        <td>{prod.quantity}</td>
+        <td>{prod.price} €</td>
+        <td>{prod.quantity} kg</td>
         <td>
           <BasketButton
             product={prod}

@@ -48,11 +48,11 @@ export default MyBody;
 function MyBody() {
 
     return (
-            <Container id="title" className="below-nav align-items-center">
+            <Container id="title" className="align-items-center">
                 <Row sm={5} className="title justify-content-center" >
                     Solidarity Purchase Group
                 </Row>
-            <Row key="main" id="main-row" className="h-100 v-70 justify-content-center">
+            <Row key="main" sm={10} id="main-row" className="h-100 v-70 justify-content-center">
                 <Col id="signup-col" className="v-100 d-sm-block">
                     <Link to="/loginpage">
                         {/*<Button variant="outline-success">Log in</Button>*/}

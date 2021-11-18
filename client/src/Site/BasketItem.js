@@ -1,17 +1,23 @@
 import React from "react";
-import { ListGroup, Badge } from "react-bootstrap";
+import { ListGroup, Col, Row, Badge } from "react-bootstrap";
 import BasketButton from "./BasketButton";
 
+
+
 function BasketItem(props) {
+
+  
   return (
     <>
       {props.product && (
         <ListGroup.Item
-          as="li"
+          as={Row}
           className="d-flex justify-content-between align-items-start"
         >
-          <div className="ms-2 me-auto">
-            <div className="fw-bold">{props.product.name}</div>
+        <Col>
+        <div className="fw-bold">{props.product.name}</div>
+        </Col>
+        <Col>
             <BasketButton
               product={props.product}
               mode={"add"}
@@ -27,10 +33,12 @@ function BasketItem(props) {
               notifyBalance={props.notifyBalance}
               notifyQuantity={props.notifyQuantity}
             ></BasketButton>{" "}
-          </div>
+          </Col>
+          <Col>
           <Badge pill bg="light" text="dark">
-            {props.product.price} €
+            {props.product.price} €/kg
           </Badge>
+          </Col>
         </ListGroup.Item>
       )}
     </>

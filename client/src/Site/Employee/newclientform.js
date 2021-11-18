@@ -1,6 +1,6 @@
-import { Form, Button, Alert, Container, Row, Col, Modal } from 'react-bootstrap';
+import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import { useState } from 'react';
-import { Link, Navigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 function SignupForm(props) {
     const [submitted, setSubmitted] = useState(false);
@@ -23,7 +23,7 @@ function SignupForm(props) {
 
         //Set the validation to false
         setValidated(false);
-        
+
         let valid = true;
         if (name === undefined || name === '') {
             valid = false;
@@ -48,21 +48,21 @@ function SignupForm(props) {
 
 
         if (valid) {
-            const newcust = {name:name, surname:surname, username:username, password:password}
-            
+            const newcust = { name: name, surname: surname, username: username, password: password }
+
             console.log(newcust);
-            
+
             try {
-                props.addClient(newcust).then((res) =>{
+                props.addClient(newcust).then((res) => {
                     console.log(res);
 
-                    if (res.error){
+                    if (res.error) {
                         setErrorMessage(`${res.error}`);
                         setIsError(true);
 
                         setSubmitted(false);
                     }
-                    else{
+                    else {
                         setSubmitted(true);
                         setValidated(true);
 
@@ -70,83 +70,83 @@ function SignupForm(props) {
                     }
                 });
 
-                
+
             }
-            catch(e){
+            catch (e) {
                 console.log(e)
             }
         }
     };
 
     return (
-        <> 
-        {submitted ? <></>
-        :
-        <Modal show = {props.show}>
-          <Modal.Header closeButton={props.handleClose}>
-            <Modal.Title>Add new Client</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <>
+            {submitted ? <></>
+                :
+                <Modal show={props.show}>
+                    <Modal.Header closeButton={props.handleClose}>
+                        <Modal.Title>Add new Client</Modal.Title>
+                    </Modal.Header>
                     {isError ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
                     <Form noValidate validated={validated}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control
-                                required
-                                type="text"
-                                value={name}
-                                onChange={ev => setName(ev.target.value)}
-                            />
-                            <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
-                            <Form.Control.Feedback type='valid' />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Surname</Form.Label>
-                            <Form.Control
-                                required
-                                type="text"
-                                value={surname}
-                                onChange={ev => setSurname(ev.target.value)}
-                            />
-                            <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
-                            <Form.Control.Feedback type='valid' />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                required
-                                type="text"
-                                value={username}
-                                onChange={ev => setUsername(ev.target.value)}
-                            />
-                            <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
-                            <Form.Control.Feedback type='valid' />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                required
-                                type="password"
-                                value={password}
-                                onChange={ev => setPassword(ev.target.value)}
-                            />
-                            <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
-                            <Form.Control.Feedback type='valid' />
-                        </Form.Group>
-                    
-                        <Row className="buttonRow d-flex justify-content-around" >
-                            <Form.Group as={Col} xs={1} className="mb-5">
+                        <Modal.Body>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="text"
+                                    value={name}
+                                    onChange={ev => setName(ev.target.value)}
+                                />
+                                <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
+                                <Form.Control.Feedback type='valid' />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Surname</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="text"
+                                    value={surname}
+                                    onChange={ev => setSurname(ev.target.value)}
+                                />
+                                <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
+                                <Form.Control.Feedback type='valid' />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="text"
+                                    value={username}
+                                    onChange={ev => setUsername(ev.target.value)}
+                                />
+                                <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
+                                <Form.Control.Feedback type='valid' />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    required
+                                    type="password"
+                                    value={password}
+                                    onChange={ev => setPassword(ev.target.value)}
+                                />
+                                <Form.Control.Feedback type='invalid'>Field required</Form.Control.Feedback>
+                                <Form.Control.Feedback type='valid' />
+                            </Form.Group>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Form.Group  className="mb-5">
                                 <Button onClick={handleSubmit}>Save</Button>
                             </Form.Group>
-                            <Form.Group as={Col} xs={1} className="mb-5">
-                                <Link to="/home"><Button variant='secondary' onClick = {props.handleClose}>Cancel</Button></Link>
+                            <Form.Group  className="mb-5">
+                                <Link to="/home"><Button variant='secondary' onClick={props.handleClose}>Cancel</Button></Link>
                             </Form.Group>
-                        </Row>
+
+                        </Modal.Footer>
                     </Form>
-                    </Modal.Body>
-                    
-        </Modal>
-        }
+
+                </Modal>
+            }
         </>
 
     )
