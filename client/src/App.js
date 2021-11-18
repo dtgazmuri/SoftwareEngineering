@@ -172,7 +172,7 @@ function App() {
         ""
       )}
 
-        <Routes>
+      <Routes>
         <Route exact path="/" element={isLogged?
         <Navigate replace to={url} />
         :
