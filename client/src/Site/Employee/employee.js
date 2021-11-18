@@ -1,6 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Col, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import API from '../../EmployeeAPI'
 
 
@@ -113,7 +112,7 @@ function CustomerList() {
             <Form className = "mb-3">
                 <Row>
                     <Col sm = {6}>
-                        <Form.Label>Filter the list below by putting a customer name</Form.Label>
+                        <Form.Label>You can filter by customer name.</Form.Label>
                     </Col>
                     <Col sm = {6}>
                         <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       

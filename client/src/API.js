@@ -14,7 +14,7 @@ async function login(credentials) {
     body: JSON.stringify(credentials),
   });
   if (response.ok) {
-    return await response.json();
+    return response.json();
   } else {
     try {
       const errDetail = await response.json();
@@ -144,7 +144,6 @@ async function fetchAllOrders() {
           for(let product in responseBody.listitems){
             productlist.push(Product.from(product))
           }
-        //const customer = await getCustomerByID(responseBody.customerid)  
         orders.push(Order.from(order.id, order.customer, order.state, order.delivery, order.total, productlist))
           
         }
@@ -248,7 +247,6 @@ async function postOrderByEmployee(order_obj) {
 /*** FUNCTIONS TO IMPLEMENTS THE STORIES 6 AND 7 ***/
 
 async function addNewUser(user) {
-  // return await axios
   axios
     .post(BASEURL + "/users/registration", user)
     .then((response) => {

@@ -1,6 +1,6 @@
 import { Container, Col, Row } from 'react-bootstrap';
 import { SignupForm } from "./newclientform.js"
-import { signin, shopemployee, wallet, deliverybig, shopemployeebig } from '../icons';
+import { signin, wallet, deliverybig, shopemployeebig } from '../icons';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 

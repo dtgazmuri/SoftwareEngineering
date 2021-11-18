@@ -3,7 +3,6 @@ import React from "react";
 import BasketItem from "./BasketItem";
 
 function Basket(props) {
-  // const pathname = window.location.pathname.split("/")[2];
   const [items, setItems] = React.useState(
     JSON.parse(sessionStorage.getItem("shopping-basket") || "")
   );
@@ -16,9 +15,6 @@ function Basket(props) {
 
 
   const [total, setTotal] = React.useState(0)
-
-  
-
 
   return (
     <Container className="below-nav justify-content-center">

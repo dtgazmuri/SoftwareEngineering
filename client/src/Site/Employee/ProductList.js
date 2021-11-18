@@ -174,7 +174,7 @@ function ProductListEmployee(props) {
         if(day !== 0 || (hour<23&&day===0))
             return true
         else 
-        return false;
+            return false;
     }
 
     return (
@@ -335,7 +335,7 @@ function CustomerSelection(props) {
             <Col sm = {4}>
                 <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
                 <Form.Text className="text-muted">
-                    You can first filter your research by putting his/her name.
+                    You can filter by customer name.
                 </Form.Text>
             </Col>
             <Col sm = {3}>

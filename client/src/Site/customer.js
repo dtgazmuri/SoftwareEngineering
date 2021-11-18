@@ -1,9 +1,8 @@
 import { Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ProductList from "./ProductList";
 import API from "../API";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CustomerHome(props) {
@@ -29,7 +28,7 @@ function CustomerHome(props) {
         <>
           <Row>
             <Col xs={11}>
-              <h3>Amout on your wallet: {customer.wallet} €</h3>
+              <h3>Amount on your wallet: {customer.wallet} €</h3>
             </Col>
 
             <Link to={`/customer/${customer.id}/basket`}>

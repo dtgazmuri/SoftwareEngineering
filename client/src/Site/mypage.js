@@ -2,7 +2,6 @@ import { Container, Button, Col, Row, InputGroup, Form, Modal } from 'react-boot
 import { Formik } from 'formik';
 import { signin } from './icons';
 import * as yup from 'yup';
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 function MyPage(props) {

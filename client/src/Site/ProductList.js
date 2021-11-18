@@ -21,7 +21,6 @@ function ProductList(props) {
     getProducts();
   }, []);
 
-  //const selection = CustomerSelection(customerlist, handleCustomer);
   const productlist = products.map((prod, id) => {
     return (
       <tr>
