@@ -144,6 +144,14 @@ function App() {
     setShowModal(false)
   }
 
+  /**USE THIS FUNCTION TO GET THE CURRENT TIME OF THE APPLICATION */
+  const getCurrentTime = () => {
+    if(!dirty)
+      return time;
+    else 
+      return faketime;
+  }
+
   return (
     <Router>
       <MyNavbar logout={doLogout} isLogged={isLogged} />
