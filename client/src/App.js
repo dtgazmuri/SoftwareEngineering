@@ -30,7 +30,7 @@ function App() {
   const [time, setTime] = useState();
   const [faketime, setFakeTime] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [dirty, setDirty] = useState(false)
+  const [dirty, setDirty] = useState(false) //to see if the time is real-time or not
 
 
   //AUTH LOGIN LOGOUT
@@ -154,7 +154,7 @@ function App() {
       <Container fluid className="below-nav" >
         <Clock time={time} faketime = {faketime} setTime={setTime} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} />
         <Button onClick={handleOpenModal}><Calendar/></Button>
-        <Button onClick={() => {console.log(time);console.log(faketime)}}>log</Button>
+        <Button onClick={() => {!dirty?console.log(time):console.log(faketime)}}>log</Button>
         <ModalDate show={showModal} handleClose={handleCloseModal} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} setTime={setTime}/>
       {message.msg !== ""?(
         <Alert className="" variant={message.type }>

@@ -8,14 +8,13 @@ let newday;
 function Clock(props) {
     useEffect( () => {
         if(!props.dirty) {
-            setInterval(() => props.setTime(dayjs().format("dddd DD/MMMM/YYYY HH:mm:ss")), 1000);
+            setInterval(async () => await props.setTime(dayjs().format("dddd DD/MMMM/YYYY HH:mm:ss")), 1000);
         }
         else{
-            console.log("we", props.faketime)
-            setInterval(() => props.setFakeTime(dayjs(props.faketime).add(1, "s").format("dddd DD/MMMM/YYYY HH:mm:ss")) , 1000)
+            setInterval(async () => await props.setFakeTime(dayjs(props.faketime).add(1, "m").format("dddd DD/MMMM/YYYY HH:mm")) , 60000)
         }
         
-        } ,[]);
+        } ,[props.faketime]);
         
     return (<>
         {!props.dirty?
@@ -37,13 +36,12 @@ function ModalDate(props) {
 
     const handleDate = (ev) => {
         setNewDate(ev.target.value);
-        console.log(newdate)
     }
 
     const handleSubmit = async (event) => {
             event.preventDefault()
-            newday = dayjs(`${newdate} ${newtime}`).format("dddd DD/MMMM/YYYY HH:mm:ss");
-            await props.setFakeTime(newday)
+            newday = dayjs(`${newdate} ${newtime}`).format("dddd DD/MMMM/YYYY HH:mm");
+            props.setFakeTime(newday)
             props.setDirty(true)
             props.handleClose();
 
