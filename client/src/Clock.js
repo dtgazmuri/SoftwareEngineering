@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import dayjs from 'dayjs';
-import { Form, Modal, InputGroup, Button } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 
 
 let newday;
 function Clock(props) {
-    
-    useEffect(() => {
-        console.log(props.dirty)
+    useEffect( () => {
         if(!props.dirty) {
             setInterval(() => props.setTime(dayjs().format("dddd DD/MMMM/YYYY HH:mm:ss")), 1000);
         }
         else{
-            newday = dayjs(newday).add(1, "s")
-            setInterval(() => props.setTime(newday) , 1000)
+            console.log("we", props.faketime)
+            setInterval(() => props.setFakeTime(dayjs(props.faketime).add(1, "s").format("dddd DD/MMMM/YYYY HH:mm:ss")) , 1000)
         }
-    }, []);
-
-
+        
+        } ,[]);
+        
     return (<>
-        {props.time}
-    </>
-    )
-
+        {!props.dirty?
+        props.time:
+        props.faketime}
+    </>)
 }
 
 function ModalDate(props) {
@@ -42,13 +40,10 @@ function ModalDate(props) {
         console.log(newdate)
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
             event.preventDefault()
-            console.log(newdate);
-            console.log(newtime);
             newday = dayjs(`${newdate} ${newtime}`).format("dddd DD/MMMM/YYYY HH:mm:ss");
-            console.log(newday)
-            props.setTime(newday)
+            await props.setFakeTime(newday)
             props.setDirty(true)
             props.handleClose();
 
@@ -57,7 +52,7 @@ function ModalDate(props) {
     const setToday = () => {
        // props.setTime(today);
         props.setDirty(false)
-        props.onClose()
+        props.handleClose()
     }
     return (
         <>

@@ -28,6 +28,7 @@ function App() {
   const [message, setMessage] = useState({ type: "", msg: "" }); //for messages interface!
   const [url, setURL] = useState("");
   const [time, setTime] = useState();
+  const [faketime, setFakeTime] = useState();
   const [showModal, setShowModal] = useState(false);
   const [dirty, setDirty] = useState(false)
 
@@ -151,9 +152,10 @@ function App() {
       <Container fluid className="below-nav vh-100 backg" />
 
       <Container fluid className="below-nav" >
-        <Clock time={time} setTime={setTime} setDirty={setDirty} dirty={dirty} />
+        <Clock time={time} faketime = {faketime} setTime={setTime} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} />
         <Button onClick={handleOpenModal}><Calendar/></Button>
-        <ModalDate show={showModal} handleClose={handleCloseModal} setDirty={setDirty} dirty={dirty} setTime={setTime}/>
+        <Button onClick={() => {console.log(time);console.log(faketime)}}>log</Button>
+        <ModalDate show={showModal} handleClose={handleCloseModal} setFakeTime = {setFakeTime} setDirty={setDirty} dirty={dirty} setTime={setTime}/>
       {message.msg !== ""?(
         <Alert className="" variant={message.type }>
       {message.msg}
