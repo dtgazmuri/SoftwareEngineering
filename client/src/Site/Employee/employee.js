@@ -53,17 +53,20 @@ function CustomerList() {
     const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
     const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
     const [customers, setCustomerList] = useState([]);
+    const [customerName, setCustomerName] = useState(""); //state used for searching a specific client
+    const [customersToBeShown, setCustomersToBeShown] = useState([]);
     
-        // show error message in toast
-        const handleErrors = (err) => {
-            console.log(err);
-        }
+    // show error message in toast
+    const handleErrors = (err) => {
+        console.log(err);
+    }
     
     useEffect(() =>  {
             API.getCustomers()
                 .then(customers => {
                     console.log(customers);
                     setCustomerList(customers);
+                    setCustomersToBeShown(customers);
                 })
                 .catch(e => handleErrors(e));
     
@@ -84,6 +87,7 @@ function CustomerList() {
                         return customer
                     });
                     setCustomerList(tmp);
+                    setCustomersToBeShown(tmp);
                     setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
                 })
                 .catch(e =>  {
@@ -94,10 +98,31 @@ function CustomerList() {
                 setWalletUpdated({status: false, id: -1, value: 0});
         }
     }, [walletUpdated, customers])
+
+    const handleFilterCustomer = (newName) => {
+        setCustomerName(newName);
+        let newCustomerlist = customers.filter( customer =>
+            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()) )
+        );
+        setCustomersToBeShown(newCustomerlist);
+    }
+
     return (
+        <>
+            {/** The form is for filtering the list of customers to be shown*/}
+            <Form className = "mb-3">
+                <Row>
+                    <Col sm = {6}>
+                        <Form.Label>Filter the list below by putting a customer name</Form.Label>
+                    </Col>
+                    <Col sm = {6}>
+                        <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                    </Col>
+                </Row>
+            </Form>
             <ListGroup variant="primary">
-                {customers.length ?
-                    customers.map(customer => {
+                {customersToBeShown.length ?
+                    customersToBeShown.map(customer => {
                         return (
                             <ListGroup.Item id = {customer.id} key = {customer.id}>
                                 <Row>
@@ -120,6 +145,7 @@ function CustomerList() {
                     : <Alert variant = "danger"> No customers found </Alert>
                 }
             </ListGroup>
+        </>
     )
 }
 
