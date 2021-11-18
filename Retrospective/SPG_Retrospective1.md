@@ -14,7 +14,7 @@ sections:
 
 - Number of stories committed vs done: 9 vs 9 
 - Total points committed vs done: 37 vs 37 
-- Nr of hours planned vs spent (as a team): 96  vs 
+- Nr of hours planned vs spent (as a team): 101 vs 96 
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -55,26 +55,37 @@ sections:
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated
-  - Total hours spent
-  - Nr of automated unit test cases 
-  - Coverage (if available)
+  - Total hours estimated		0h
+  - Total hours spent			0h
+  - Nr of automated unit test cases 	0
+  - Coverage (if available)		0%
 - E2E testing:
-  - Total hours estimated
-  - Total hours spent
+  - Total hours estimated		0h
+  - Total hours spent			0h
 - Code review 
-  - Total hours estimated 
-  - Total hours spent
-- Technical Debt management:
-  - Total hours estimated 
-  - Total hours spent
-  - Hours estimated for remediation by SonarQube
-  - Hours estimated for remediation by SonarQube only for the selected and planned issues 
-  - Hours spent on remediation 
-  - debt ratio (as reported by SonarQube under "Measures-Maintainability")
-  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
-  
+  - Total hours estimated 		3h
+  - Total hours spent			3h
 
+- Technical Debt management:		
+  - Total hours estimated 		0h
+  - Total hours spent			0h
+  - Hours estimated for remediation by SonarQube		
+    - Reliability 10m 
+    - Security 0m
+    - Maintainability 1d 1h
+    - Total of 1d 1h 10m
+  - Hours estimated for remediation by SonarQube only for the selected and planned issues
+    - Critics: 4 issues for a total of 45m
+    - Major: 52 issues for a total of 7h 30m
+    - Total of: 1d 15m
+  - Hours spent on remediation 														0h
+  - debt ratio (as reported by SonarQube under "Measures-Maintainability")									0.6%
+  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability)	
+    - Reliability: D
+    - Security: A
+    - Maintainability: A
+
+NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
 
 ## ASSESSMENT
 
