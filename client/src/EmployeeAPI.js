@@ -22,16 +22,18 @@ async function getCustomers() {
 }
 
 async function updateCustomerWallet(value, id) {
-    const response = await fetch('/api/customers/wallet/'+id+'/'+value, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application.json',
-        },
-        body: JSON.stringify(value),
-    });
+    let response;
+    if (!isNaN(value)) {
+        response = await fetch('/api/customers/wallet/'+id+'/'+value, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application.json',
+            },
+            body: JSON.stringify(value),
+        });
+    }
     console.log(response);
     const responseBody = await response.json();
-    console.log("Qua12");
     if(response.ok) {
         return responseBody;
     }
