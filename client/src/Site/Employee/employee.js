@@ -128,7 +128,7 @@ function CustomerList() {
                                     <Col>
                                         <h5>{customer.name + " " + customer.surname}</h5>
                                         <h5>ID: {customer.id} </h5>
-                                        <h5>Username: {customer.username}</h5>
+                                        {/*<h5>Username: {customer.username}</h5>*/}
                                         <h5>Amount in Wallet: {customer.wallet} €</h5>
                                     </Col>
                                     <Col>

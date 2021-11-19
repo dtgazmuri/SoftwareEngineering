@@ -315,7 +315,6 @@ function CustomerSelection(props) {
 
     //use effect to fill customerList at the beginning
     useEffect(() => {
-        console.log(props.customers);
         let newCustomerlist = props.customers.map((e, id) => {
             return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
         );
