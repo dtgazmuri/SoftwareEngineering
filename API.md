@@ -1,56 +1,136 @@
-#### Get the product list
+# Group P13 - API Documentation
 
-* HTTP method: `GET`  URL: `/api/products/all
-* Description: fetch the list of available products
-* Request body: _None_
+This document lists all of the methods and functions available in the API. They will be catalogued according to the information they aim to retrieve.
 
-* Response: `200 Ok` (success)
-* Response body: an array filled with json object, one for each product stored in the DB
+## Index
+
+- [General](#general)
+- [Orders](#orders)
+- [Products](#products)
+- [Customers](#customers)
+- [Farmers](#farmers)
+
+## General
+
+#### Check if a Given User ID is Already Present
+
+* HTTP method: `GET`  URL: `/api/username/present/:id`
+* Description: Returns a boolean indicating the presence or absence of a certain user ID (True means the ID exists already)
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found`
+* Response Body: A JSON object with a boolean describing presence of the username:
 
 ``` JSON
-[
-    {
-        "id": "id",
-        "name": "name",
-        "farmerid": "farmer id",
-        "price":"price",
-        "quantity":"quantity"
-    },
-    {},
-    {},
-    ...
-]
+{
+    "present": true
+}
 ```
 
-* Error responses:  `404 Not Found`
+or
 
+``` JSON
+{
+    "present": false
+}
+```
 
-#### Get Farmer by id
+#### Create New User
 
-* HTTP method: `GET`  URL: `/api/farmer/:id`
-* Description: retrieve the farmer information given by its id
-* Request body: _None_
-* Response: `200 OK` (success)
-* Response body: One object describing the required farmer:
+* HTTP method: `POST`  URL: `/api/users/registration`
+* Description: Creates a new user and adds it to the database.
+* Request Body: A json object with the information of the new user:
 
 ``` JSON
 {
     "id":1,
-    "name":"Tunin",
-    "surname":"Lamiera"
+    "userid":"pending",
+    "username":"yes", 
+    "hash":"XXXX", 
+    "role":"ROLE"
 }
 ```
 
-* Error responses:  `500 Server Error`
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error`
+* Response Body: A JSON object with the ID of the new user:
 
+``` JSON
+{
+    "userid":1
+}
+```
+
+#### Update Customer Wallet (Not ready)
+
+* HTTP method: `POST`  URL: `/api/customers/wallet/:id/:value`
+* Description: Adds money to a customer's wallet.
+* Request Body: A JSON object with the value to be added to the wallet:
+
+``` JSON
+{
+    "value": "value"
+}
+```
+
+* Successful Response: `200 OK`
+* Error Response:  `500 DB error when updating wallet` or `422 Error in Parameters`
+* Response Body: _None_
+
+#### Login
+
+* HTTP method: `POST`  URL: `/api/sessions`
+* Description: Uses the received credentials to try to log in a user.
+* Request Body: A JSON object with the credentials of the user:
+
+``` JSON
+{
+    "username": "username",
+    "password": "password"
+}
+```
+
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found`
+* Response Body: The user's information.
+
+``` JSON
+{
+    "id": "id",
+    "userid": "userid",
+    "username": "username",
+    "role": "role"
+}
+```
+
+#### Logout
+
+* HTTP method: `DELETE`  URL: `/api/sessions/current`
+* Description: Logs out the current logged in user.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found`
+* Response Body: _None_
+
+#### Check if User is an Administrator
+
+* HTTP method: `GET`  URL: `/api/sessions/current`
+* Description: Authenticates the current user, checking if they are an administrator .
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `401 Unauthenticated user`
+* Response Body: _None_
+
+## Orders
 
 #### Get All Orders
 
 * HTTP method: `GET`  URL: `/api/orders/all`
-* Description: retrieve a list of all orders stored in the DB
-* Request body: _None_
-* Response: `200 OK` (success)
-* Response body: An array with one object for each order in the DB:
+* Description: Retrieves a list of all orders stored in the database.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found`
+* Response Body: An array of JSON objects (one for each order stored in the database).
 
 ``` JSON
 [
@@ -79,19 +159,15 @@
             ]
     },
     {},
-    {},
-    ...
+    {}
 ]
 ```
 
-* Error responses:  `404 Not Found`
-
-
-#### Add a new order on the DB
+#### Add a New Order to the Database
 
 * HTTP method: `POST`  URL: `/api/order/employee`
-* Description: post a new order on the DB
-* Request body: an object describing the order:
+* Description: Posts a new order to the database. Must be done by an employee.
+* Request Body: A JSON object describing the order:
 
 ``` JSON
 {
@@ -107,14 +183,14 @@
                 "price":9.90
             },
             {},
-            {},
-            ...
+            {}
         ]
 }
 ```
 
-* Response: `200 OK` (success)
-* Response body: An object with the ID of the created order
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error` or `422 Error in Parameters`
+* Response Body: An object with the ID of the created order
 
 ``` JSON
 {
@@ -122,33 +198,90 @@
 }
 ```
 
-* Error responses:  `500 Server Error`
+#### Hand-Out Order
 
+* HTTP method: `POST`  URL: `/api/orders/:id/handOut`
+* Description: Changes the status of an order from "Pending" to "Delivered"
+* Request Body: A JSON object saying "handOut".
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error` or `422 Error in Parameters`
 
-#### Check if a given username is already present
+## Products
 
-* HTTP method: `GET`  URL: `/api/username/present/:id`
-* Description: retrieve true or false accodring if the given username (:id) is already used or not
+#### Get the List of Products
+
+* HTTP method: `GET`  URL: `/api/products/all`
+* Description: Retrieves the list of available products.
 * Request body: _None_
-* Response: `200 OK` (success)
-* Response body: One object describing presence of the username:
+* Successful response: `200 Ok`
+* Error response:  `404 Not Found`
+* Response body: An array of JSON objects (one for each product stored in the database).
 
 ``` JSON
-{
-    "present": true/false
-}
+[
+    {
+        "id": "id",
+        "name": "name",
+        "farmerid": "farmer id",
+        "price":"price",
+        "quantity":"quantity"
+    },
+    {},
+    {}
+]
 ```
 
-* Error responses:  `404 Not Found`
+#### Get the List of Products of a Specific Farmer
 
+* HTTP method: `GET`  URL: `/api/farmer/+farmerId+/products`
+* Description: Retrieves the list of products a specific farmer offers.
+* Request Body: _None_
+* Successful Response: `200 Ok`
+* Error Response:  `500 Server Error`
+* Response Body: An array of JSON objects, each corresponding to a product.
 
-#### Get the customer list
+``` JSON
+[
+    {
+        "id": "id",
+        "name": "name",
+        "farmerid": "farmer id",
+        "price":"price",
+    },
+    {},
+    {}
+]
+```
+
+#### Set Expected Amount of Product for Next Week
+
+* HTTP method: `POST`  URL: `/api/warehouse`
+* Description: A farmer saves in the database how much of a certain product they expect to have the following week.
+* Request Body: A JSON object with the product and the expected amount of it:
+
+``` JSON
+
+    {
+        "product": "product ID",
+        "quantity": "quantity"
+    }
+
+```
+
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error` or `422 Error in Parameters`
+* Response Body: _None_
+
+## Customers
+
+#### Get the List of Customers
 
 * HTTP method: `GET`  URL: `/api/customerlist`
-* Description: retrieve a list of all customers stored in the DB
-* Request body: _None_
-* Response: `200 OK` (success)
-* Response body: An array with one object for each customer in the DB:
+* Description: Retrieves a list of all customers stored in the database.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found`
+* Response Body: An array with one JSON object for each customer in the database:
 
 ``` JSON
 [
@@ -171,31 +304,28 @@
         "wallet":0
     }
     {},
-    {},
-    ...
+    {}
 ]
 ```
 
-* Error responses:  `404 Not Found`
-
-
-#### Add a new customer on the DB
+#### Add a New Customer to the Database
 
 * HTTP method: `POST`  URL: `/api/customer`
-* Description: post a new customer on the DB
-* Request body: an object describing the customer:
+* Description: Posts a new customer to the database.
+* Request Body: A JSON object describing the customer:
 
 ``` JSON
 {
-    "name": "marcello", 
-    "surname": "fumagalli", 
-    "username": "marcello.fumagalli@polito.it", 
+    "name": "name", 
+    "surname": "surname", 
+    "username": "e-mail", 
     "hash": "hash"
 }
 ```
 
-* Response: `200 OK` (success)
-* Response body: An object with the ID of the created user id
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error` or `422 Error in Parameters`
+* Response Body: A JSON object with the ID of the new customer:
 
 ``` JSON
 {
@@ -203,4 +333,39 @@
 }
 ```
 
-* Error responses:  `500 Server Error`
+#### Get Customer by ID
+
+* HTTP method: `GET`  URL: `/api/customers/:id`
+* Description: Retrieves the available information for the customer with that ID.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response: `500 Server Error`
+* Response Body: A JSON object describing the desired customer.
+
+``` JSON
+{
+    "id":1,
+    "name":"Roberto",
+    "surname":"Rossi",
+    "wallet":50
+}
+```
+
+## Farmers
+
+#### Get Farmer by ID
+
+* HTTP method: `GET`  URL: `/api/farmer/:id`
+* Description: Retrieves the available information for the farmer with that ID.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response: `500 Server Error` or `404 Not Found`
+* Response Body: A JSON object describing the desired farmer.
+
+``` JSON
+{
+    "id":1,
+    "name":"Tunin",
+    "surname":"Lamiera"
+}
+```

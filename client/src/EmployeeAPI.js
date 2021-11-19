@@ -22,7 +22,6 @@ async function getCustomers() {
 }
 
 async function updateCustomerWallet(value, id) {
-    const valore = value;
     const response = await fetch('/api/customers/wallet/'+id+'/'+value, {
         method: 'POST',
         headers: {

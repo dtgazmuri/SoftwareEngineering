@@ -7,8 +7,9 @@ function MyNavbar(props) {
 
     return (
         
-            <Navbar bg='dark' variant='dark' fixed='top' className="justify-content-between">
+            <Navbar bg='dark' variant='dark' fixed='top' className="justify-content-between " >
               <Col>
+              
                 {/* Bottone Toggler */}
                 <Link to ="../"> <ArrowLeft variant="outline-light"/> </Link>
                 {/* Logo + Nome */}

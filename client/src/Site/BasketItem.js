@@ -2,11 +2,7 @@ import React from "react";
 import { ListGroup, Col, Row, Badge } from "react-bootstrap";
 import BasketButton from "./BasketButton";
 
-
-
 function BasketItem(props) {
-
-  
   return (
     <>
       {props.product && (
@@ -14,10 +10,10 @@ function BasketItem(props) {
           as={Row}
           className="d-flex justify-content-between align-items-start"
         >
-        <Col>
-        <div className="fw-bold">{props.product.name}</div>
-        </Col>
-        <Col>
+          <Col>
+            <div className="fw-bold">{props.product.name}</div>
+          </Col>
+          <Col>
             <BasketButton
               product={props.product}
               mode={"add"}
@@ -35,9 +31,9 @@ function BasketItem(props) {
             ></BasketButton>{" "}
           </Col>
           <Col>
-          <Badge pill bg="light" text="dark">
-            {props.product.price} €/kg
-          </Badge>
+            <Badge pill bg="light" text="dark">
+              {(props.product.price * props.product.quantity).toFixed(2)} €
+            </Badge>
           </Col>
         </ListGroup.Item>
       )}

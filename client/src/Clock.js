@@ -48,7 +48,6 @@ function ModalDate(props) {
     }
 
     const setToday = () => {
-        // props.setTime(today);
         props.setDirty(false)
         props.handleClose()
     }

@@ -21,6 +21,10 @@
   color: black;
   
 }
+.text-decoration:hover {
+  text-decoration: underline;
+}
+
 .loginContainer {
   margin-top: 20px !important;
 }
@@ -52,7 +56,7 @@
 .LoginButton {
   width: 200px;
   height: 200px;
-  background-color: white;
+  /*background-color: white;*/
   display: block;
   align-items:center;
   margin-left: auto;
@@ -62,6 +66,7 @@
   position:relative;
   padding-top: 10px;
   padding-bottom: 10px;
+  cursor: pointer;
 }
 
 .backg {

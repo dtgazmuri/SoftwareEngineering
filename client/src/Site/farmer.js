@@ -23,8 +23,8 @@ function Farmer() {
             setTrueIfNeverSearchedProducts(false);
         
           API.getProductsOfFarmer(farmerId)
-            .then(products => {
-                setProducts(products);
+            .then(farmer_products => {
+                setProducts(farmer_products);
             })
             .catch(e => handleErrors(e));
         }

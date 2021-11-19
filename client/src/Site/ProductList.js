@@ -11,8 +11,8 @@ function ProductList(props) {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const products = await API.fetchAllProducts();
-        setProducts(products);
+        const all_products = await API.fetchAllProducts();
+        setProducts(all_products);
       } catch (err) {
         //setLogged(false)
         console.log(err.error);
@@ -21,7 +21,6 @@ function ProductList(props) {
     getProducts();
   }, []);
 
-  //const selection = CustomerSelection(customerlist, handleCustomer);
   const productlist = products.map((prod, id) => {
     return (
       <tr>

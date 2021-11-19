@@ -22,14 +22,16 @@ function ProductListEmployee(props) {
         setShow(true)
     }
 
-    useEffect(() => { }
+    useEffect(() => {
+        // Niente
+    }
         , [delivery, customer])
     //PRODUCTS FETCH
     useEffect(() => {
         const getProducts = async () => {
             try {
-                const products = await API.fetchAllProducts();
-                setProducts(products);
+                const current_products = await API.fetchAllProducts();
+                setProducts(current_products);
             } catch (err) {
                 //setLogged(false)
                 console.log(err.error);
@@ -127,9 +129,8 @@ function ProductListEmployee(props) {
     }
 
     const getBookedProduct = ((prod_id) => {
-        let i = 0;
-        for (i = 0; i < order.length; i++) {
-            if (order[i].id == prod_id) {
+        for (let i = 0; i < order.length; i++){
+            if (order[i].id == prod_id){
                 return order[i].quantity;
             }
         }
@@ -349,17 +350,23 @@ function RecapCart(props) {
 function CustomerSelection(props) {
 
     const [customerName, setCustomerName] = useState("");
-    const [customerlist, setCustomerList] = useState(
-        props.customers.map((e, id) => {
-            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
-        }
-        ));
+    const [customerlist, setCustomerList] = useState();
+
+    //use effect to fill customerList at the beginning
+    useEffect(() => {
+        let newCustomerlist = props.customers.map((e, id) => {
+            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
+        );
+        setCustomerList(newCustomerlist);
+    }, [props.customers.length]);
 
     //this function takes the input inside the searchbar and filters all the customers according to the value written
     //in order to simplify the search, it is case insensitive.
     const handleFilterCustomer = (newName) => {
         setCustomerName(newName);
-        let newCustomerlist = props.customers.filter(customer => customer.name.toUpperCase().startsWith(newName.toUpperCase())).map((e, id) => {
+        let newCustomerlist = props.customers.filter(customer => 
+            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()) ) )
+        .map((e, id) => {
             return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
         }
         );
@@ -368,24 +375,24 @@ function CustomerSelection(props) {
 
     return (
         <Form align-items="center">
-            <Row>
-                <Col sm={4}>
-                    <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
-                    <Form.Text className="text-muted">
-                        You can first filter your research by putting his/her name.
-                    </Form.Text>
-                </Col>
-                <Col sm={3}>
-                    <Form.Control type="text" placeholder="Search customer by name" value={customerName} onChange={(event) => handleFilterCustomer(event.target.value)} />
-                </Col>
-                <Col sm={5}>
-                    <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
-                        <option key={`customerdefault`} selected disabled hidden >---select---</option>
-                        {customerlist}
-                    </Form.Control>
-                </Col>
-
-            </Row>
+        <Row>
+            <Col sm = {4}>
+                <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
+                <Form.Text className="text-muted">
+                    You can filter by customer name.
+                </Form.Text>
+            </Col>
+            <Col sm = {3}>
+                <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+            </Col>
+            <Col sm = {5}>
+                <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
+                    <option key={`customerdefault`} selected disabled hidden >---select---</option>
+                    {customerlist}
+                </Form.Control>
+            </Col>
+            
+        </Row>
         </Form>
     )
 

@@ -198,6 +198,16 @@ function App() {
           }
           />
 
+
+        
+          <Route path="/shopemployee/selection/"
+            element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
+               : 
+                <Navigate replace to="/home" />
+              
+            }
+          />
+
           <Route path="/shopemployee/products/"
             element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
                : 

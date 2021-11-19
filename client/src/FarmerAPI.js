@@ -1,4 +1,4 @@
-/**API for getting product info of the products of a specific farmed (farmerId)*/
+/**API for getting product info of the products of a specific farmer (farmerId)*/
 async function getProductsOfFarmer(farmerId) {
     let response = await fetch('/api/farmer/'+farmerId+'/products');
     let responseBody = await response.json();

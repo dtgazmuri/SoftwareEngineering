@@ -22,12 +22,10 @@ exports.addNewUser = (user, role) => {
     console.log(role);
     if (role == "customer") {
       sql =
-        "INSERT INTO customer(NAME, SURNAME, WALLET)\
-          VALUES (?, ? ,?)";
+        "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? ,?)";
       data = [user.name, user.surname, 0];
     } else if (role == "shopemployee") {
-      sql = "INSERT INTO shopemployee(NAME,SURNAME)\
-            VALUES (?, ?)";
+      sql = "INSERT INTO shopemployee(NAME,SURNAME) VALUES (?, ?)";
       data = [user.name, user.surname];
     }
     db.run(sql, data, function (err) {
@@ -43,8 +41,7 @@ exports.addNewUser = (user, role) => {
       bcrypt.hash(user.password, saltRounds, function (err, hash) {
         return new Promise((resolve, reject) => {
           const sql =
-            "INSERT INTO users(USERID, USERNAME, HASH, ROLE)\
-                    VALUES (?, ? , ? , ?)";
+            "INSERT INTO users(USERID, USERNAME, HASH, ROLE) VALUES (?, ? , ? , ?)";
           db.run(sql, [userId, user.username, hash, role], function (err) {
             if (err) {
               reject(err);

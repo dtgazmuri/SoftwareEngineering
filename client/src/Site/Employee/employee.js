@@ -1,6 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Col, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import API from '../../EmployeeAPI'
 
 
@@ -53,17 +52,20 @@ function CustomerList() {
     const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
     const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
     const [customers, setCustomerList] = useState([]);
+    const [customerName, setCustomerName] = useState(""); //state used for searching a specific client
+    const [customersToBeShown, setCustomersToBeShown] = useState([]);
     
-        // show error message in toast
-        const handleErrors = (err) => {
-            console.log(err);
-        }
+    // show error message in toast
+    const handleErrors = (err) => {
+        console.log(err);
+    }
     
     useEffect(() =>  {
             API.getCustomers()
-                .then(customers => {
-                    console.log(customers);
-                    setCustomerList(customers);
+                .then(all_customers => {
+                    console.log(all_customers);
+                    setCustomerList(all_customers);
+                    setCustomersToBeShown(all_customers);
                 })
                 .catch(e => handleErrors(e));
     
@@ -84,6 +86,7 @@ function CustomerList() {
                         return customer
                     });
                     setCustomerList(tmp);
+                    setCustomersToBeShown(tmp);
                     setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
                 })
                 .catch(e =>  {
@@ -94,17 +97,38 @@ function CustomerList() {
                 setWalletUpdated({status: false, id: -1, value: 0});
         }
     }, [walletUpdated, customers])
+
+    const handleFilterCustomer = (newName) => {
+        setCustomerName(newName);
+        let newCustomerlist = customers.filter( customer =>
+            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()) )
+        );
+        setCustomersToBeShown(newCustomerlist);
+    }
+
     return (
+        <>
+            {/** The form is for filtering the list of customers to be shown*/}
+            <Form className = "mb-3">
+                <Row>
+                    <Col sm = {6}>
+                        <Form.Label>You can filter by customer name.</Form.Label>
+                    </Col>
+                    <Col sm = {6}>
+                        <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                    </Col>
+                </Row>
+            </Form>
             <ListGroup variant="primary">
-                {customers.length ?
-                    customers.map(customer => {
+                {customersToBeShown.length ?
+                    customersToBeShown.map(customer => {
                         return (
                             <ListGroup.Item id = {customer.id} key = {customer.id}>
                                 <Row>
                                     <Col>
                                         <h5>{customer.name + " " + customer.surname}</h5>
                                         <h5>ID: {customer.id} </h5>
-                                        <h5>Username: {customer.username}</h5>
+                                        {/*<h5>Username: {customer.username}</h5>*/}
                                         <h5>Amount in Wallet: {customer.wallet} €</h5>
                                     </Col>
                                     <Col>
@@ -120,29 +144,22 @@ function CustomerList() {
                     : <Alert variant = "danger"> No customers found </Alert>
                 }
             </ListGroup>
+        </>
     )
 }
 
 function CustomerForm(props) {
     const [amount, setAmount] = useState("");
 
-    function walletTopUp(id, amount) {
+    function walletTopUp(id, amount_to_add) {
 
-        var value = Number(amount);
-        //var tmp = [];
+        var value = Number(amount_to_add);
         props.customers.forEach((customer) => {
             if (customer.id === id) {
-                // customer.wallet += value;
                 var valore = customer.wallet + value;
                 props.setWalletUpdated({status: true, id: id, value: valore});
-                //tmp.push(customer);
             }
-            /*
-            else {
-                tmp.push(customer);
-            }*/
         })
-        //props.setCustomerList(tmp);
     }
 
     return (
@@ -172,9 +189,9 @@ function OrderList() {
 
     useEffect(() => {
           API.getOrders()
-            .then(orders => {
-                console.log(orders);
-                setOrderList(orders);
+            .then(all_orders => {
+                console.log(all_orders);
+                setOrderList(all_orders);
             })
             .catch(e => handleErrors(e));
       }, [])
@@ -221,7 +238,7 @@ function OrderList() {
                                 <Col>
                                     <Row>Customer id: {order.customerid} </Row>
                                     <Row>Order state: {order.state} </Row>
-                                    <Row>Order total: {order.total}</Row>
+                                    <Row>Order total: {order.total.toFixed(2)}</Row>
                                 </Col>
                                 <Col>
                                     {   order.state === "pending" &&

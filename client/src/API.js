@@ -4,6 +4,7 @@ import Product from "./Site/data/product"
 import Farmer from "./Site/data/farmer"
 import Order from "./Site/data/order"
 import Customer from "./Site/data/customer";
+
 async function login(credentials) {
   let response = await fetch('/api/sessions', {
     method: 'POST',
@@ -13,8 +14,7 @@ async function login(credentials) {
     body: JSON.stringify(credentials),
   });
   if (response.ok) {
-    const user = await response.json();
-    return user;
+    return response.json();
   } else {
     try {
       const errDetail = await response.json();
@@ -75,7 +75,7 @@ async function fetchAllProducts() {
         for (const ex of responseBody){
            const farmername =  await fetchFarmerById(ex.farmerid);
            list.push(new Product(ex.id, ex.name, farmername, ex.price, ex.quantity))
-          };
+          }
         return list;
       }
       
@@ -144,7 +144,6 @@ async function fetchAllOrders() {
           for(let product in responseBody.listitems){
             productlist.push(Product.from(product))
           }
-        //const customer = await getCustomerByID(responseBody.customerid)  
         orders.push(Order.from(order.id, order.customer, order.state, order.delivery, order.total, productlist))
           
         }
@@ -168,7 +167,7 @@ async function fetchAllOrders() {
 
 
 
-/** The function NEEDS to be called by the employee to create a new client order. The clinet needs a separate function because the client id needs to be taken from the cookie in that case.
+/** The function NEEDS to be called by the employee to create a new client order. The client needs a separate function because the client id needs to be taken from the cookie in that case.
  * 
  * @param {object} order_obj The object containing the data of the order, in the format:
  * 
@@ -248,7 +247,7 @@ async function postOrderByEmployee(order_obj) {
 /*** FUNCTIONS TO IMPLEMENTS THE STORIES 6 AND 7 ***/
 
 async function addNewUser(user) {
-  return await axios
+  axios
     .post(BASEURL + "/users/registration", user)
     .then((response) => {
       return response.data;
@@ -264,7 +263,7 @@ async function fetchCustomerById(id) {
     const response = await fetch(url);
     if (response.ok) {
       const responseBody = await response.json();
-      return Customer.from(responseBody[0]);;
+      return Customer.from(responseBody[0]);
     } else {
       return { error: ` error code ${response.status}` };
     }
@@ -402,6 +401,7 @@ async function handOutOrder(id) {
   });
   let responseBody = await response.json();
   if(response.ok) {
+    console.log(responseBody);
       return responseBody;
   }
   else {
