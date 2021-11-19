@@ -238,7 +238,7 @@ function OrderList() {
                                 <Col>
                                     <Row>Customer id: {order.customerid} </Row>
                                     <Row>Order state: {order.state} </Row>
-                                    <Row>Order total: {order.total}</Row>
+                                    <Row>Order total: {order.total.toFixed(2)}</Row>
                                 </Col>
                                 <Col>
                                     {   order.state === "pending" &&

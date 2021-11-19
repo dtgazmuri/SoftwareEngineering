@@ -311,10 +311,16 @@ function RecapCart(props) {
 function CustomerSelection(props) {
 
     const [customerName, setCustomerName] = useState("");
-    const [customerlist, setCustomerList] = useState(
-                props.customers.map((e, id) => {
-                return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
-    ));
+    const [customerlist, setCustomerList] = useState();
+
+    //use effect to fill customerList at the beginning
+    useEffect(() => {
+        console.log(props.customers);
+        let newCustomerlist = props.customers.map((e, id) => {
+            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
+        );
+        setCustomerList(newCustomerlist);
+    }, [props.customers.length]);
 
     //this function takes the input inside the searchbar and filters all the customers according to the value written
     //in order to simplify the search, it is case insensitive.
