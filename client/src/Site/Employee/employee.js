@@ -73,7 +73,6 @@ function CustomerList() {
 
     useEffect(() => {
         if (walletUpdated.status === true) {
-            console.log("Qua");
             API.updateCustomerWallet(walletUpdated.value, walletUpdated.id)
                 .then(res => {
                     console.log(res);
@@ -93,7 +92,6 @@ function CustomerList() {
                     handleErrors(e);
                     setAlertWalletUpdated({id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.`});
                 });
-                console.log("Qua5");
                 setWalletUpdated({status: false, id: -1, value: 0});
         }
     }, [walletUpdated, customers])

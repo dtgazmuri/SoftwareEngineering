@@ -315,7 +315,7 @@ app.post(
   "/api/customers/wallet/:id/:value",
   isLogged,
   isEmployee,
-  [check("id").isInt(), check("value").isInt()],
+  [check("id").isInt()],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
