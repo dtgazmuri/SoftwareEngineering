@@ -11,6 +11,8 @@ function ProductListEmployee(props) {
     const [address, setAddress] = useState("");
     const [order, setOrder] = useState([]) //order<-
     const [show, setShow] = useState(false)
+    const [date, setDate] = useState();
+    const [time, setTime] = useState();
 
     const handleClose = () => {
         setShow(false)
@@ -126,8 +128,8 @@ function ProductListEmployee(props) {
 
     const getBookedProduct = ((prod_id) => {
         let i = 0;
-        for (i = 0; i < order.length; i++){
-            if (order[i].id == prod_id){
+        for (i = 0; i < order.length; i++) {
+            if (order[i].id == prod_id) {
                 return order[i].quantity;
             }
         }
@@ -136,22 +138,22 @@ function ProductListEmployee(props) {
     });
 
     const productlist = products.map((prod, id) => {
-        
-        if (getBookedProduct(prod.id) > 0){
+
+        if (getBookedProduct(prod.id) > 0) {
             return <tr key={"prod" + id} bgcolor="#99ff99">
-            <td>{prod.id}</td>
-            <td>{prod.name}</td>
-            <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-            <td>{prod.price}</td>
-            <td>{prod.quantity}</td>
-            <td><Button onClick={() => addOrder(prod)}>+</Button></td>
-            <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
-            <td>{getBookedProduct(prod.id)}</td>
+                <td>{prod.id}</td>
+                <td>{prod.name}</td>
+                <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
+                <td>{prod.price}</td>
+                <td>{prod.quantity}</td>
+                <td><Button onClick={() => addOrder(prod)}>+</Button></td>
+                <td><Button onClick={() => removeOrder(prod)}>-</Button></td>
+                <td>{getBookedProduct(prod.id)}</td>
 
             </tr>
         }
-        else{
-        
+        else {
+
             return <tr key={"prod" + id}>
                 <td>{prod.id}</td>
                 <td>{prod.name}</td>
@@ -169,77 +171,99 @@ function ProductListEmployee(props) {
     const checkTime = () => {
         let day = dayjs(props.time).get("d");
         let hour = dayjs(props.time).get("h");
-        console.log(day, hour )
-        if(day !== 0 || (hour<23&&day===0))
+        console.log(day, hour)
+        if (day !== 0 || (hour < 23 && day === 0))
             return true
-        else 
-        return false;
+        else
+            return false;
     }
 
     return (
         <>
-        {checkTime()?
-            customer.name === "" ?
-                <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
-                :
-                <>
-                    <h3>{"Create a order for " + customer.name + " " + customer.surname}</h3>
-                    <Table responsive className="table-prod">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Product Name</th>
-                                <th>Farmer</th>
-                                <th>Price</th>
-                                <th>Expected Quantity</th>
-                                <th>Add to the cart</th>
-                                <th>Remove from the cart</th>
-                                <th>Booked quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productlist}
-                            <tr key="delivery-row">
-                                <th>
-                                    Do you want the order to be delivered at your home?
-                                </th>
-                                <th>
-                                    <Form.Group controlId="delivery">
-                                        <Form.Control
-                                            type="checkbox"
-                                            label="delivery"
-                                            onChange={handleDelivery}
-                                            inline
-                                        />
-                                    </Form.Group>
-                                </th>
-                                <th></th><th></th><th></th><th></th><th></th><th></th>
-                            </tr>
-
-                            {delivery ?
+            {checkTime() ?
+                customer.name === "" ?
+                    <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
+                    :
+                    <>
+                        <h3>{"Create a order for " + customer.name + " " + customer.surname}</h3>
+                        <Table responsive className="table-prod">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <Form.Group className="mb-3" controlId="delivery">
-                                            <Form.Label>Please insert your delivery address</Form.Label>
-                                            <Form.Control type="address" placeholder="Enter Address" onChange={ev => setAddress(ev.target.value)} />
-                                        </Form.Group>
+                                    <th>#</th>
+                                    <th>Product Name</th>
+                                    <th>Farmer</th>
+                                    <th>Price</th>
+                                    <th>Expected Quantity</th>
+                                    <th>Add to the cart</th>
+                                    <th>Remove from the cart</th>
+                                    <th>Booked quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {productlist}
+                                <tr key="delivery-row">
+
+                                    <td as={Col}>
+                                        <tr>
+                                            <th>
+                                                Do you want the order to be delivered at your home?
+
+                                                <Form.Group controlId="delivery">
+                                                    <Form.Control
+                                                        type="checkbox"
+                                                        label="delivery"
+                                                        onChange={handleDelivery}
+                                                        inline
+                                                    />
+                                                </Form.Group>
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            {delivery ?
+                                                <>
+                                                    <td>
+                                                        <Form.Group className="mb-3" controlId="delivery">
+                                                            <Form.Label>Please insert your delivery address</Form.Label>
+                                                            <Form.Control type="address" placeholder="Enter Address" onChange={ev => setAddress(ev.target.value)} />
+                                                        </Form.Group>
+                                                    </td>
+                                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                                </>
+                                                : <></>
+                                            }
+                                        </tr>
                                     </td>
-                                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                                    <td as={Col}> </td><td as={Col}> </td><td as={Col}> </td>
+                                    <td as={Col}>
+                                        <Form.Group controlId="form-date">
+                                            <Form.Label>Date</Form.Label>
+                                            <Form.Control type="date" className="mb-3" name="date" format="dd/MM/yyyy" value={date} onChange={(ev) => setDate(ev.target.value)} />
+                                        </Form.Group>
+                                        <Form.Group controlId="form-deadline-time">
+                                            <Form.Label>Time</Form.Label>
+                                            <Form.Control type="time" name="time" value={time} onChange={(ev) => setTime(ev.target.value)} />
+                                        </Form.Group>
+
+                                    </td>
+                                    <td as={Col}> </td><td as={Col}> </td><td as={Col}> </td>
                                 </tr>
 
-                                : <></>}
+                                <tr id="submrow">
+                                    <th>
+                                        <Button variant="success" onClick={handleShow}>Submit Order!</Button>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </Table>
+                        <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} />
 
-                            <tr id="submrow">
-                                <th>
-                                    <Button variant="success" onClick={handleShow}>Submit Order!</Button>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </Table>
-                    <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} />
-
-                </>
-            :<h1>We're sorry but orders close at 23 of every Sunday</h1>
+                    </>
+                : <h1>We're sorry but orders close at 23 of every Sunday</h1>
             }
         </>
     )
@@ -284,20 +308,35 @@ function RecapCart(props) {
                                 <th>€</th>
                             </tr>
                         </thead>
-                        {cartlist}
-                        <tr id="total">
-                            <th>
-                                Your total: {total.toFixed(2)}€
-                            </th>
-                        </tr>
-                        <tr id="buttons" className="buttonRow d-flex justify-content-around" >
+                        <tbody>
+                            {cartlist}
+                        </tbody>
+                        <tfoot>
+                            <tr id="total">
+                                <th></th><th></th><th>Your total:</th>
+                                <th>
+                                     {total.toFixed(2)}€
+                                </th>
+                            </tr>
+                            <tr id="delivery" className="h-100">
+                                <th>
+                                    {!props.delivery ? "Pick-up at the shop" : `delivery address:`}
+                                </th>
+                                <td>{props.delivery ? props.address:""}</td>
+                            </tr>
 
-                            <Button onClick={props.handleSubmit}>Save</Button>
+                            <tr id="date">
+                                <th>{!props.delivery ? "Pick-up" : "Delivery date:"}</th> <td>{`${props.date} at ${props.time}`}</td>
+                            </tr>
 
-                            <Button variant='secondary' onClick={props.handleClose}>Cancel</Button>
+                            <tr id="buttons" className="buttonRow d-flex justify-content-around" >
 
-                        </tr>
+                                <Button onClick={props.handleSubmit}>Save</Button>
 
+                                <Button variant='secondary' onClick={props.handleClose}>Cancel</Button>
+
+                            </tr>
+                        </tfoot>
 
                     </Table>
                 }
@@ -311,9 +350,10 @@ function CustomerSelection(props) {
 
     const [customerName, setCustomerName] = useState("");
     const [customerlist, setCustomerList] = useState(
-                props.customers.map((e, id) => {
-                return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>}
-    ));
+        props.customers.map((e, id) => {
+            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
+        }
+        ));
 
     //this function takes the input inside the searchbar and filters all the customers according to the value written
     //in order to simplify the search, it is case insensitive.
@@ -328,24 +368,24 @@ function CustomerSelection(props) {
 
     return (
         <Form align-items="center">
-        <Row>
-            <Col sm = {4}>
-                <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
-                <Form.Text className="text-muted">
-                    You can first filter your research by putting his/her name.
-                </Form.Text>
-            </Col>
-            <Col sm = {3}>
-                <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
-            </Col>
-            <Col sm = {5}>
-                <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
-                    <option key={`customerdefault`} selected disabled hidden >---select---</option>
-                    {customerlist}
-                </Form.Control>
-            </Col>
-            
-        </Row>
+            <Row>
+                <Col sm={4}>
+                    <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
+                    <Form.Text className="text-muted">
+                        You can first filter your research by putting his/her name.
+                    </Form.Text>
+                </Col>
+                <Col sm={3}>
+                    <Form.Control type="text" placeholder="Search customer by name" value={customerName} onChange={(event) => handleFilterCustomer(event.target.value)} />
+                </Col>
+                <Col sm={5}>
+                    <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
+                        <option key={`customerdefault`} selected disabled hidden >---select---</option>
+                        {customerlist}
+                    </Form.Control>
+                </Col>
+
+            </Row>
         </Form>
     )
 

@@ -7,7 +7,7 @@ function MyNavbar(props) {
 
     return (
         
-            <Navbar bg='dark' variant='dark' fixed='top' justify-content="between" className="justify-content-between">
+            <Navbar bg='dark' variant='dark' fixed='top' className="justify-content-between">
               <Col>
                 {/* Bottone Toggler */}
                 <Link to ="../"> <ArrowLeft variant="outline-light"/> </Link>
@@ -28,9 +28,7 @@ function MyNavbar(props) {
               <Col  className="aling-items-center">
                 {props.isLogged?
                 <LogoutButton logout = {props.logout}/>
-                :<Navbar.Text>
-                    About Us
-                </Navbar.Text>
+                :""
                 }
                </Col>
 
