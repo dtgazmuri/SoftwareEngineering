@@ -19,7 +19,7 @@ This document lists all of the methods and functions available in the API. They 
 * Request Body: _None_
 * Successful Response: `200 OK`
 * Error Response:  `404 Not Found`
-* Response Body: One object with a boolean describing presence of the username:
+* Response Body: A JSON object with a boolean describing presence of the username:
 
 ``` JSON
 {
@@ -35,7 +35,7 @@ or
 }
 ```
 
-#### Create New User (Not ready)
+#### Create New User
 
 * HTTP method: `POST`  URL: `/api/users/registration`
 * Description: Creates a new user and adds it to the database.
@@ -53,8 +53,13 @@ or
 
 * Successful Response: `200 OK`
 * Error Response:  `500 Server Error`
-* Response Body: _TO COMPLETE_
+* Response Body: A JSON object with the ID of the new user:
 
+``` JSON
+{
+    "userid":1
+}
+```
 
 #### Update Customer Wallet (Not ready)
 
@@ -70,7 +75,7 @@ or
 
 * Successful Response: `200 OK`
 * Error Response:  `500 DB error when updating wallet` or `422 Error in Parameters`
-* Response Body: _TO COMPLETE_
+* Response Body: _None_
 
 #### Login
 
@@ -193,7 +198,7 @@ or
 }
 ```
 
-#### Hand-Out Order (Not ready)
+#### Hand-Out Order
 
 * HTTP method: `POST`  URL: `/api/orders/:id/handOut`
 * Description: Changes the status of an order from "Pending" to "Delivered"
@@ -248,7 +253,7 @@ or
 ]
 ```
 
-#### Set Expected Amount of Product for Next Week (Not Ready)
+#### Set Expected Amount of Product for Next Week
 
 * HTTP method: `POST`  URL: `/api/warehouse`
 * Description: A farmer saves in the database how much of a certain product they expect to have the following week.
@@ -265,13 +270,12 @@ or
 
 * Successful Response: `200 OK`
 * Error Response:  `500 Server Error` or `422 Error in Parameters`
-* Response Body: _Complete_
+* Response Body: _None_
 
 ## Customers
 
-#### Get the List of Customers (Not ready)
+#### Get the List of Customers
 
-_Which of the two methods? This or getCustomers_
 * HTTP method: `GET`  URL: `/api/customerlist`
 * Description: Retrieves a list of all customers stored in the database.
 * Request Body: _None_

@@ -158,7 +158,6 @@ exports.listCustomersAll = () => {
 };
 
 exports.updateCustomerWallet = (id, value) => {
-    console.log("Qua20");
     return new Promise((resolve, reject) => {
         const sql = 'UPDATE customer SET WALLET = ? WHERE ID = ?';
 
