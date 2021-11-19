@@ -16,7 +16,7 @@ function MyPage(props) {
       <Container fluid className="below-nav vh-100 align-items-center">
         <Row id="first">
           <Col id="signin-col" >
-            <Container fluid className="LoginButton border border-dark rounded nolink" align="center" onClick={handleShow}>
+            <Container fluid className="LoginButton border border-dark rounded nolink text-decoration" align="center" onClick={handleShow}>
               {signin}
               <h3>Create new Client</h3>
             </Container>
