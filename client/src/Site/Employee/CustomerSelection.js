@@ -33,7 +33,7 @@ function CustomerSelection(props) {
                 <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
             </Col>
             <Col sm = {5}>
-                <Form.Control as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
+                <Form.Control title="select-statement" as="select" aria-label="Please select a client" onChange={ev => props.handleCustomer(ev.target.value)}>
                     <option key={`customerdefault`} selected disabled hidden >---select---</option>
                     {customerlist}
                 </Form.Control>
