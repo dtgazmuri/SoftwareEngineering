@@ -1,5 +1,5 @@
 "use strict";
-const db = require("./db");
+const db = require("../db");
 const bcrypt = require("bcrypt");
 
 exports.checkIfUserNotExists = (username) => {
@@ -21,8 +21,7 @@ exports.addNewUser = (user, role) => {
     var data = [];
     console.log(role);
     if (role == "customer") {
-      sql =
-        "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? ,?)";
+      sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? ,?)";
       data = [user.name, user.surname, 0];
     } else if (role == "shopemployee") {
       sql = "INSERT INTO shopemployee(NAME,SURNAME) VALUES (?, ?)";
@@ -37,6 +36,7 @@ exports.addNewUser = (user, role) => {
     });
   })
     .then((userId) => {
+      console.log("hereee");
       const saltRounds = 10;
       bcrypt.hash(user.password, saltRounds, function (err, hash) {
         return new Promise((resolve, reject) => {
@@ -44,10 +44,13 @@ exports.addNewUser = (user, role) => {
             "INSERT INTO users(USERID, USERNAME, HASH, ROLE) VALUES (?, ? , ? , ?)";
           db.run(sql, [userId, user.username, hash, role], function (err) {
             if (err) {
+              console.log("errorrrr");
               reject(err);
               return;
             }
-            resolve();
+            console.log("resolving");
+            console.log(userId);
+            resolve(userId);
           });
         });
       });

@@ -1,5 +1,5 @@
-const employeeDAO = require("./employeeDBAccess"); // module for accessing the DB
-const farmerDAO = require("./farmerDAO"); //module for accessing db from farmer
+const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
+const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
 const bcrypt = require("bcrypt");
 /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
@@ -11,10 +11,10 @@ const morgan = require("morgan"); // logging middleware
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy; // username+psw
 const session = require("express-session");
-const myUserDao = require("./userDao");
-const customerDao = require("./customerDao");
+const myUserDao = require("./Dao/userDao");
+const customerDao = require("./Dao/customerDao");
 
-const userDao = require("./dbusers.js");
+const userDao = require("./Dao/dbusers");
 
 passport.use(
   new LocalStrategy(function (username, password, done) {
@@ -530,7 +530,10 @@ app.post(
 
       if (!tmp_hash.err) {
         //0) Create the object instance for the customer
-        const customerINST = { name: req.body.name, surname: req.body.surname };
+        const customerINST = {
+          name: req.body.name,
+          surname: req.body.surname,
+        };
 
         //2) post on DB and get the new Customer ID back
         const customer_id = await employeeDAO.createNewCustomer(customerINST);
@@ -620,6 +623,7 @@ app.get("/api/customers/:id", isLoggedIn, (req, res) => {
       res.status(error.code).json(error);
     });
 });
+
 /* END of STORIES NUMBER 6, 7, 8 */
 
 module.exports = app;

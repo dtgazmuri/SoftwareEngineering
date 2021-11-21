@@ -1,4 +1,4 @@
-const userDao = require("../userDao");
+const userDao = require("../Dao/userDao");
 const db = require("../db");
 
 const initializeDB = () => {

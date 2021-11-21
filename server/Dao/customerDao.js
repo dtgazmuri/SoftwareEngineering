@@ -1,5 +1,5 @@
 "use strict";
-const db = require("./db");
+const db = require("../db");
 
 exports.getCustomerByUserId = (id) => {
   return new Promise((resolve, reject) => {
