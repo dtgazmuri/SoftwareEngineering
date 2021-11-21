@@ -1,6 +1,7 @@
 const app = require("../app");
 const request = require("supertest");
-const db = require("../db");
+
+//jest.mock("../db");
 
 describe("Test api's", () => {
   beforeAll(() => {
@@ -14,7 +15,7 @@ describe("Test api's", () => {
   test("responds to /api/products/all", async () => {
     const res = await request(app).get("/api/products/all");
     expect(res.statusCode).toBe(200);
-    // expect(JSON.parse(res.text)[0]).toBe([]);
+    //expect(res.body[0]).toEqual([]);
   });
 });
 
