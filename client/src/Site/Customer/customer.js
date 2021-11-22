@@ -28,7 +28,7 @@ function CustomerHome(props) {
         <>
           <Row>
             <Col xs={11}>
-              <h3>Amout on your wallet: {customer.wallet} €</h3>
+              <h3>Amount on your wallet: {customer.wallet} €</h3>
             </Col>
 
             <Link to={`/customer/${customer.id}/basket`}>
