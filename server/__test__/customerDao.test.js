@@ -29,15 +29,18 @@ const addCustomerForTest = (customer) => {
     );
   });
 };
-describe("Test customerDao functions", () => {
-  beforeAll(() => {
-    initializeDB();
-  });
 
-  // afterAll(async () => {});
-  afterAll(() => {
-    // initializeDB();
-  });
+beforeAll(async () => {
+  // console.log("before all");
+  await initializeDB();
+});
+
+afterAll(async () => {
+  //  console.log("afterall");
+  await initializeDB();
+});
+
+describe("Test customerDao functions", () => {
   test("test getCustomerByUserId when id does not exist", async () => {
     return expect(customerDao.getCustomerByUserId(1)).rejects.toEqual({
       code: "404",
@@ -60,7 +63,7 @@ describe("Test customerDao functions", () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   });
 });

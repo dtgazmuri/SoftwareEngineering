@@ -28,15 +28,15 @@ const addUserForTest = (user, userId, hash, role) => {
   });
 };
 
+beforeAll(async () => {
+  await initializeDB();
+});
+
+afterAll(async () => {
+  await initializeDB();
+});
+
 describe("Test userDao functions", () => {
-  beforeAll(() => {
-    initializeDB();
-  });
-
-  afterAll(() => {
-    initializeDB();
-  });
-
   test("test checkIfUserNotExists while it deosn't", async () => {
     return expect(
       userDao.checkIfUserNotExists("setare@polito.it")
