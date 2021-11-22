@@ -113,7 +113,7 @@ function CustomerList() {
                         <Form.Label>You can filter by customer name.</Form.Label>
                     </Col>
                     <Col sm = {6}>
-                        <Form.Control  type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                        <Form.Control type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
                     </Col>
                 </Row>
             </Form>
@@ -258,4 +258,4 @@ function OrderList() {
         </Col>
     )
 }
-export {CustomerList,OrderList};
+export {CustomerList, OrderList, CustomerForm};
