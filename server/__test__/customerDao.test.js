@@ -42,7 +42,7 @@ afterAll(async () => {
 
 describe("Test customerDao functions", () => {
   test("test getCustomerByUserId when id does not exist", async () => {
-    return expect(customerDao.getCustomerByUserId(1)).rejects.toEqual({
+    return expect(customerDao.getCustomerByUserId(db, 1)).rejects.toEqual({
       code: "404",
       msg: "not found",
     });
@@ -51,7 +51,7 @@ describe("Test customerDao functions", () => {
     const newCustomer = { NAME: "setare", SURNAME: "askari", WALLET: 100 };
     addCustomerForTest(newCustomer)
       .then((id) => {
-        return customerDao.getCustomerByUserId(id).then((data) => {
+        return customerDao.getCustomerByUserId(db, id).then((data) => {
           expect(data).toEqual([
             {
               ID: id,

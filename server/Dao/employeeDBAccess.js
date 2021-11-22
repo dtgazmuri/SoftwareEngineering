@@ -1,8 +1,8 @@
 /* This file contain the SQL query for the DB for the employee requests */
 
-const db = require("../db");
+//const db = require("../db");
 
-exports.getCustomers = () => {
+exports.getCustomers = (db) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM customer";
     db.all(sql, [], (err, rows) => {
@@ -22,7 +22,7 @@ exports.getCustomers = () => {
 };
 
 // get all products (with the werehouse quantity)
-exports.listProductsAll = () => {
+exports.listProductsAll = (db) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql =
@@ -47,7 +47,7 @@ exports.listProductsAll = () => {
 };
 
 //Get the farmer info given its ID
-exports.getFarmerById = (farmer_id) => {
+exports.getFarmerById = (db, farmer_id) => {
   return new Promise((resolve, reject) => {
     //Create the sql query (the ? is for the farmer_id)
     const sql = "SELECT * FROM farmer WHERE ID = ?";
@@ -85,7 +85,7 @@ exports.getFarmerById = (farmer_id) => {
 };
 
 // get all orderitems of a given order ID
-exports.getOrderItems = (order_id) => {
+exports.getOrderItems = (db, order_id) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql = "SELECT * FROM orderitems WHERE ORDERID = ?";
@@ -116,7 +116,7 @@ exports.getOrderItems = (order_id) => {
 };
 
 // get all the orders
-exports.getOrderAll = () => {
+exports.getOrderAll = (db) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql = "SELECT * FROM clientorder";
@@ -146,7 +146,7 @@ exports.getOrderAll = () => {
   });
 };
 
-exports.listCustomersAll = () => {
+exports.listCustomersAll = (db) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM customer";
 
@@ -169,7 +169,7 @@ exports.listCustomersAll = () => {
   });
 };
 
-exports.updateCustomerWallet = (id, value) => {
+exports.updateCustomerWallet = (db, id, value) => {
   return new Promise((resolve, reject) => {
     const sql = "UPDATE customer SET WALLET = ? WHERE ID = ?";
 
@@ -183,7 +183,7 @@ exports.updateCustomerWallet = (id, value) => {
   });
 };
 
-exports.handOutOrder = (id) => {
+exports.handOutOrder = (db, id) => {
   return new Promise((resolve, reject) => {
     const sql = "UPDATE clientorder SET STATE = ? WHERE ID = ?";
 
@@ -198,7 +198,7 @@ exports.handOutOrder = (id) => {
 };
 
 // get all the orders
-exports.getOrderAll = () => {
+exports.getOrderAll = (db) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql = "SELECT * FROM clientorder";
@@ -229,7 +229,7 @@ exports.getOrderAll = () => {
 };
 
 // get all the orders of a given customer
-exports.getOrderByCustomer = (customer_id) => {
+exports.getOrderByCustomer = (db, customer_id) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql = "SELECT * FROM order WHERE CUSTOMER = ?";
@@ -260,7 +260,7 @@ exports.getOrderByCustomer = (customer_id) => {
 };
 
 //Add a new client order
-exports.createClientOrder = (order) => {
+exports.createClientOrder = (db, order) => {
   return new Promise((resolve, reject) => {
     const sql =
       "INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL) VALUES(?, ?, ?, ?)";
@@ -280,7 +280,7 @@ exports.createClientOrder = (order) => {
 };
 
 //Add a new order item
-exports.createOrderItem = (item) => {
+exports.createOrderItem = (db, item) => {
   return new Promise((resolve, reject) => {
     const sql =
       "INSERT INTO orderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?, ?)";
@@ -300,7 +300,7 @@ exports.createOrderItem = (item) => {
 };
 
 //Check if a given username is present
-exports.isUsernamePresent = (username) => {
+exports.isUsernamePresent = (db, username) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql = "SELECT * FROM users WHERE USERNAME = ?";
@@ -330,7 +330,7 @@ exports.isUsernamePresent = (username) => {
 //Add a new customer to the DB (need to add the client AND the user!)
 
 //Add a new customer
-exports.createNewCustomer = (customer) => {
+exports.createNewCustomer = (db, customer) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES(?, ?, ?)";
 
@@ -347,7 +347,7 @@ exports.createNewCustomer = (customer) => {
 };
 
 //Add a new user
-exports.createNewUser = (user) => {
+exports.createNewUser = (db, user) => {
   return new Promise((resolve, reject) => {
     const sql =
       "INSERT INTO users(USERID, USERNAME, HASH, ROLE) VALUES(?, ?, ?, ?)";

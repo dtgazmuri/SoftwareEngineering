@@ -1,9 +1,9 @@
 "use strict";
 
-const db = require("../db");
+// const db = require("../db");
 const bcrypt = require("bcrypt");
 
-exports.getUserById = (id) => {
+exports.getUserById = (db, id) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM users WHERE id = ?";
     db.get(sql, [id], (err, row) => {
@@ -22,7 +22,7 @@ exports.getUserById = (id) => {
   });
 };
 
-exports.getUser = (username, password) => {
+exports.getUser = (db, username, password) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM users WHERE USERNAME = ?";
     db.get(sql, [username], (err, row) => {

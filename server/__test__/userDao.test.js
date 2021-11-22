@@ -39,7 +39,7 @@ afterAll(async () => {
 describe("Test userDao functions", () => {
   test("test checkIfUserNotExists while it deosn't", async () => {
     return expect(
-      userDao.checkIfUserNotExists("setare@polito.it")
+      userDao.checkIfUserNotExists(db, "setare@polito.it")
     ).resolves.toBe();
   });
 
@@ -53,7 +53,7 @@ describe("Test userDao functions", () => {
     addUserForTest(newUser, 1, "123456", "customer")
       .then(() => {
         return expect(
-          userDao.checkIfUserNotExists("setare@polito.it")
+          userDao.checkIfUserNotExists(db, "setare@polito.it")
         ).rejects.toEqual({ code: 409, msg: "user already exits." });
       })
       .catch(() => {});

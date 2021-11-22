@@ -1,8 +1,8 @@
 "use strict";
-const db = require("../db");
+// const db = require("../db");
 const bcrypt = require("bcrypt");
 
-exports.checkIfUserNotExists = (username) => {
+exports.checkIfUserNotExists = (db, username) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM users WHERE USERNAME = ?";
     db.get(sql, [username], (err, row) => {
@@ -15,7 +15,7 @@ exports.checkIfUserNotExists = (username) => {
   });
 };
 
-exports.addNewUser = (user, role) => {
+exports.addNewUser = (db, user, role) => {
   return new Promise((resolve, reject) => {
     var sql = "";
     var data = [];

@@ -1,4 +1,7 @@
-const app = require("../app");
+const express = require("express");
+const db = require("../db");
+const app = express();
+const server = require("../app")(app, db);
 const request = require("supertest");
 
 //jest.mock("../db");
