@@ -4,8 +4,6 @@ const app = express();
 const server = require("../app")(app, db);
 const request = require("supertest");
 
-//jest.mock("../db");
-
 describe("Test api's", () => {
   beforeAll(() => {
     /* db.run(`DELETE FROM product`, function (err) {
