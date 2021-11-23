@@ -1,5 +1,5 @@
 const userDao = require("../Dao/userDao");
-const db = require("../db");
+const db = require("../dbTest");
 
 const initializeDB = () => {
   return new Promise((resolve, reject) => {
