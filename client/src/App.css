@@ -116,6 +116,14 @@
   margin-bottom: 10px !important;
 }
 
+.h-divider{
+  margin-top:5px;
+  margin-bottom:5px;
+  height:1px;
+  width:100%;
+  border-top:1px solid gray;
+ }
+
 
 @keyframes App-logo-spin {
   from {
