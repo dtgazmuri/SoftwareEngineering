@@ -83,6 +83,7 @@ function ProductListEmployee(props) {
             try {
                 const customers = await API.fetchAllCustomers();
                 setList(customers);
+                console.log(customers);
             } catch (err) {
                 console.log(err.error);
             }
@@ -220,7 +221,9 @@ function ProductListEmployee(props) {
                             {
                                 customer.name === "" ?
                                     <>
+                                       { customerlist.length !== 0 &&
                                         <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
+                                        }
                                     </>
                                     :
                                     <>

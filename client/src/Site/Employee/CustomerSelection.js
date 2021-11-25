@@ -13,9 +13,12 @@ function CustomerSelection(props) {
     //in order to simplify the search, it is case insensitive.
     const handleFilterCustomer = (newName) => {
         setCustomerName(newName);
-        let newCustomerlist = props.customers.filter(customer => customer.name.toUpperCase().startsWith(newName.toUpperCase())).map((e, id) => {
-            return <option key={`customer-${id}`} value={e.id}>  {e.name + " " + e.surname}  </option>
-        }
+        let newCustomerlist = props.customers.map(customer => 
+            {
+                if(customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()))
+                    return <option key={`customer-${customer.id}`} value={customer.id}>  {customer.name + " " + customer.surname}  </option>
+
+            }
         );
         setCustomerList(newCustomerlist);
     }
