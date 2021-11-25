@@ -59,7 +59,7 @@ function ProductList(props) {
             <th>#</th>
             <th>Product Name</th>
             <th>Farmer</th>
-            <th>Price</th>
+            <th>Price of 1 kg</th>
             <th>Expected Quantity</th>
             <th>Add to the basket</th>
           </tr>

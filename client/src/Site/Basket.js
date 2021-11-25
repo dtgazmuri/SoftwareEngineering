@@ -1,4 +1,5 @@
-import { Row, Col, Container, ListGroup } from "react-bootstrap";
+import { Row, Col, Container, ListGroup, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import React from "react";
 import BasketItem from "./BasketItem";
 
@@ -34,7 +35,7 @@ function Basket(props) {
             className="d-flex justify-content-between align-items-start"
           >
             <Col>Product Name</Col>
-            <Col>Product quantity</Col>
+            <Col>Product Quantity (kg)</Col>
             <Col>Price</Col>
           </ListGroup.Item>
 
@@ -48,11 +49,24 @@ function Basket(props) {
             />
           ))}
 
-          <ListGroup.Item as={Row}>
-            Your total: {total.toFixed(2)} €
+          <ListGroup.Item as={Row} className="d-flex justify-content-between align-items-start">
+            <Col>Your total: {total.toFixed(2)} €</Col>
+            <Col></Col>
+            <Col>
+              {items.length != 0 &&
+              <Link to={`/customer`}>
+                <Button>Place Order Request</Button>
+              </Link>
+              }
+            </Col>
           </ListGroup.Item>
+
         </ListGroup>
       )}
+      <br></br>
+      <Link to={`/customer`}>
+        <Button>Return</Button>
+      </Link>
     </Container>
   );
 }

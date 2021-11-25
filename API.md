@@ -174,7 +174,8 @@ or
     "customerid":1,
     "state":"pending",
     "delivery":"yes", 
-    "total":9.90, 
+    "total":9.90,
+    "date": "YYYY-MM-DD 00:00",
     "listitems":
         [
             {

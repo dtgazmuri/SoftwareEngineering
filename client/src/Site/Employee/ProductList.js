@@ -21,6 +21,8 @@ function ProductListEmployee(props) {
     const [show, setShow] = useState(false)
     const [date, setDate] = useState();
     const [time, setTime] = useState();
+    const [orderTime, setOrderTime] = useState();
+    const [orderDate, setOrderDate] = useState();
 
 
     //Error in cart
@@ -41,20 +43,20 @@ function ProductListEmployee(props) {
 
         if (order.length <= 0 && good) {
             setCartError(true);
-            setCartErrorMessage("Your cart is empty!");
+            setCartErrorMessage("Cart is empty");
             good = false;
         }
 
         if (date === undefined && good) {
             setCartError(true);
-            setCartErrorMessage("You didn't set the withdraw date!");
+            setCartErrorMessage("Please set a date");
             good = false;
         }
 
 
         if (time === undefined && good) {
             setCartError(true);
-            setCartErrorMessage("You didn't set the withdraw time!");
+            setCartErrorMessage("Please set a time");
             good = false;
         }
 
@@ -170,7 +172,10 @@ function ProductListEmployee(props) {
     const handleSubmit = async () => {
 
         let total = 0;
-        let deladd = "shop"
+        let deladd = "shop";
+        let date = orderDate;
+        let time = orderTime;
+        let dateTime = date + " " + time;
         if (delivery)
             deladd = address;
 
@@ -179,7 +184,7 @@ function ProductListEmployee(props) {
             total += o.price * o.quantity;
         }
         try {
-            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: deladd, total: total, listitems: order });
+            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: deladd, total: total, listitems: order, date: dateTime});
             props.setMessage({ type: "success", msg: `Order added correctly` })
 
         } catch (err) {
@@ -230,7 +235,7 @@ function ProductListEmployee(props) {
                                             cartError ?
                                                 <ErrorCartModal handleClose={handleClose} show={show} errorMessage={cartErrorMessage} />
                                                 :
-                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} />
+                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate}/>
                                         }
 
 
@@ -482,8 +487,10 @@ export function RecapCart(props) {
                         </tr>
 
                         <tr>
-                            <td><b>Delivery date:</b></td>
+                            <td><b>Delivery Date:</b></td>
                             <td colSpan="2">{`${props.date} at ${props.time}`}</td>
+                            {props.setOrderDate(props.date)}
+                            {props.setOrderTime(props.time)}
                         </tr>
 
                     </tbody>
