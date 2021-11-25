@@ -123,7 +123,7 @@ function CustomerList() {
                         return (
                             <ListGroup.Item id = {customer.id} key = {customer.id}>
                                 <Row>
-                                    <Col>
+                                    <Col md = {6} lg = {6} sm = {6}>
                                         <h5>{customer.name + " " + customer.surname}</h5>
                                         <h5>ID: {customer.id} </h5>
                                         {/*<h5>Username: {customer.username}</h5>*/}
