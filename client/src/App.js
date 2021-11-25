@@ -12,6 +12,7 @@ import API from "./API.js"
 import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductList';
 import { CustomerList, OrderList } from './Site/Employee/employee';
+import { CancelationOrderList } from './Site/Employee/cancelationorders';
 import Farmer from './Site/farmer';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/customer";
@@ -228,6 +229,11 @@ function App() {
             }
           />
 
+          <Route
+            path="/shopemployee/cancelationpending/"
+            element={isLogged ? <CancelationOrderList /> : <Navigate replace to="/home" />}
+          />
+
           {/**Route for the main page of the shop employee */}
           <Route exact path="/shopemployee/"
             element={
@@ -276,17 +282,7 @@ function App() {
           />*/}
         </Routes>
       </Container>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>
     </Router>
   );
 }

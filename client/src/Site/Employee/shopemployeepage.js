@@ -50,6 +50,16 @@ function MyPage(props) {
               </Link>
           </Col>
           </Row>
+          <Row id="third">
+          <Col id="handout-col">
+            <Link to ="/shopemployee/cancelationpending">
+              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+                {deliverybig}
+                <h3>Orders pending cancelation</h3>
+              </Container>
+              </Link>
+          </Col>
+          </Row>
           
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />
         </Container>
