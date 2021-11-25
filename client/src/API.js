@@ -194,6 +194,7 @@ async function postOrderByEmployee(order_obj) {
   const url = `${BASEURL}/order/employee`;
 
   const data = order_obj;
+  console.log(data);
 
   try {
     const response = await fetch(url, {

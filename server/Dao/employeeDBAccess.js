@@ -265,11 +265,11 @@ exports.getOrderByCustomer = (db, customer_id) => {
 exports.createClientOrder = (db, order) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL) VALUES(?, ?, ?, ?)";
-
+      "INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL, DATETIME) VALUES(?, ?, ?, ?, ?)";
+    console.log(order.date);
     db.run(
       sql,
-      [order.customerid, order.state, order.delivery, order.total],
+      [order.customerid, order.state, order.delivery, order.total, order.date],
       function (err) {
         if (err) {
           reject(err);
