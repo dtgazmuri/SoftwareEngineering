@@ -24,14 +24,14 @@ function MyNavbar(props) {
   return (
 
     <Navbar bg='dark' variant='dark' fixed='top' className="d-flex justify-content-between" >
-        <Col xs={2} className="d-flex text-left">
+        <Col className="d-flex">
 
           {/* Bottone Toggler */}
           {loc && 
           <Link to="../"> <ArrowLeft variant="outline-light" /> </Link>}
           {/* Logo + Nome */}
         </Col>
-        <Col xs={2} className="d-flex text-center">
+        <Col lg= {8} xs={4} className="d-flex justify-content-center">
           <Navbar.Brand fixed="center">
             <Link to="/" className="nolink" variant="outline-light">
               <span>
@@ -43,7 +43,7 @@ function MyNavbar(props) {
             </Link>
           </Navbar.Brand>
         </Col>
-        <Col xs={2} className="d-flex text-right">
+        <Col className="d-flex justify-content-end">
           {props.isLogged ?
             <LogoutButton logout={props.logout} />
             : ""
@@ -57,11 +57,9 @@ function MyNavbar(props) {
 
 function LogoutButton(props) {
   return (
-    <Col>
       <Link to="/">
         <Button variant="outline-light" onClick={props.logout}>Logout</Button>
       </Link>
-    </Col>
   )
 }
 
