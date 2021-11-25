@@ -638,34 +638,29 @@ module.exports = function (app, db) {
   // this GET is used by employees to get information about the orders with a total > walletBalance of the customer who placed it
   // GET /api/orders/insufficientWallet
   app.get("/api/orders/insufficientWallet", isLogged, isEmployee, async (req, res) => {
+    console.log("/api/orders/insufficientWallet");
     try {
-      const resultArray = [];   //array with answers
       const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
+      //console.log(orders);
 
       //get all customers info 
       const customers = await employeeDAO.getCustomers(db);
+      //console.log(customers);
 
-      for (let i = 0; i < orders.length; i++) {
-        //for each order, map the info of the customer to it
-        const customer = customers.find(customer => customer.id ===orders[i].customerid);
-        console.log(customer);
-
-        //Create the order object
-        const order = {
-          id: orderid,
-          customerid: orders[i].customerid,
-          state: orders[i].state,
-          delivery: orders[i].delivery,
-          total: orders[i].total,
-          customerName: customer.name,
-          customerSurname: customer.surname,
-          customerUsername: customer.username,
-          customerWallet: customer.wallet,
-        };
-
-        //Add it to the res array
-        resultArray.push(order);
-      }
+      const resultArray = orders.map(order =>{
+          let customer = customers.find(customer => customer.id ===order.customerid);
+          return {
+            id: order.id,
+            customerid: order.customerid,
+            state: order.state,
+            delivery: order.delivery,
+            total: order.total,
+            customerName: customer.name,
+            customerSurname: customer.surname,
+            customerUsername: customer.username,
+            customerWallet: customer.wallet
+          }
+      });
 
       res.status(200).json(resultArray);
     } catch (err) {
