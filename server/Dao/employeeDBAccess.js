@@ -4,7 +4,8 @@
 
 exports.getCustomers = (db) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM customer";
+    //UPDATED query for getting customers in order to return also the username (email)
+    const sql = "SELECT C.ID AS ID, NAME, SURNAME, WALLET, USERNAME FROM customer C INNER JOIN users U on C.id = U.USERID WHERE U.role = 'customer'";
     db.all(sql, [], (err, rows) => {
       if (err) {
         reject(err);
@@ -15,6 +16,7 @@ exports.getCustomers = (db) => {
         name: e.NAME,
         surname: e.SURNAME,
         wallet: e.WALLET,
+        username: e.USERNAME
       }));
       resolve(customers);
     });
