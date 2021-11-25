@@ -60,5 +60,16 @@ async function handOutOrder(id) {
     }
 }
 
-const API = { getOrders, getCustomers, updateCustomerWallet, handOutOrder };
+async function getOrdersWithInsufficientWalletBalance() {
+    let response = await fetch('/api/orders/insufficientWallet');
+    let responseBody = await response.json();
+    if(response.ok) {
+        return responseBody;
+    }
+    else {
+        throw responseBody;  // an object with the error coming from the server
+    }
+}
+
+const API = { getOrders, getCustomers, updateCustomerWallet, handOutOrder, getOrdersWithInsufficientWalletBalance };
 export default API;
