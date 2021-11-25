@@ -643,7 +643,7 @@ module.exports = function (app, db) {
       const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
 
       //get all customers info 
-      const customers = await employeeDAO.getCustomers();
+      const customers = await employeeDAO.getCustomers(db);
 
       for (let i = 0; i < orders.length; i++) {
         //for each order, map the info of the customer to it
