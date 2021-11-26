@@ -648,7 +648,7 @@ module.exports = function (app, db) {
       const customers = await employeeDAO.getCustomers(db);
       //console.log(customers);
 
-      const resultArray = orders.map(order =>{
+      let resultArray = orders.map(order =>{
           let customer = customers.find(customer => customer.id ===order.customerid);
           return {
             id: order.id,
@@ -662,7 +662,7 @@ module.exports = function (app, db) {
             customerWallet: customer.wallet
           }
       });
-
+      resultArray = resultArray.filter(order => order.total > order.customerWallet);
       res.status(200).json(resultArray);
     } catch (err) {
       res.status(404).end();
