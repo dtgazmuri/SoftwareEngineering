@@ -136,6 +136,8 @@ describe("Test api's", () => {
         .get(`/api/farmer/${id}`)
         .then((res) => {
           expect(res.statusCode).toBe(200);
+          expect(res.body.name).toEqual("test");
+          expect(res.body.surname).toEqual("test");
         });
     });
   });
