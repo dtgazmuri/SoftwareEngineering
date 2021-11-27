@@ -15,7 +15,7 @@ const initializeDB = () => {
   });
 };
 
-beforeAll(async () => {
+beforeEach(async () => {
   await initializeDB();
 });
 
