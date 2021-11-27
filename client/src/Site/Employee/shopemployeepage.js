@@ -55,7 +55,7 @@ function MyPage(props) {
             <Link to ="/shopemployee/cancelationpending">
               <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
-                <h3>Orders pending cancelation</h3>
+                <h4>Orders pending cancelation</h4>
               </Container>
               </Link>
           </Col>
