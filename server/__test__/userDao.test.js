@@ -1,5 +1,6 @@
 const userDao = require("../Dao/userDao");
 const db = require("../dbTest");
+const functions = require("./basicFunctions");
 
 const initializeDB = () => {
   return new Promise((resolve, reject) => {
@@ -10,20 +11,6 @@ const initializeDB = () => {
         reject(err);
         return;
       } else resolve();
-    });
-  });
-};
-
-const addUserForTest = (user, userId, hash, role) => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "INSERT INTO users(USERID, USERNAME, HASH, ROLE) VALUES (?, ? , ? , ?)";
-    db.run(sql, [userId, user.username, hash, role], function (err) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve();
     });
   });
 };
@@ -50,7 +37,8 @@ describe("Test userDao functions", () => {
       username: "setare@polito.it",
       password: "123456",
     };
-    addUserForTest(newUser, 1, "123456", "customer")
+    functions
+      .addUserForTest(newUser, 1, "123456", "customer")
       .then(() => {
         return expect(
           userDao.checkIfUserNotExists(db, "setare@polito.it")

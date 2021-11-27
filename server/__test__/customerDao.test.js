@@ -1,5 +1,6 @@
 const customerDao = require("../Dao/customerDao");
 const db = require("../dbTest");
+const functions = require("./basicFunctions");
 
 const initializeDB = () => {
   return new Promise((resolve, reject) => {
@@ -13,30 +14,11 @@ const initializeDB = () => {
   });
 };
 
-const addCustomerForTest = (customer) => {
-  return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? , ?)";
-    db.run(
-      sql,
-      [customer.NAME, customer.SURNAME, customer.WALLET],
-      function (err) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(this.lastID);
-      }
-    );
-  });
-};
-
 beforeAll(async () => {
-  // console.log("before all");
   await initializeDB();
 });
 
 afterAll(async () => {
-  //  console.log("afterall");
   await initializeDB();
 });
 
@@ -49,7 +31,8 @@ describe("Test customerDao functions", () => {
   });
   test("test getCustomerByUserId when id exists", async () => {
     const newCustomer = { NAME: "setare", SURNAME: "askari", WALLET: 100 };
-    addCustomerForTest(newCustomer)
+    functions
+      .addCustomerForTest(newCustomer)
       .then((id) => {
         return customerDao.getCustomerByUserId(db, id).then((data) => {
           expect(data).toEqual([
