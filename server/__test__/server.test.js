@@ -21,11 +21,11 @@ const initializeDB = () => {
   });
 };
 
-beforeEach(async () => {
-  await initializeDB();
+beforeEach(() => {
+  initializeDB();
 });
 
-afterAll(async () => {
+afterAll(() => {
   // await initializeDB();
 });
 describe("Test userDao functions", () => {
@@ -97,6 +97,35 @@ describe("test farmerDao functions", () => {
   });
 });
 
+describe("Test customerDao functions", () => {
+  test("test getCustomerByUserId when id does not exist", async () => {
+    return expect(customerDao.getCustomerByUserId(db, 1)).rejects.toEqual({
+      code: "404",
+      msg: "not found",
+    });
+  });
+  test("test getCustomerByUserId when id exists", async () => {
+    const newCustomer = { NAME: "setare", SURNAME: "askari", WALLET: 100 };
+    functions
+      .addCustomerForTest(newCustomer)
+      .then((id) => {
+        return customerDao.getCustomerByUserId(db, id).then((data) => {
+          expect(data).toEqual([
+            {
+              ID: id,
+              NAME: newCustomer.NAME,
+              SURNAME: newCustomer.SURNAME,
+              WALLET: newCustomer.WALLET,
+            },
+          ]);
+        });
+      })
+      .catch((err) => {
+        //console.log(err);
+      });
+  });
+});
+
 describe("Test api's", () => {
   test("responds to /api/products/all", async () => {
     const res = await request(app).get("/api/products/all");
@@ -141,4 +170,13 @@ describe("Test api's", () => {
         });
     });
   });
+  /*
+  test("responds to /api/orders/all", async () => {
+    request(app)
+      .get("/api/orders/all")
+      .then((res) => {
+        expect(res.statusCode).toBe(200);
+      });
+  });
+  */
 });
