@@ -122,7 +122,11 @@
   height:1px;
   width:100%;
   border-top:1px solid gray;
- }
+}
+
+.tablePadding{
+  margin-left: 0px !important;
+}
 
 
 @keyframes App-logo-spin {
