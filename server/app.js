@@ -1,4 +1,4 @@
-module.exports = function (app, db) {
+module.exports = function (app, db, testUser) {
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
@@ -62,6 +62,10 @@ module.exports = function (app, db) {
   app.use(passport.session());
 
   const isLogged = (req, res, next) => {
+    console.lo;
+    if (testUser) {
+      req.user = testUser;
+    }
     if (req.isAuthenticated()) {
       return next();
     }
@@ -238,7 +242,7 @@ module.exports = function (app, db) {
           state: req.body.state,
           delivery: req.body.delivery,
           total: req.body.total,
-          date: req.body.date
+          date: req.body.date,
         };
 
         //2) post on DB and get the new Order ID back
@@ -638,18 +642,24 @@ module.exports = function (app, db) {
   /**SERVER SIDE FOR STORY 10 */
   // this GET is used by employees to get information about the orders with a total > walletBalance of the customer who placed it
   // GET /api/orders/insufficientWallet
-  app.get("/api/orders/insufficientWallet", isLogged, isEmployee, async (req, res) => {
-    console.log("/api/orders/insufficientWallet");
-    try {
-      const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
-      //console.log(orders);
+  app.get(
+    "/api/orders/insufficientWallet",
+    isLogged,
+    isEmployee,
+    async (req, res) => {
+      console.log("/api/orders/insufficientWallet");
+      try {
+        const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
+        //console.log(orders);
 
-      //get all customers info 
-      const customers = await employeeDAO.getCustomers(db);
-      //console.log(customers);
+        //get all customers info
+        const customers = await employeeDAO.getCustomers(db);
+        //console.log(customers);
 
-      let resultArray = orders.map(order =>{
-          let customer = customers.find(customer => customer.id ===order.customerid);
+        let resultArray = orders.map((order) => {
+          let customer = customers.find(
+            (customer) => customer.id === order.customerid
+          );
           return {
             id: order.id,
             customerid: order.customerid,
@@ -659,14 +669,16 @@ module.exports = function (app, db) {
             customerName: customer.name,
             customerSurname: customer.surname,
             customerUsername: customer.username,
-            customerWallet: customer.wallet
-          }
-      });
-      resultArray = resultArray.filter(order => order.total > order.customerWallet);
-      res.status(200).json(resultArray);
-    } catch (err) {
-      res.status(404).end();
+            customerWallet: customer.wallet,
+          };
+        });
+        resultArray = resultArray.filter(
+          (order) => order.total > order.customerWallet
+        );
+        res.status(200).json(resultArray);
+      } catch (err) {
+        res.status(404).end();
+      }
     }
-  });
-
+  );
 };
