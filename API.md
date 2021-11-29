@@ -208,6 +208,33 @@ or
 * Successful Response: `200 OK`
 * Error Response:  `500 Server Error` or `422 Error in Parameters`
 
+
+#### Orders pending cancellation
+
+* HTTP method: `GET`  URL: `/api/orders/insufficientWallet`
+* Description: Retrieves a list of orders pending cancellation (i.e. their total amount is higher than current customer wallet)
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response:  `404 Not Found` or `401 Not authenticated` or `401 Unauthorized action`
+* Response Body: An array of JSON objects like the one below.
+``` JSON
+[
+    {
+        "id": 1,
+        "customerid": 1,
+        "state": "pending",
+        "delivery": "no",
+        "total": 73.21,
+        "customerName": "Giovanna",
+        "customerSurname": "Arco",
+        "customerUsername": "giovanna.arco@gmail.com",
+        "customerWallet": 10
+    },
+    {}
+]
+```
+
+
 ## Products
 
 #### Get the List of Products
