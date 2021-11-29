@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import ProductListEmployee from '../Site/Employee/ProductList'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ProductTableRow, ConfirmDeliveryPanel, ErrorCartModal, RecapCart } from '../Site/Employee/ProductList'
 import { Container } from 'react-bootstrap';
 

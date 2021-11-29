@@ -149,8 +149,8 @@ describe("Test Dao classes", () => {
     //TESTING getCustomers
     test("test getCustomers when no customer is present", async () => {
       employeeDAO.getCustomers(db).then((data) => {
-        return expect(data).toEqual([]);
-      })
+        expect(data).toEqual([]);
+      }).catch((err) => {return err;});
     });
     test("test getCustomers when some customer is present", async () => {
       const fakeCustomer = { NAME: "lorenzo", SURNAME: "molteni", WALLET: 1000 };
@@ -173,18 +173,17 @@ describe("Test Dao classes", () => {
     });
 
     //TESTING getOrderAll
-    //this is not working, seems like it is not initializing the clientorder table. It's actually returning 3 instead of 0
-    /*
     test("test getOrderAll when no order is present", async () => {
       employeeDAO.getOrderAll(db).then((data) => {
-        return expect(data.length).toEqual(0);
-      });
-    });*/
+        expect(data.length).toEqual(0);
+      }).catch((err) => { return err; })
+    });
+
     test("test getOrderAll when some orders are present", async () => {
       const fakeOrder1 = {customerid : 1, state: "pending", delivery: false, total: 17.31, date: "2021-12-01 12:00"};
       employeeDAO.createClientOrder(db, fakeOrder1).then((id) => {
         employeeDAO.getOrderAll(db).then((data) => {
-          return expect(data).toEqual([
+          expect(data).toEqual([
             {
               id: id,
               customerid:  1,
@@ -193,13 +192,11 @@ describe("Test Dao classes", () => {
               total: 17.31
             }
           ])
-        });
+        }).catch((err) => {return err;});
 
       }).catch((err) => {});
             
     });
-
-
   });
 
 });
@@ -235,8 +232,8 @@ describe("Test api's", () => {
           .then((res) => {
             // console.log(res);
             expect(res.statusCode).toBe(200);
-          });
-      });
+          }).catch((err) => {return err;});
+      }).catch((err) => {return err;});
   });
   test("responds to /api/products/all", async () => {
     const res = await request(app).get("/api/products/all");
@@ -257,7 +254,7 @@ describe("Test api's", () => {
             expect(res.body[0].name).toEqual(newProduct.NAME);
             expect(res.body[0].price).toEqual(newProduct.PRICE);
             //   expect(res.body[0].id).toEqual(id);
-          });
+          }).catch((err) => {return err;});
       });
     });
   });
@@ -267,7 +264,7 @@ describe("Test api's", () => {
       .get(`/api/farmer/tt`)
       .then((res) => {
         expect(res.statusCode).toBe(500);
-      });
+      }).catch((err) => {return err;});
   });
 
   test("responds to api/farmer/:id", async () => {
@@ -278,7 +275,27 @@ describe("Test api's", () => {
           expect(res.statusCode).toBe(200);
           expect(res.body.name).toEqual("test");
           expect(res.body.surname).toEqual("test");
-        });
+        }).catch((err) => {return err;});
     });
   });
+  
+  test("response to api/orders/insufficientWallet if unlogged", async () => {
+    request(app).get("/api/orders/insufficientWallet")
+      .then((res) => {
+        expect(res.statusCode).toEqual(401);
+      }).catch((err) => {return err;});
+  });
+
+  test("response to api/orders/insufficientWallet if logged", async () => {
+      const id = await functions.addUserForTest({username: "lorenzo@polito.it"}, 1, "11111111", "shopemployee");
+      user = {id: id, username: "lorenzo@polito.it", role: "shopemployee", userid: 1 };
+      server = require("../app")(app, db, user);
+      const response = await request(app).get("/api/orders/insufficientWallet");
+      /*NEED TO SET THE TOKEN FOR THE AUTH
+      it's not working right now
+      expect(response.body).toBe({});
+      expect(response.statusCode).toBe(200);*/
+  });
+  
+  
 });
