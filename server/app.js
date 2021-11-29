@@ -243,6 +243,7 @@ module.exports = function (app, db, testUser) {
           delivery: req.body.delivery,
           total: req.body.total,
           date: req.body.date,
+          address: req.body.address
         };
 
         //2) post on DB and get the new Order ID back

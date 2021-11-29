@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Form, Button, Table, Modal, Row, Col, Container, Card } from "react-bootstrap";
+import { Form, Button, Table, Modal, Container, Card } from "react-bootstrap";
 import API from "../../API";
 
 import '../../App.css';
@@ -53,10 +53,15 @@ function ProductListEmployee(props) {
             good = false;
         }
 
-
         if (time === undefined && good) {
             setCartError(true);
             setCartErrorMessage("Please set a time");
+            good = false;
+        }
+
+        if (address === "" && good && delivery) {
+            setCartError(true);
+            setCartErrorMessage("Please enter the delivery address");
             good = false;
         }
 
@@ -132,7 +137,6 @@ function ProductListEmployee(props) {
         }
         else {
             setOrder([...order, { id: prod.id, name: prod.name, price: prod.price, quantity: 1 }]);
-            //props.setMessage({ type: "success", msg: `Product ${prod.name} added correctly` });
         }
 
     }
@@ -173,19 +177,23 @@ function ProductListEmployee(props) {
     const handleSubmit = async () => {
 
         let total = 0;
-        let deladd = "shop";
-        let date = orderDate;
-        let time = orderTime;
-        let dateTime = date + " " + time;
-        if (delivery)
+        // Delivery --> True or False
+        // Address  --> If Delivery is True, then client's entered address. Else, "Shop"
+        let wantsDelivery = "False";
+        let deladd = "Shop";
+        if (delivery && address != "") {
             deladd = address;
-
+            wantsDelivery = "True";
+        }
+        let deliveryDate = orderDate;
+        let deliveryTime = orderTime;
+        let dateTime = deliveryDate + " " + deliveryTime;
         let customerid = customer.id;
         for (let o of order) {
             total += o.price * o.quantity;
         }
         try {
-            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: deladd, total: total, listitems: order, date: dateTime});
+            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: order, date: dateTime, address: deladd});
             props.setMessage({ type: "success", msg: `Order added correctly` })
 
         } catch (err) {
