@@ -219,7 +219,7 @@ function App() {
 
           <Route
             path="/shopemployee/handout/"
-            element={isLogged ? <OrderList /> : <Navigate replace to="/home" />}
+            element={isLogged ? <OrderList getCurrentTime = {getCurrentTime}/> : <Navigate replace to="/home" />}
           />
 
           <Route

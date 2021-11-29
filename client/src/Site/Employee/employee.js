@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { Col, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import API from '../../EmployeeAPI'
+import dayjs from 'dayjs';
 
 
 /*
@@ -173,7 +174,7 @@ function CustomerForm(props) {
     );
 }
 
-function OrderList() {
+function OrderList(props) {
     const [updateOrder, setUpdateOrder] = useState(-1);
     const [updated, setUpdated] = useState({});
     const [orders, setOrderList] = useState([]);
@@ -196,19 +197,27 @@ function OrderList() {
 
    
     function handOutOrder(id) {
-        var tmp = [];
+        //need to check if handout is possible
+        //"Pickups take place from Wednesday morning until Friday evening"
+        //handout is possible from Wednesday at 9:00 until Friday 21:00
+        const currentTime = dayjs(props.getCurrentTime());
+        if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21)){
+            var tmp = [];
 
-        orders.forEach((order) => {
-            if(order.id === id){
-                order.state = "delivered";
-                tmp.push(order);
-            }
-            else {
-                tmp.push(order);
-            }
-        });
-        setOrderList(tmp);
-        setUpdateOrder(id);
+            orders.forEach((order) => {
+                if(order.id === id){
+                    order.state = "delivered";
+                    tmp.push(order);
+                }
+                else {
+                    tmp.push(order);
+                }
+            });
+            setOrderList(tmp);
+            setUpdateOrder(id);
+        }
+        else 
+            setUpdated({id: id, variant: "danger", msg:"Sorry, handouts are possible between Wednesday at 9 and Friday at 21."});
     }
 
     useEffect(() => {
