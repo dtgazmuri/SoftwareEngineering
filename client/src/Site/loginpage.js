@@ -39,13 +39,13 @@ function LoginPage(props) {
     <Container className="fluid below-nav">
     <Form>
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
-      <Form.Group controlId='username'>
+      <Form.Group controlId='username' >
           <Form.Label>email</Form.Label>
-          <Form.Control type='email' value={username} onChange={ev => setUsername(ev.target.value)} />
+          <Form.Control type='email' test-id="username" value={username} onChange={ev => setUsername(ev.target.value)} />
       </Form.Group>
-      <Form.Group controlId='password'>
+      <Form.Group controlId='password' >
           <Form.Label>Password</Form.Label>
-          <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
+          <Form.Control type='password' test-id="password" value={password} onChange={ev => setPassword(ev.target.value)} />
       </Form.Group>
       <Button onClick={handleSubmit}>Login</Button>
     </Form>
