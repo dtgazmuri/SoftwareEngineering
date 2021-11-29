@@ -76,6 +76,7 @@ function SignupForm(props) {
                             <Form.Label>Name</Form.Label>
                             <Form.Control
                                 required
+                                test-id="name"
                                 type="text"
                                 value={name}
                                 onChange={ev => setName(ev.target.value)}
@@ -87,6 +88,7 @@ function SignupForm(props) {
                             <Form.Label>Surname</Form.Label>
                             <Form.Control
                                 required
+                                test-id="surname"
                                 type="text"
                                 value={surname}
                                 onChange={ev => setSurname(ev.target.value)}
@@ -98,6 +100,7 @@ function SignupForm(props) {
                             <Form.Label>Username</Form.Label>
                             <Form.Control
                                 required
+                                test-id="username"
                                 type="email"
                                 value={username}
                                 onChange={ev => setUsername(ev.target.value)}
@@ -110,6 +113,7 @@ function SignupForm(props) {
                             <Form.Control
                                 required
                                 type="password"
+                                test-id="password1"
                                 value={password}
                                 onChange={ev => setPassword(ev.target.value)}
                             />
@@ -120,6 +124,7 @@ function SignupForm(props) {
                             <Form.Label>Repeat Password</Form.Label>
                             <Form.Control
                                 required
+                                test-id="password2"
                                 type="password"
                                 value={rpassword}
                                 onChange={ev => setRPassword(ev.target.value)}
@@ -135,6 +140,7 @@ function SignupForm(props) {
                             <Col className="py-3">
                                 {role === "customer" ? (
                                     <Button
+
                                         onClick={() => setRole("customer")}
                                         className="nolink btn-primary"
                                     >
@@ -143,6 +149,8 @@ function SignupForm(props) {
                                     </Button>
                                 ) : (
                                     <Button
+                                    test-id="customer-button"
+
                                         onClick={() => setRole("customer")}
                                         className="nolink btn-outline-primary btn-light"
                                     >
@@ -253,7 +261,7 @@ function SignupForm(props) {
                         </Row>
                         <Row className="buttonRow d-flex justify-content-around">
                             <Form.Group as={Col} xs={1} className="mb-5">
-                                <Button onClick={handleSubmit}>Save</Button>
+                                <Button test-id="save-button" onClick={handleSubmit}>Save</Button>
                             </Form.Group>
                             <Form.Group as={Col} xs={1} className="mb-5">
                                 <Link to="/home">

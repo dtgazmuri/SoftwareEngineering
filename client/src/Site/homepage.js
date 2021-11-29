@@ -53,7 +53,7 @@ function MyBody() {
                     Solidarity Purchase Group
                 </Row>
             <Row key="main" sm={10} id="main-row" className="h-100 v-70 justify-content-center">
-                <Col id="signup-col" className="v-100 d-sm-block">
+                <Col id="login-col" className="v-100 d-sm-block">
                     <Link to="/loginpage">
                         {/*<Button variant="outline-success">Log in</Button>*/}
                         <Container fluid className="LoginButton shadow border border-dark rounded nolink align-items-center">
