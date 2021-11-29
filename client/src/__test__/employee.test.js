@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CustomerList, OrderList, CustomerForm } from '../Site/Employee/employee.js'
+import { CustomerForm } from '../Site/Employee/employee.js'
 
 import { waitFor } from '@testing-library/dom';
 //import API from '../API.js';

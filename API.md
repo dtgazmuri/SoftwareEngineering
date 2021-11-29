@@ -172,10 +172,11 @@ or
 ``` JSON
 {
     "customerid":1,
-    "state":"pending",
-    "delivery":"yes", 
+    "state": "pending",
+    "delivery": "False/True", 
     "total":9.90,
     "date": "YYYY-MM-DD 00:00",
+    "address": "Shop/Client Address",
     "listitems":
         [
             {

@@ -3,11 +3,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import {
     shopemployee,
-    customer,
-    farmer,
-    delivery,
-    warehouse,
-    manager,
+    customer
 } from "./icons.js";
 import API from "../API";
 
