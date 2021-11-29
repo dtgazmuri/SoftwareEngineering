@@ -62,8 +62,8 @@ module.exports = function (app, db, testUser) {
   app.use(passport.session());
 
   const isLogged = (req, res, next) => {
-    console.lo;
     if (testUser) {
+      // console.log(testUser);
       req.user = testUser;
     }
     if (req.isAuthenticated()) {

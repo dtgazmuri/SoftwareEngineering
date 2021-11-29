@@ -1,7 +1,8 @@
 const express = require("express");
 const db = require("../dbTest");
 const app = express();
-const server = require("../app")(app, db);
+let user = undefined;
+let server = require("../app")(app, db, user);
 const request = require("supertest");
 const functions = require("./basicFunctions");
 const farmerDao = require("../Dao/farmerDAO");
@@ -21,112 +22,150 @@ const initializeDB = () => {
   });
 };
 
-beforeEach(() => {
-  initializeDB();
-});
-
 afterAll(() => {
   // await initializeDB();
 });
-describe("Test userDao functions", () => {
-  test("test checkIfUserNotExists while it deosn't", async () => {
-    return expect(
-      userDao.checkIfUserNotExists(db, "setare@polito.it")
-    ).resolves.toBe();
+
+describe("Test Dao classes", () => {
+  beforeEach(() => {
+    initializeDB();
   });
 
-  test("test checkIfUserNotExists while it deos", async () => {
-    const newUser = {
-      name: "setare",
-      surname: "askari",
-      username: "setare@polito.it",
-      password: "123456",
-    };
-    functions
-      .addUserForTest(newUser, 1, "123456", "customer")
-      .then(() => {
-        return expect(
-          userDao.checkIfUserNotExists(db, "setare@polito.it")
-        ).rejects.toEqual({ code: 409, msg: "user already exits." });
-      })
-      .catch(() => {});
-  });
-});
+  describe("Test userDao functions", () => {
+    test("test checkIfUserNotExists while it deosn't", async () => {
+      return expect(
+        userDao.checkIfUserNotExists(db, "setare@polito.it")
+      ).resolves.toBe();
+    });
 
-describe("test farmerDao functions", () => {
-  test("test getFarmerProducts while farmer does not exist", async () => {
-    return farmerDao.getFarmerProducts(db, 1).then((data) => {
-      expect(data).toEqual([]);
+    test("test checkIfUserNotExists while it deos", async () => {
+      const newUser = {
+        name: "setare",
+        surname: "askari",
+        username: "setare@polito.it",
+        password: "123456",
+      };
+      functions
+        .addUserForTest(newUser, 1, "123456", "customer")
+        .then(() => {
+          return expect(
+            userDao.checkIfUserNotExists(db, "setare@polito.it")
+          ).rejects.toEqual({ code: 409, msg: "user already exits." });
+        })
+        .catch(() => {});
     });
   });
 
-  test("test getFarmerProducts", async () => {
-    functions
-      .addFarmerForTest({ NAME: "test", SURNAME: "test" })
-      .then((farmerId) => {
-        const newProduct = {
-          NAME: "apple",
-          PRICE: 100,
-        };
-        functions.addProductForTest(newProduct, farmerId).then((productId) => {
-          //console.log(productId);
-          return farmerDao.getFarmerProducts(db, farmerId).then((data) => {
+  describe("test farmerDao functions", () => {
+    test("test getFarmerProducts while farmer does not exist", async () => {
+      return farmerDao.getFarmerProducts(db, 1).then((data) => {
+        expect(data).toEqual([]);
+      });
+    });
+
+    test("test getFarmerProducts", async () => {
+      functions
+        .addFarmerForTest({ NAME: "test", SURNAME: "test" })
+        .then((farmerId) => {
+          const newProduct = {
+            NAME: "apple",
+            PRICE: 100,
+          };
+          functions
+            .addProductForTest(newProduct, farmerId)
+            .then((productId) => {
+              //console.log(productId);
+              return farmerDao.getFarmerProducts(db, farmerId).then((data) => {
+                expect(data).toEqual([
+                  {
+                    id: productId,
+                    name: newProduct.NAME,
+                    price: newProduct.PRICE,
+                  },
+                ]);
+              });
+            });
+        });
+    });
+
+    test("test ADDProductExpectedAmount", async () => {
+      const product = {
+        product: 3,
+        quantity: 14,
+      };
+      return farmerDao.addProductExpectedAmount(db, product).then((data) => {
+        expect(data).toEqual({
+          product: product.product,
+          quantity: product.quantity,
+        });
+      });
+    });
+  });
+
+  describe("Test customerDao functions", () => {
+    test("test getCustomerByUserId when id does not exist", async () => {
+      return expect(customerDao.getCustomerByUserId(db, 1)).rejects.toEqual({
+        code: "404",
+        msg: "not found",
+      });
+    });
+    test("test getCustomerByUserId when id exists", async () => {
+      const newCustomer = { NAME: "setare", SURNAME: "askari", WALLET: 100 };
+      functions
+        .addCustomerForTest(newCustomer)
+        .then((id) => {
+          return customerDao.getCustomerByUserId(db, id).then((data) => {
             expect(data).toEqual([
               {
-                id: productId,
-                name: newProduct.NAME,
-                price: newProduct.PRICE,
+                ID: id,
+                NAME: newCustomer.NAME,
+                SURNAME: newCustomer.SURNAME,
+                WALLET: newCustomer.WALLET,
               },
             ]);
           });
+        })
+        .catch((err) => {
+          //console.log(err);
         });
-      });
-  });
-
-  test("test ADDProductExpectedAmount", async () => {
-    const product = {
-      product: 3,
-      quantity: 14,
-    };
-    return farmerDao.addProductExpectedAmount(db, product).then((data) => {
-      expect(data).toEqual({
-        product: product.product,
-        quantity: product.quantity,
-      });
     });
-  });
-});
-
-describe("Test customerDao functions", () => {
-  test("test getCustomerByUserId when id does not exist", async () => {
-    return expect(customerDao.getCustomerByUserId(db, 1)).rejects.toEqual({
-      code: "404",
-      msg: "not found",
-    });
-  });
-  test("test getCustomerByUserId when id exists", async () => {
-    const newCustomer = { NAME: "setare", SURNAME: "askari", WALLET: 100 };
-    functions
-      .addCustomerForTest(newCustomer)
-      .then((id) => {
-        return customerDao.getCustomerByUserId(db, id).then((data) => {
-          expect(data).toEqual([
-            {
-              ID: id,
-              NAME: newCustomer.NAME,
-              SURNAME: newCustomer.SURNAME,
-              WALLET: newCustomer.WALLET,
-            },
-          ]);
-        });
-      })
-      .catch((err) => {
-        //console.log(err);
-      });
   });
 });
 
 describe("Test api's", () => {
+  beforeAll(() => {});
+
+  test("responds to /api/orders/all", async () => {
+    functions
+      .addUserForTest(
+        {
+          username: "pappa@pappa.it",
+        },
+        2,
+        "123456",
+        "shopemployee"
+      )
+      .then((id) => {
+        user = {
+          id: id,
+          username: "pappa@pappa.it",
+          role: "shopemployee",
+          userid: 2,
+        };
+        server = require("../app")(app, db, user);
+        // let req = request(app).get("/api/orders/all");
+        // req.field
+        //   req.set("Content-Type", "multipart/form-data");
+        //  req.field("user", JSON.stringify(u));
+        // req.attach("user", JSON.stringify(u));
+        request(app)
+          .get("/api/orders/all")
+          .then((res) => {
+            // console.log(res);
+            expect(res.statusCode).toBe(200);
+          });
+      });
+  });
   test("responds to /api/products/all", async () => {
     const res = await request(app).get("/api/products/all");
     expect(res.statusCode).toBe(200);
@@ -170,13 +209,4 @@ describe("Test api's", () => {
         });
     });
   });
-  /*
-  test("responds to /api/orders/all", async () => {
-    request(app)
-      .get("/api/orders/all")
-      .then((res) => {
-        expect(res.statusCode).toBe(200);
-      });
-  });
-  */
 });

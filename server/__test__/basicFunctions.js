@@ -64,7 +64,7 @@ exports.addUserForTest = (user, userId, hash, role) => {
         reject(err);
         return;
       }
-      resolve();
+      resolve(this.lastID);
     });
   });
 };
