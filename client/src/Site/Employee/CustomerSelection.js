@@ -29,7 +29,7 @@ function CustomerSelection(props) {
             <Col sm = {4}>
                 <Form.Label className="mb-0">Select a client for the order using the dropdown</Form.Label>
                 <Form.Text className="text-muted">
-                    You can first filter your research by putting his/her name.
+                    You can filter your search by writing the customer's name.
                 </Form.Text>
             </Col>
             <Col sm = {3}>

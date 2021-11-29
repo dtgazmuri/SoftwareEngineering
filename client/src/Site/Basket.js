@@ -27,6 +27,7 @@ function Basket(props) {
   }, [changeBasket]);
 
   return (
+    <>
     <Container className="below-nav justify-content-center">
       {items && (
         <ListGroup>
@@ -68,6 +69,7 @@ function Basket(props) {
         <Button>Return</Button>
       </Link>
     </Container>
+    </>
   );
 }
 
