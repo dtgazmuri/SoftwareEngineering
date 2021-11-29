@@ -1,9 +1,10 @@
+import dayjs from 'dayjs';
 import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import API from '../FarmerAPI'
 
 
-function Farmer() {
+function Farmer(props) {
     const farmerName = "Farmer1";
     const [trueIfNeverSearchedProducts, setTrueIfNeverSearchedProducts] = useState(true);
     const [farmerId, setFarmerId] = useState(0);
@@ -50,7 +51,7 @@ function Farmer() {
             </Row>
             <Row className ="my-3" align="center">
                 <Col className="d-sm-block col-12" sm= {4} id="farmer-sidebar">
-                    <Form>
+                    <Form className = "mb-3">
                         <Form.Group controlId="farmer-id" className = "mb-3">
                             <Form.Label>Insert here your farmer id</Form.Label>
                             <Form.Control size = "lg" type="number" min = "0" value = {farmerId} onChange={(event) => setFarmerId(event.target.value)}/>       
@@ -63,7 +64,8 @@ function Farmer() {
                     <Alert variant='danger'>Sorry, no products found for the specified farmer id.</Alert>
                 }
                 { products.length !== 0 &&
-                    <ProductList products = {products} setExpectedQuantityForProduct = {setExpectedQuantityForProduct} updatedQuantity = {updatedQuantity}/>
+                    <ProductList products = {products} setExpectedQuantityForProduct = {setExpectedQuantityForProduct} updatedQuantity = {updatedQuantity}
+                    getCurrentTime = {props.getCurrentTime}/>
                 }
                 
             </Row>
@@ -89,7 +91,8 @@ function ProductList(props) {
                                 </Col>
                                 <Col>
                                     <ProductForm id = {product.id} updatedQuantity = {props.updatedQuantity}
-                                    setExpectedQuantityForProduct = {props.setExpectedQuantityForProduct}/>
+                                    setExpectedQuantityForProduct = {props.setExpectedQuantityForProduct}
+                                    getCurrentTime = {props.getCurrentTime}/>
                                 </Col>
                                 </Row>
                             </ListGroup.Item>    
@@ -105,6 +108,14 @@ function ProductForm(props){
     const [amount, setAmount] = useState(0);
     const [error, setError] = useState("");
     function handleSetAmount(id, quantity) {
+        //need to check if it's possible to set amount
+        //amounts of products can be set only between Monday after 9 and Saturday at 9:00
+        //amounts cannot be set on Sundays
+        const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
+        if(currentTime.day() === 0 || (currentTime.day() === 1 && currentTime.hour() < 9) || (currentTime.day() === 6 && currentTime.hour() > 8)){
+            setError("Sorry, amounts cannot be set between Saturday at 9 and Monday at 9.");
+            return;
+        }
         if(quantity > -1){
             props.setExpectedQuantityForProduct({id: id, quantity: quantity});
             setError("");
@@ -123,7 +134,7 @@ function ProductForm(props){
             {props.updatedQuantity.product === props.id && 
                 <Alert variant = 'success'>Product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
             }
-            <Button onClick={() => handleSetAmount(props.id, amount)}>Set amount</Button>
+            <Button onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
         </Form>
     );
 }

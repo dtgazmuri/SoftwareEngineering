@@ -243,7 +243,7 @@ function App() {
             }
           />
           {/**Route for the main page of the shop employee */}
-          <Route exact path="/farmer/" element={<Farmer />} />
+          <Route exact path="/farmer/" element={<Farmer getCurrentTime = {getCurrentTime}/>} />
 
           <Route path="/sign-up" element={
               <SignupForm
