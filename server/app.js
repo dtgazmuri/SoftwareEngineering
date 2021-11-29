@@ -647,7 +647,6 @@ module.exports = function (app, db, testUser) {
     isLogged,
     isEmployee,
     async (req, res) => {
-      console.log("/api/orders/insufficientWallet");
       try {
         const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
         //console.log(orders);

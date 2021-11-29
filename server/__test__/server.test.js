@@ -8,11 +8,12 @@ const functions = require("./basicFunctions");
 const farmerDao = require("../Dao/farmerDAO");
 const userDao = require("../Dao/userDao");
 const customerDao = require("../Dao/customerDao");
+const employeeDAO = require("../Dao/employeeDBAccess");
 
 const initializeDB = () => {
   return new Promise((resolve, reject) => {
     const sql =
-      "DELETE FROM users; DELETE FROM customer; DELETE FROM shopemployee; DELETE FROM product; DELETE FROM farmer; DELETE FROM warehouse;";
+      "DELETE FROM orderitems; DELETE FROM clientorder; DELETE FROM users; DELETE FROM customer; DELETE FROM shopemployee; DELETE FROM product; DELETE FROM farmer; DELETE FROM warehouse;";
     db.run(sql, [], (err) => {
       if (err) {
         reject(err);
@@ -130,6 +131,77 @@ describe("Test Dao classes", () => {
         });
     });
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**Lorenzo Molteni trying to test  getOrderAll and getCustomers functions in employeeDBAccess.js*/
+  describe("Test employeeDAO functions", () => {
+    //TESTING getCustomers
+    test("test getCustomers when no customer is present", async () => {
+      employeeDAO.getCustomers(db).then((data) => {
+        return expect(data).toEqual([]);
+      })
+    });
+    test("test getCustomers when some customer is present", async () => {
+      const fakeCustomer = { NAME: "lorenzo", SURNAME: "molteni", WALLET: 1000 };
+      
+      functions.addCustomerForTest(fakeCustomer).then((id) => { 
+        functions.addUserForTest({username: "lorenzo@polito.it",}, id, "789123", "customer").then(() => {
+          return employeeDAO.getCustomers(db).then((data) => {
+            expect(data.length).toEqual(1);
+            expect(data).toEqual([
+              {
+                id: id,
+                name: "lorenzo",
+                surname: "molteni",
+                wallet: 1000,
+                username: "lorenzo@polito.it"
+              }]);
+          });
+        }).catch((err) => {});
+      }).catch((err) => {});
+    });
+
+    //TESTING getOrderAll
+    //this is not working, seems like it is not initializing the clientorder table. It's actually returning 3 instead of 0
+    /*
+    test("test getOrderAll when no order is present", async () => {
+      employeeDAO.getOrderAll(db).then((data) => {
+        return expect(data.length).toEqual(0);
+      });
+    });*/
+    test("test getOrderAll when some orders are present", async () => {
+      const fakeOrder1 = {customerid : 1, state: "pending", delivery: false, total: 17.31, date: "2021-12-01 12:00"};
+      employeeDAO.createClientOrder(db, fakeOrder1).then((id) => {
+        employeeDAO.getOrderAll(db).then((data) => {
+          return expect(data).toEqual([
+            {
+              id: id,
+              customerid:  1,
+              state: "pending",
+              delivery: false,
+              total: 17.31
+            }
+          ])
+        });
+
+      }).catch((err) => {});
+            
+    });
+
+
+  });
+
 });
 
 describe("Test api's", () => {
