@@ -1,4 +1,16 @@
 const db = require("../dbTest");
+
+exports.deleteTable = (tableName) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM " + tableName;
+    db.run(sql, [], (err) => {
+      if (err) {
+        reject(err);
+        return;
+      } else resolve();
+    });
+  });
+};
 exports.addCustomerForTest = (customer) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? , ?)";
