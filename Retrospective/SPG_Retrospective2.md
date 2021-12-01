@@ -32,31 +32,36 @@ sections:
 
 
 ### Detailed statistics
-[//]: # (Here I put calcules in comments                                                                                            Story 0: TASKS DONE = sprint planning(9h vs 9h), implement clock (2h vs 2h 15m), TD Estimation and Management (6h vs 5h15m), Resolve Github Issues (2h vs 2h), Responsive Interface (3h vs 3h), Put togheter documentation (1h vs 2h), Scrum meeting (6h vs 6h), Restospective (6h vs 6h)                                                                                                               Story 0: TASKS NOT DONE =SonarQube(3h vs 3h), Docker (6h vs 9h 30m), Backend testing (6h vs 16h30m), Frontend testing (10h vs 12h30m), Rearrange application behaviour according to system clock (8h vs 5h)
+<!--- Here I put calcules in comments
 
-)
+STORY 0: TASKS DONE = sprint planning(9h vs 9h), implement clock (2h vs 2h 15m), TD Estimation and Management (6h vs 5h15m), Resolve Github Issues (2h vs 2h), Responsive Interface (3h vs 3h), Put togheter documentation (1h vs 2h), Scrum meeting (6h vs 6h), Restospective (6h vs 6h) 
+STORY 0: TASKS NOT DONE =SonarQube(3h vs 3h), Docker (6h vs 9h 30m), Backend testing (6h vs 16h30m), Frontend testing (10h vs 12h30m), Rearrange application behaviour according to system clock (8h vs 5h)
 
-[//]: # ( )
+STORY 10: TASKS DONE: SPG-10:API (3h vs 3h), SPG-10:Backend (4h vs 4h)
+STORY 10: TASKS NOT DONE: SPG-10:Frontend (3h vs 1h30m)
 
-[//]: # ()
+STORY 11: TASKS DONE: _None_
+STORY 11: TASKS NOT DONE: SPG-11:Frontend (3h vs 6h), SPG-11:API (3h vs 2h15m), SPG-11:Backend (3h vs 2h15m)
 
-
+STORY 12: TASKS DONE: _None_
+STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG-12:Backend (3h vs 0h)
+--->
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
 | _#0_  |   13    | -      |      68h   |     82h      |
-| 10    |     3   |     5  |      8h    |      12h     |
-|    11 |     3   |     3  |      8h    |       6h     |
-|    12 |     3   |     5  |       8h   |      6h      |
+| 10    |     3   |     5  |      10h   |      8h 30m  |
+|    11 |     3   |     5  |      9h    |    10h 30m   |
+|    12 |     3   |     3  |      9h    |      1h      |
 
 
 > 'place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
 - Hours per task (average, standard deviation)
-  - average estimated: 101h / 35 =   **2.88**
-  - average actual: 96h / 35 =   **2.74**
-  - standard deviation: **1.304**
+  - average estimated: 96h / 22 =   **4.36**
+  - average actual: 102h / 22 =   **4.63**
+  - standard deviation: **2.3461**
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-  - 101h/96h = **1.052**
+  - 96h/102h = **0,941**
 
   
 ## QUALITY MEASURES 
