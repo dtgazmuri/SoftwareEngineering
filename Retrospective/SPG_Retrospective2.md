@@ -30,20 +30,23 @@ sections:
 
 > In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing and E2E testing as part od DoD.
 
+
 ### Detailed statistics
+[//]: # (Here I put calcules in comments                                                                                            Story 0: TASKS DONE = sprint planning(9h vs 9h), implement clock (2h vs 2h 15m), TD Estimation and Management (6h vs 5h15m), Resolve Github Issues (2h vs 2h), Responsive Interface (3h vs 3h), Put togheter documentation (1h vs 2h), Scrum meeting (6h vs 6h), Restospective (6h vs 6h)                                                                                                               Story 0: TASKS NOT DONE =SonarQube(3h vs 3h), Docker (6h vs 9h 30m), Backend testing (6h vs 16h30m), Frontend testing (10h vs 12h30m), Rearrange application behaviour according to system clock (8h vs 5h)
+
+)
+
+[//]: # ( )
+
+[//]: # ()
+
 
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
-| _#0_  |   7     | -      |      29h   |     26h 15m  |
-| 1     |     3   |     5  |      8h    |      12h     |
-|    2  |     3   |     3  |      8h    |       6h     |
-|    3  |     3   |     5  |       8h   |      6h      |
-|    4  |     3   |     3  |       8h   |     8h       |
-|    5  |     3   |     2  |       8h   |     8h 30m   |
-|    6  |     3   |     3  |       6h   |     5h 45m   |
-|    7  |     6   |     8  |  13h 30m   |       14h    |
-|    8  |     1   |     3  |    4h 30m  |      3h      |
-|    9  |     3   |     5  |     8h     |      6h 30m  |
+| _#0_  |   13    | -      |      68h   |     82h      |
+| 10    |     3   |     5  |      8h    |      12h     |
+|    11 |     3   |     3  |      8h    |       6h     |
+|    12 |     3   |     5  |       8h   |      6h      |
 
 
 > 'place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
