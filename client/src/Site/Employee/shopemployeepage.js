@@ -51,7 +51,7 @@ function MyPage(props) {
           </Col>
           </Row>
           <Row id="third">
-          <Col id="handout-col">
+          <Col id="cancelation-pending-col">
             <Link to ="/shopemployee/cancelationpending">
               <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
@@ -59,6 +59,7 @@ function MyPage(props) {
               </Container>
               </Link>
           </Col>
+          <Col></Col>
           </Row>
           
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />

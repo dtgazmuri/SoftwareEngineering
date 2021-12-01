@@ -138,7 +138,7 @@ or
         "id":1,
         "customerid":1,
         "state":"delivered",
-        "delivery":"no",
+        "delivery":"False",
         "total":72.25,
         "listitems":
             [
@@ -223,7 +223,7 @@ or
         "id": 1,
         "customerid": 1,
         "state": "pending",
-        "delivery": "no",
+        "delivery": "False",
         "total": 73.21,
         "customerName": "Giovanna",
         "customerSurname": "Arco",

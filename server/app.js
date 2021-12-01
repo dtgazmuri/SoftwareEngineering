@@ -79,6 +79,13 @@ module.exports = function (app, db, testUser) {
     return res.status(401).json({ error: "Unauthorized action" });
   };
 
+  const isManager = (req, res, next) => {
+    if (req.user.role == "manager") {
+      return next();
+    }
+    return res.status(401).json({ error: "Unauthorized action" });
+  };
+
   // custom middleware: check if a given request is coming from an authenticated user
   const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) return next();
@@ -182,7 +189,7 @@ module.exports = function (app, db, testUser) {
           state: orders[i].state,
           delivery: orders[i].delivery,
           total: orders[i].total,
-          listitems: items,
+          products: items,
         };
 
         //Add it to the res array
@@ -681,4 +688,46 @@ module.exports = function (app, db, testUser) {
       }
     }
   );
+
+
+  //STORY N.15
+  // GET /api/farmerOrders/all
+  app.get("/api/farmerOrders/all", isLogged, isManager, async (req, res) => {
+    try {
+      //0) Create an empty array as an answer
+      const resultArray = [];
+
+      //0) Get the orders from the table
+      const orders = await farmerDAO.getFarmerOrderAll(db);
+
+      //1) Then, for each order I need to get the farmerOrderItems
+      for (let i = 0; i < orders.length; i++) {
+        //Get the i-th order
+        const orderid = orders[i].id;
+
+        //Get the orderitems from the DB
+        let items = await farmerDAO.getFarmerOrderItems(db, orderid);
+
+        //Create the order object
+        const order = {
+          id: orderid,
+          farmerid: orders[i].farmerid,
+          farmerName: orders[i].name,
+          farmerSurname: orders[i].surname,
+          state: orders[i].state,
+          total: orders[i].total,
+          time: order[i].datetime,
+          listitems: items,
+        };
+
+        //Add it to the res array
+        resultArray.push(order);
+      }
+
+      res.status(200).json(resultArray);
+    } catch (err) {
+      res.status(404).end();
+    }
+  });
+
 };

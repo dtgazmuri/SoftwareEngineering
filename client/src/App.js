@@ -1,14 +1,21 @@
+//CSS FILES - Bootstrap - Custom - React
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './App.css';
-import MyBody from './Site/homepage'
+import "react-toastify/dist/ReactToastify.css";
+
+//REACT COMPONENTS
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import MyNavbar from './Site/navbar';
 import { Alert, Container, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from "react-toastify";
+import { Calendar } from 'react-bootstrap-icons';
+
+//Our components
+import MyBody from './Site/homepage'
+import MyNavbar from './Site/navbar';
 import SigninPage from './Site/signinpage';
 import LoginPage from './Site/loginpage'
-import { useState, useEffect } from 'react';
-import API from "./API.js"
 import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductList';
 import { CustomerList, OrderList } from './Site/Employee/employee';
@@ -17,10 +24,12 @@ import Farmer from './Site/farmer';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/customer";
 import Basket from "./Site/Basket";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Clock, ModalDate } from './Clock';
-import { Calendar } from 'react-bootstrap-icons';
+import { ManagerPage, ManagerPageFarmerOrders } from './Site/Manager/ManagerPage';
+
+//API
+import API from "./API.js"
+
 
 function App() {
   const [user, setUser] = useState();
@@ -200,7 +209,7 @@ function App() {
           />
 
 
-        
+          {/**SHOP EMPLOYEE ROUTES */}
           <Route path="/shopemployee/selection/"
             element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
                : 
@@ -242,8 +251,27 @@ function App() {
                : <Navigate replace to="/" />
             }
           />
-          {/**Route for the main page of the shop employee */}
+
+          {/**FARMER ROUTES */}
+          {/**Route for the main page of the farmer */}
           <Route exact path="/farmer/" element={<Farmer getCurrentTime = {getCurrentTime}/>} />
+
+
+          {/**MANAGER ROUTER */}
+          {/**Route for the main page of the manager */}
+          <Route exact path="/manager"
+            element={
+              isLogged ? <ManagerPage user = {user}/>
+               : <Navigate replace to="/" />
+            }
+          />
+          <Route exact path="/manager/farmerorders"
+            element={
+              isLogged ? <ManagerPageFarmerOrders user = {user}/>
+               : <Navigate replace to="/" />
+            }
+          />
+
 
           <Route path="/sign-up" element={
               <SignupForm

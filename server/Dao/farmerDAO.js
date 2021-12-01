@@ -42,3 +42,46 @@ exports.addProductExpectedAmount = (db, product) => {
     });
   });
 };
+
+//getting all the farmerOrders with farmer info
+exports.getFarmerOrderAll = (db) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT O.id AS id, farmerId, state, total, datetime, NAME, SURNAME FROM farmerorder O INNER JOIN farmer F ON O.farmerId = F.id";
+    db.all(sql, [], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const orders = rows.map((e) => ({
+        id: e.id,
+        farmerid: e.farmerId, 
+        state: e.state,
+        total: e.total,
+        datetime: e.datetime,
+        name: e.NAME,
+        surname: e.SURNAME,
+      }));
+      resolve(orders);
+    });
+  });
+};
+
+exports.getFarmerOrderItems= (db, orderid) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT PRODUCT, QUANTITY, NAME AS PRODUCTNAME , F.PRICE as PRICE FROM farmerorderitems F INNER JOIN product P ON F.PRODUCT = P.id WHERE orderid = ?";
+    db.all(sql, [orderid], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const products = rows.map((e) => ({
+        id: e.product,
+        quantity: e.quantity,
+        name: e.PRODUCTNAME,
+        price: e.PRICE,
+      }));
+      resolve(products);
+    });
+  });
+
+};
