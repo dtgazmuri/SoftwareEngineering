@@ -75,7 +75,7 @@ STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG
   - Coverage (if available)		0%
 - E2E testing:
   - Total hours estimated		5h
-  - Total hours spent			3h (stefano)
+  - Total hours spent			3h
 - Code review 
   - Total hours estimated 		4h 30m
   - Total hours spent			4h 30m
