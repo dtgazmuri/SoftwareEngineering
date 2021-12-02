@@ -4,9 +4,9 @@ RETROSPECTIVE: Team P13
 The retrospective should include _at least_ the following
 sections:
 
-- [process measures](#process-measures)
-- [quality measures](#quality-measures)
-- [general assessment](#assessment)
+- [Process Measures](#process-measures)
+- [Quality Measures](#quality-measures)
+- [General Assessment](#assessment)
 
 ## PROCESS MEASURES 
 
@@ -104,21 +104,31 @@ NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
+
   We made errors in estimation mainly because we spent more time than expected on learning the technologies needed for testing.
 
 - What lessons did you learn (both positive and negative) in this sprint?
 
   Negative lessons:
-  We are spending a lot of time in the sprint planning than in the actual work and even if it results on a more programmed plan we have a limited time to work and in proportion a lot of it consists on planning.
-  Positive lessons:
-  We learned the importance of testing since it proved to be very useful and insightful for our purposes. Moreover, we divided the load of work in a better way compared to the previous sprint.
 
-- Which improvement goals set in the previous retrospective were you able to achieve? 
+  We are spending a lot of time in the sprint planning rather than in the actual work and, even if it results on a more organized plan, we have a limited time to work and in proportion a lot of it consists on planning.
+
+  Positive lessons:
+
+  We learned the importance of testing since it proved to be very useful and insightful for our purposes. Moreover, we divided the work load in a better way compared to the previous sprint.
+
+- Which improvement goals set in the previous retrospective were you able to achieve?
+ 
     We managed very well to include most of the testing phase in the sprint.
+
 - Which ones you were not able to achieve? Why?
+
     We were not able to include all of the E2E testing and we were not efficient in our meetings.
+
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-  We want to deliver a complete work, both on developing and testing, and we want to be more organized and efficient during all the meeting in order to have more time for the project.  
+
+  We want to deliver a complete work, both on developing and testing. We also want to be more organized and efficient during all the meeting in order to have more time for the project.  
 
 - One thing you are proud of as a Team:
-  We are increasing very quickly our global knowledge about programming a web application, especially for the testing. 
+
+  We are increasing very quickly our global knowledge about programming a web application, especially in the testing part. 
