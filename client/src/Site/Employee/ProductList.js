@@ -264,7 +264,7 @@ function ProductListEmployee(props) {
                     <>
                         <Container fluid>
                             <h1>
-                                Sorry the service is unavailable now!
+                                You cannot place orders after Sunday 23:00.
                             </h1>
                         </Container>
                     </>
