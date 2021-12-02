@@ -14,7 +14,7 @@ sections:
 
 - Number of stories committed vs done: ? vs ? 
 - Total points committed vs done: ? vs ? 
-- Nr of hours planned vs spent (as a team): ? vs ?
+- Nr of hours planned vs spent (as a team): 96 vs 102
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -67,33 +67,35 @@ STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated		0h
-  - Total hours spent			0h
-  - Nr of automated unit test cases 	0
+  - Total hours estimated		20h
+  - Total hours spent			34h
+  - Nr of automated unit test cases 
+    - Frontend Unit Testing: 27
+    - Backend Unit Testing: 18
   - Coverage (if available)		0%
 - E2E testing:
-  - Total hours estimated		0h
-  - Total hours spent			0h
+  - Total hours estimated		5h
+  - Total hours spent			3h (stefano)
 - Code review 
-  - Total hours estimated 		3h
-  - Total hours spent			3h
+  - Total hours estimated 		4h 30m
+  - Total hours spent			4h 30m
 
 - Technical Debt management:		
-  - Total hours estimated 		0h
-  - Total hours spent			0h
+  - Total hours estimated 		3h
+  - Total hours spent			3h
   - Hours estimated for remediation by SonarQube		
-    - Reliability 10m 
+    - Reliability 0m 
     - Security 0m
-    - Maintainability 1d 1h
-    - Total of 1d 1h 10m
+    - Maintainability 2d 3h
+    - Total of 2h 3h
   - Hours estimated for remediation by SonarQube only for the selected and planned issues
-    - Critics: 4 issues for a total of 45m
-    - Major: 52 issues for a total of 7h 30m
-    - Total of: 1d 15m
-  - Hours spent on remediation 														0h
+    - Critics: 11 issues for a total of 1h 26m
+    - Major: 85 issues for a total of 1d 6h
+    - Total of: 2d 3h
+  - Hours spent on remediation 														3h
   - debt ratio (as reported by SonarQube under "Measures-Maintainability")									0.6%
   - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability)	
-    - Reliability: D
+    - Reliability: A
     - Security: A
     - Maintainability: A
 
