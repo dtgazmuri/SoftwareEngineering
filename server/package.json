@@ -28,5 +28,8 @@
     "jest-sonar-reporter": "^2.0.0",
     "superagent": "^6.1.0",
     "supertest": "^6.1.6"
+  },
+  "jest": {
+    "testResultsProcessor": "jest-sonar-reporter"
   }
 }

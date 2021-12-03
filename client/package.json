@@ -65,5 +65,8 @@
   },
   "devDependencies": {
     "jest-sonar-reporter": "^2.0.0"
+  },
+  "jest": {
+    "testResultsProcessor": "jest-sonar-reporter"
   }
 }
