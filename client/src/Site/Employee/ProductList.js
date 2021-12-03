@@ -264,7 +264,7 @@ function ProductListEmployee(props) {
                     <>
                         <Container fluid>
                             <h1>
-                                Sorry the service is unavailable now!
+                                The service is not available now.
                             </h1>
                         </Container>
                     </>

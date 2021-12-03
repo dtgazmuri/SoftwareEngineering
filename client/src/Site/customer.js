@@ -39,6 +39,7 @@ function CustomerHome(props) {
             notifyBalance={props.notifyBalance}
             wallet={customer.wallet}
             notifyQuantity={props.notifyQuantity}
+            user = {props.user}
           />
         </>
       ) : (

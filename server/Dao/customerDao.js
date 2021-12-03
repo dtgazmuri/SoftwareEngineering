@@ -19,3 +19,23 @@ exports.getCustomerByUserId = (db, id) => {
     });
   });
 };
+
+//Add a new client order
+exports.createClientOrder = (db, order) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL, DATETIME, ADDRESS) VALUES(?, ?, ?, ?, ?, ?)";
+    console.log(order.date);
+    db.run(
+      sql,
+      [order.customerid, order.state, order.delivery, order.total, order.date, order.address],
+      function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
+      }
+    );
+  });
+};
