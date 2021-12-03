@@ -44,7 +44,7 @@ exports.addProductExpectedAmount = (db, product) => {
 };
 
 //getting all the farmerOrders with farmer info
-exports.getFarmerOrderAll = (db) => {
+exports.getFarmerOrders = (db) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT O.id AS id, farmerId, state, total, datetime, NAME, SURNAME FROM farmerorder O INNER JOIN farmer F ON O.farmerId = F.id";
     db.all(sql, [], (err, rows) => {
@@ -75,8 +75,8 @@ exports.getFarmerOrderItems= (db, orderid) => {
         return;
       }
       const products = rows.map((e) => ({
-        id: e.product,
-        quantity: e.quantity,
+        id: e.PRODUCT,
+        quantity: e.QUANTITY,
         name: e.PRODUCTNAME,
         price: e.PRICE,
       }));

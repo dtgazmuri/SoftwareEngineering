@@ -52,7 +52,6 @@ function App() {
           console.log(u);
           setURL(`/${u.role}`);
           setLogged(true);
-          console.log("logged in user");
           setMessage({
             type: "success",
             msg: `Welcome back, ${u.username}`,
@@ -71,7 +70,6 @@ function App() {
       const currentUser = await API.login(credentials);
       setUser(currentUser);
       setURL(`/${currentUser.role}`);
-      console.log(url);
       setLogged(true);
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
     } catch (err) {

@@ -783,32 +783,30 @@ module.exports = function (app, db, testUser) {
       const resultArray = [];
 
       //0) Get the orders from the table
-      const orders = await farmerDAO.getFarmerOrderAll(db);
+      const orders = await farmerDAO.getFarmerOrders(db);
 
       //1) Then, for each order I need to get the farmerOrderItems
       for (let i = 0; i < orders.length; i++) {
-        //Get the i-th order
-        const orderid = orders[i].id;
+        //Get the i-th order id
+        let orderid = orders[i].id;
 
         //Get the orderitems from the DB
         let items = await farmerDAO.getFarmerOrderItems(db, orderid);
 
         //Create the order object
-        const order = {
+        let order = {
           id: orderid,
           farmerid: orders[i].farmerid,
           farmerName: orders[i].name,
           farmerSurname: orders[i].surname,
           state: orders[i].state,
           total: orders[i].total,
-          time: order[i].datetime,
+          time: orders[i].datetime,
           listitems: items,
         };
-
         //Add it to the res array
         resultArray.push(order);
       }
-
       res.status(200).json(resultArray);
     } catch (err) {
       res.status(404).end();
