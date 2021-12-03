@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/diego/Desktop/Comp/Torino/SoftEng2/SoftwareEngineering/server/__test__/server.test.js">
+    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deosn&apos;t" duration="1"/>
+    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deos" duration="0"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts while farmer does not exist" duration="0"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts" duration="1"/>
+    <testCase name="Test Dao classes test farmerDao functions test ADDProductExpectedAmount" duration="25"/>
+    <testCase name="Test Dao classes Test customerDao functions test getCustomerByUserId when id does not exist" duration="0"/>
+    <testCase name="Test Dao classes Test customerDao functions test getCustomerByUserId when id exists" duration="0"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when no customer is present" duration="0"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when some customer is present" duration="0"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when no order is present" duration="0"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when some orders are present" duration="39"/>
+    <testCase name="Test api&apos;s responds to /api/orders/all" duration="0"/>
+    <testCase name="Test api&apos;s responds to /api/products/all" duration="62"/>
+    <testCase name="Test api&apos;s responds to /api/products/all" duration="0"/>
+    <testCase name="Test api&apos;s responds to api/farmer/:id with invalid id" duration="1"/>
+    <testCase name="Test api&apos;s responds to api/farmer/:id" duration="0"/>
+    <testCase name="Test api&apos;s response to api/orders/insufficientWallet if unlogged" duration="1"/>
+    <testCase name="Test api&apos;s response to api/orders/insufficientWallet if logged" duration="27"/>
+  </file>
+</testExecutions>
