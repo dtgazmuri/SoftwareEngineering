@@ -219,6 +219,35 @@ async function postOrderByEmployee(order_obj) {
   }
 }
 
+async function postOrderByCustomer(order_obj) {
+  const url = `${BASEURL}/order/customer`;
+
+  const data = order_obj;
+  console.log(data);
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) 
+    });
+
+    if (response.ok) {
+      return {};
+    }
+    else {
+      return { error: ` error code ${response.status}` };
+    }
+
+
+  }
+  catch (error) {
+    return { error: `${error}` };
+  }
+}
+
 
 
 /** The function returns true if the username is already oresent, false otherwise
@@ -432,6 +461,7 @@ const API = {
   postOrderByEmployee,
   addNewUser,
   fetchCustomerById,
+  postOrderByCustomer,
 }
 
 export default API;

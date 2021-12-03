@@ -159,10 +159,47 @@ or
 ]
 ```
 
-#### Add a New Order to the Database
+#### Add a New Order to the Database by Employee
 
 * HTTP method: `POST`  URL: `/api/order/employee`
-* Description: Posts a new order to the database. Must be done by an employee.
+* Description: Posts a new order to the database. Only an employee can post with this URL.
+* Request Body: A JSON object describing the order:
+
+``` JSON
+{
+    "customerid":1,
+    "state": "pending",
+    "delivery": "False/True", 
+    "total":9.90,
+    "date": "YYYY-MM-DD 00:00",
+    "address": "Shop/Client Address",
+    "listitems":
+        [
+            {
+                "productid":3,
+                "quantity":10, 
+                "price":9.90
+            },
+            {},
+            {}
+        ]
+}
+```
+
+* Successful Response: `200 OK`
+* Error Response:  `500 Server Error` or `422 Error in Parameters`
+* Response Body: An object with the ID of the created order
+
+``` JSON
+{
+    "orderid": 1
+}
+```
+
+#### Add a New Order to the Database by Customer
+
+* HTTP method: `POST`  URL: `/api/order/customer`
+* Description: Posts a new order to the database. The order is "pending" until an employee approves it.
 * Request Body: A JSON object describing the order:
 
 ``` JSON

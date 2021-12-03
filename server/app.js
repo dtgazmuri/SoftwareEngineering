@@ -288,6 +288,91 @@ module.exports = function (app, db, testUser) {
     }
   );
 
+  // POST /api/order/customer
+  app.post(
+    "/api/order/customer",
+    /*isLogged,*/
+    [
+      check("customerid").isNumeric().withMessage("Customer ID is incorrect"),
+      check("state")
+        .isString()
+        .isLength({ min: 1 })
+        .withMessage("State is incorrect"),
+      check("delivery")
+        .isString()
+        .isLength({ min: 1 })
+        .withMessage("Delivery is incorrect"),
+      check("total").isNumeric().withMessage("Total is incorrect"),
+      check("listitems").isArray().withMessage("Listitems array is incorrect"),
+      /* Check the parameters of the array */
+      check("listitems.*.id")
+        .isNumeric()
+        .withMessage("Listitems : Productid field is incorrect"),
+      check("listitems.*.quantity")
+        .isNumeric()
+        .withMessage("Listitems : Quantity field is incorrect"),
+      check("listitems.*.price")
+        .isNumeric()
+        .withMessage("Listitems : Price field is incorrect"),
+    ],
+    async (req, res) => {
+      //Check the result of the validation
+      const errors = validationResult(req);
+      console.log("Errors in validation");
+      console.log(errors);
+
+      if (!errors.isEmpty()) {
+        console.log("Errors 2");
+        return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
+      }
+
+      //Devo aspettare che la promise sia risolta! Metto await
+      try {
+        //1) We need to add the order to the clientorder tabel first
+        const orderINST = {
+          customerid: req.body.customerid,
+          state: req.body.state,
+          delivery: req.body.delivery,
+          total: req.body.total,
+          date: req.body.date,
+          address: req.body.address
+        };
+
+        //2) post on DB and get the new Order ID back
+        const order_id = await customerDao.createClientOrder(db, orderINST);
+
+        //3) now I have the Order ID; I need now to store the orderitems
+
+        //3.1) Get items
+        const itemArray = req.body.listitems;
+
+        //Check the length
+        if (itemArray.length > 0) {
+          //Post them
+          for (let i = 0; i < itemArray.length; i++) {
+            const el = itemArray[i];
+
+            const itemINST = {
+              orderid: order_id,
+              productid: el.id,
+              quantity: el.quantity,
+              price: el.price,
+            };
+
+            console.log(`item instance : ${itemINST}`);
+
+            //POST IT
+            // const id_item = await employeeDAO.createOrderItem(itemINST);
+          }
+        }
+
+        res.status(200).json({ orderid: order_id }); //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+      } catch (err) {
+        res.status(500).end(); //Mando errore!
+      }
+    }
+  );
+
   //SERVER SIDE FOR THE STORIES NUMBER 4-5-9
   //STORY NUMBER 4
 
