@@ -4,17 +4,21 @@ RETROSPECTIVE: Team P13
 The retrospective should include _at least_ the following
 sections:
 
-- [process measures](#process-measures)
-- [quality measures](#quality-measures)
-- [general assessment](#assessment)
+- [Process Measures](#process-measures)
+- [Quality Measures](#quality-measures)
+- [General Assessment](#assessment)
 
 ## PROCESS MEASURES 
 
 ### Macro statistics
 
-- Number of stories committed vs done: ? vs ? 
-- Total points committed vs done: ? vs ? 
-- Nr of hours planned vs spent (as a team): ? vs ?
+- Number of stories committed vs done: 3 vs 0 
+
+- Total points committed vs done: 13 vs 0
+
+- Nr of hours planned vs spent (as a team): 96 vs 102
+
+  (For one story only the frontend test was left and the two others missed the backend test and partially the fronted test)
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -26,9 +30,8 @@ sections:
 
 - Unit testing done
 
-- E2E testing done
 
-> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing and E2E testing as part od DoD.
+> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing as part od DoD.
 
 
 ### Detailed statistics
@@ -67,33 +70,35 @@ STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated		0h
-  - Total hours spent			0h
-  - Nr of automated unit test cases 	0
+  - Total hours estimated		20h
+  - Total hours spent			34h
+  - Nr of automated unit test cases 
+    - Frontend Unit Testing: 27
+    - Backend Unit Testing: 18
   - Coverage (if available)		0%
 - E2E testing:
-  - Total hours estimated		0h
-  - Total hours spent			0h
+  - Total hours estimated		5h
+  - Total hours spent			3h (stefano)
 - Code review 
-  - Total hours estimated 		3h
-  - Total hours spent			3h
+  - Total hours estimated 		4h 30m
+  - Total hours spent			4h 30m
 
 - Technical Debt management:		
-  - Total hours estimated 		0h
-  - Total hours spent			0h
+  - Total hours estimated 		3h
+  - Total hours spent			3h
   - Hours estimated for remediation by SonarQube		
-    - Reliability 10m 
+    - Reliability 0m 
     - Security 0m
-    - Maintainability 1d 1h
-    - Total of 1d 1h 10m
+    - Maintainability 2d 3h
+    - Total of 2h 3h
   - Hours estimated for remediation by SonarQube only for the selected and planned issues
-    - Critics: 4 issues for a total of 45m
-    - Major: 52 issues for a total of 7h 30m
-    - Total of: 1d 15m
-  - Hours spent on remediation 														0h
+    - Critics: 11 issues for a total of 1h 26m
+    - Major: 85 issues for a total of 1d 6h
+    - Total of: 2d 3h
+  - Hours spent on remediation 														3h
   - debt ratio (as reported by SonarQube under "Measures-Maintainability")									0.6%
   - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability)	
-    - Reliability: D
+    - Reliability: A
     - Security: A
     - Maintainability: A
 
@@ -103,18 +108,30 @@ NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
 
 - What caused your errors in estimation (if any)?
 
+  We made errors in estimation mainly because we spent more time than expected on learning the technologies needed for testing.
 
 - What lessons did you learn (both positive and negative) in this sprint?
 
   Negative lessons:
 
+  We are spending a lot of time in the sprint planning rather than in the actual work and, even if it results on a more organized plan, we have a limited time to work and in proportion a lot of it consists on planning.
+
   Positive lessons:
 
-- Which improvement goals set in the previous retrospective were you able to achieve? 
+  We learned the importance of testing since it proved to be very useful and insightful for our purposes. Moreover, we divided the work load in a better way compared to the previous sprint.
+
+- Which improvement goals set in the previous retrospective were you able to achieve?
+
+    We managed very well to include most of the testing phase in the sprint.
 
 - Which ones you were not able to achieve? Why?
 
+    We were not able to include all of the E2E testing and we were not efficient in our meetings.
+
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-  
+
+  We want to deliver a complete work, both on developing and testing. We also want to be more organized and efficient during all the meeting in order to have more time for the project.  
 
 - One thing you are proud of as a Team:
+
+  We are increasing very quickly our global knowledge about programming a web application, especially in the testing part. 

@@ -10,6 +10,7 @@
     "bcrypt": "^5.0.1",
     "bootstrap": "^4.6.0",
     "cypress": "^9.1.0",
+    "cypress-sql-server": "^1.0.0",
     "dayjs": "^1.10.7",
     "eslint-plugin-cypress": "^2.12.1",
     "express": "^4.17.1",

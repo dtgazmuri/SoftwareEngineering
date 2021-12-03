@@ -47,7 +47,7 @@ function LoginPage(props) {
           <Form.Label>Password</Form.Label>
           <Form.Control type='password' test-id="password" value={password} onChange={ev => setPassword(ev.target.value)} />
       </Form.Group>
-      <Button onClick={handleSubmit}>Login</Button>
+      <Button test-id="login-button" onClick={handleSubmit}>Login</Button>
     </Form>
     </Container>)
 }

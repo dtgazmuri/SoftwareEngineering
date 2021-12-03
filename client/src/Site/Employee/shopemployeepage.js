@@ -16,7 +16,7 @@ function MyPage(props) {
       <Container fluid className="below-nav vh-100 align-items-center">
         <Row id="first">
           <Col id="signin-col" >
-            <Container fluid className="LoginButton border border-dark rounded nolink text-decoration" align="center" onClick={handleShow}>
+            <Container test-id = "create-button" fluid className="LoginButton border border-dark rounded nolink text-decoration" align="center" onClick={handleShow}>
               {signin}
               <h3>Create new Client</h3>
             </Container>
@@ -24,7 +24,7 @@ function MyPage(props) {
           </Col>
           <Col id="products-col">
             <Link to="/shopemployee/products">
-              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+              <Container test-id="show-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {shopemployeebig}
                 <h3>Show products</h3>
               </Container>
@@ -35,7 +35,7 @@ function MyPage(props) {
           <Row id="second">
           <Col id="topup-col">
             <Link to = "/shopemployee/topupwallet/" >
-              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+              <Container test-id="topup-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {wallet}
                 <h3>Top Up Wallet</h3>
               </Container>
@@ -43,7 +43,7 @@ function MyPage(props) {
           </Col>
           <Col id="handout-col">
             <Link to ="/shopemployee/handout">
-              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+              <Container test-id="handout-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
                 <h3>Handout Order</h3>
               </Container>
@@ -53,7 +53,7 @@ function MyPage(props) {
           <Row id="third">
           <Col id="cancelation-pending-col">
             <Link to ="/shopemployee/cancelationpending">
-              <Container fluid className="LoginButton border border-dark rounded nolink" align="center">
+              <Container test-id="pending-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
                 <h4>Orders pending cancelation</h4>
               </Container>

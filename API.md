@@ -36,30 +36,26 @@ or
 ```
 
 #### Create New User
-
-* HTTP method: `POST`  URL: `/api/users/registration`
-* Description: Creates a new user and adds it to the database.
-* Request Body: A json object with the information of the new user:
-
+* HTTP method: `POST`  URL: `/api/users/registration
+* Description: Register a new user and adds it to the database
+* Request body: description of the user 
 ``` JSON
 {
-    "id":1,
-    "userid":"pending",
-    "username":"yes", 
-    "hash":"XXXX", 
-    "role":"ROLE"
+    "name": "name",
+    "surname": "surname",
+    "username": "username",
+    "password":"password",
+    "role":"client"
 }
 ```
-
-* Successful Response: `200 OK`
-* Error Response:  `500 Server Error`
+* Response: `201 Created` (success)
 * Response Body: A JSON object with the ID of the new user:
-
 ``` JSON
 {
     "userid":1
 }
 ```
+* Error responses:  `500 Internal Server Error` (generic error), `409 Conflict` (user already exists), `400 Bad Request`
 
 #### Update Customer Wallet (Not ready)
 
@@ -405,7 +401,7 @@ or
 * Description: Retrieves the available information for the customer with that ID.
 * Request Body: _None_
 * Successful Response: `200 OK`
-* Error Response: `500 Server Error`
+* Error Response: `500 Server Error` or `404 Not Found`
 * Response Body: A JSON object describing the desired customer.
 
 ``` JSON
