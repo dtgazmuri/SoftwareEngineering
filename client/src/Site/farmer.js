@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
 import API from '../FarmerAPI'
+import {littleX} from './icons';
 
 
 function Farmer(props) {
@@ -50,7 +51,7 @@ function Farmer(props) {
                 <h1>Main page for the farmer {farmerName}</h1>
             </Row>
             <Row className ="my-3" align="center">
-                <Col className="d-sm-block col-12" sm= {4} id="farmer-sidebar">
+                <Col className="d-sm-block col-12 mb-3" sm= {4} id="farmer-sidebar">
                     <ListGroup variant = "flush">
                         <ListGroup.Item key = "label-insert-farmer" className = "border-bottom-0">
                             <h4>Search among you products</h4>
@@ -59,7 +60,8 @@ function Farmer(props) {
                         <ListGroup.Item key = "form-searching-farmer-products">
                             <Form className = "mb-3">
                                 <Form.Group controlId="farmer-searching" className = "mb-3">
-                                    <Form.Control size = "lg"  value = {farmerToSearch} onChange={(event) => setFarmerToSearch(event.target.value)}/>       
+                                    <Form.Control size = "lg"  value = {farmerToSearch} placeholder = "Insert id, name or surname"
+                                    onChange={(event) => setFarmerToSearch(event.target.value)}/>       
                                 </Form.Group>
                                 <Button onClick={() => setSearchProducts(true)}>Search products</Button>
                             </Form>
@@ -87,7 +89,12 @@ function ProductList(props) {
         <Col>
             <ListGroup variant = "primary"> 
                 {props.products.length &&
-                    props.products.map(product => {
+                    <>
+                    <ListGroup.Item id="farmer-products-title" key = "farmer-products-title" variant = "primary">
+                        <h5 className="text-left">Here is your product list</h5>
+                    </ListGroup.Item>
+                    {
+                        props.products.map(product => {
                         return (
                             <ListGroup.Item id = {product.id} key = {product.id}>
                                 <h5>{product.name}</h5>
@@ -104,7 +111,9 @@ function ProductList(props) {
                                 </Row>
                             </ListGroup.Item>    
                         ); 
-                    })
+                        })
+                    }
+                    </> 
                 }     
             </ListGroup> 
         </Col>
@@ -114,25 +123,33 @@ function ProductList(props) {
 function ProductForm(props){
     const [amount, setAmount] = useState(0);
     const [error, setError] = useState("");
+    const [show, setShow] = useState(true);
+    const [showWarning, setShowWarning] = useState(false);
+    
 
-    let invalidTime = false;
     //need to check if it's possible to set amount
     //amounts of products can be set only between Monday after 9 and Saturday at 9:00
     //amounts cannot be set on Sundays
+    let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
     if(currentTime.day() === 0 || (currentTime.day() === 1 && currentTime.hour() < 9) || (currentTime.day() === 6 && currentTime.hour() > 8)){
         invalidTime = true;
         //"Sorry, amounts cannot be set between Saturday at 9 and Monday at 9.");
     }
+    
 
     function handleSetAmount(id, quantity) {
         if(quantity > -1){
             props.setExpectedQuantityForProduct({id: id, quantity: quantity});
             setError("");
+            setShow(true);
         }
-        else
+        else {
             setError("Impossible to set a negative/undefined amount. If you think you won't have this product next week, set 0");
+            setShowWarning(true);
+        }
     }
+
     return (
         <>
         {invalidTime ? 
@@ -142,11 +159,21 @@ function ProductForm(props){
                 <Form.Group controlId= {`amountOf${props.id}`} className = "mb-3">
                     <Form.Control size = "sm" type="number" placeholder="Insert here the expected amount" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
                 </Form.Group>
-                {error!=="" && 
-                    <Alert variant='warning'>{error}</Alert>
+                {(error!=="" && showWarning) &&
+                    <Alert variant='warning'>
+                        <Row>
+                        <Col>{error}</Col>
+                        <Col lg={1}><Button variant="outline-warning" className = "p-0" onClick={() => setShowWarning(false)}>{littleX}</Button></Col>
+                        </Row>
+                    </Alert>
                 }
-                {props.updatedQuantity.product === props.id && 
-                    <Alert variant = 'success'>Availability of product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
+                { (props.updatedQuantity.product === props.id && show) &&
+                    <Alert variant = 'success'>
+                        <Row>
+                        <Col>Availability of product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Col>
+                        <Col lg={1}><Button variant="outline-success" className = "p-0" onClick={() => setShow(false)}>{littleX}</Button></Col>
+                        </Row>
+                    </Alert>
                 }
                 <Button onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
             </Form>

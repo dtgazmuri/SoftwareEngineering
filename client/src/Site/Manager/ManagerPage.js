@@ -95,7 +95,7 @@ function FarmerOrderItem(props) {
     
     let order = props.order;
 
-    //useEffect for closing alert after 2 seconds
+    //useEffect for closing alert after 3 seconds
     useEffect(() => {
         if(ackedSuccessfully){
             window.setTimeout(()=>{

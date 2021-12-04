@@ -149,9 +149,10 @@ function CustomerList() {
 
 function CustomerForm(props) {
     const [amount, setAmount] = useState("");
+    const [showAlert, setShowAlert] = useState(true);
 
     function walletTopUp(id, amount_to_add) {
-
+        setShowAlert(true);
         var value = Number(amount_to_add);
         props.customers.forEach((customer) => {
             if (customer.id === id) {
@@ -161,9 +162,18 @@ function CustomerForm(props) {
         })
     }
 
+    //useEffect for closing alert after 3 seconds
+    useEffect(() => {
+        if(showAlert){
+            window.setTimeout(()=>{
+                setShowAlert(false);
+              },3000)
+        }
+      }, [showAlert]);
+
     return (
         <Form>
-            {props.alertWalletUpdated.id === props.id &&
+            {(props.alertWalletUpdated.id === props.id && showAlert) &&
                 <Alert variant = {props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
             }
             <Form.Group controlId={props.id} className = "mb-3">
@@ -185,6 +195,16 @@ function OrderList(props) {
         console.log(err);
     }
 
+    //need to check if handout is possible
+    //"Pickups take place from Wednesday morning until Friday evening"
+    //handout is possible from Wednesday at 9:00 until Friday 21:00
+    let invalidTime = false;
+    const currentTime = dayjs(props.getCurrentTime());
+    if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
+        invalidTime = false;
+    else 
+        invalidTime = true;
+
 
     useEffect(() => {
           API.getOrders()
@@ -197,11 +217,6 @@ function OrderList(props) {
 
    
     function handOutOrder(id) {
-        //need to check if handout is possible
-        //"Pickups take place from Wednesday morning until Friday evening"
-        //handout is possible from Wednesday at 9:00 until Friday 21:00
-        const currentTime = dayjs(props.getCurrentTime());
-        if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21)){
             var tmp = [];
 
             orders.forEach((order) => {
@@ -215,9 +230,6 @@ function OrderList(props) {
             });
             setOrderList(tmp);
             setUpdateOrder(id);
-        }
-        else 
-            setUpdated({id: id, variant: "danger", msg:"Sorry, handouts are possible between Wednesday at 9 and Friday at 21."});
     }
 
     useEffect(() => {
@@ -232,6 +244,15 @@ function OrderList(props) {
                 setUpdateOrder(-1);
            }
     }, [updateOrder])
+
+    //useEffect for closing alert after 3 seconds
+    useEffect(() => {
+        if(updated!== {}){
+            window.setTimeout(()=>{
+                setUpdated({});
+              },3000)
+        }
+      }, [updated]);
 
     return (
         <Col>
@@ -248,7 +269,12 @@ function OrderList(props) {
                                     <Row>Order total: {order.total.toFixed(2)}</Row>
                                 </Col>
                                 <Col>
-                                    {   order.state === "pending" &&
+                                    {invalidTime &&
+                                        <Alert variant = "warning" >
+                                            Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
+                                        </Alert>
+                                    }
+                                    {   (order.state === "pending" && !invalidTime) &&
                                         <Button onClick = {() => handOutOrder(order.id)}>Hand out order</Button>
                                     }
                                     {
