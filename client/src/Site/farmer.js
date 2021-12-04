@@ -85,11 +85,11 @@ function ProductList(props) {
                             <ListGroup.Item id = {product.id} key = {product.id}>
                                 <h5>{product.name}</h5>
                                 <Row>
-                                <Col>
+                                <Col sm = {4} md = {6}>
                                     <Row>Product id: {product.id} </Row>
                                     <Row>Product price: {product.price} </Row>
                                 </Col>
-                                <Col>
+                                <Col sm = {4} md = {6}>
                                     <ProductForm id = {product.id} updatedQuantity = {props.updatedQuantity}
                                     setExpectedQuantityForProduct = {props.setExpectedQuantityForProduct}
                                     getCurrentTime = {props.getCurrentTime}/>
@@ -107,15 +107,18 @@ function ProductList(props) {
 function ProductForm(props){
     const [amount, setAmount] = useState(0);
     const [error, setError] = useState("");
+
+    let invalidTime = false;
+    //need to check if it's possible to set amount
+    //amounts of products can be set only between Monday after 9 and Saturday at 9:00
+    //amounts cannot be set on Sundays
+    const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
+    if(currentTime.day() === 0 || (currentTime.day() === 1 && currentTime.hour() < 9) || (currentTime.day() === 6 && currentTime.hour() > 8)){
+        invalidTime = true;
+        //"Sorry, amounts cannot be set between Saturday at 9 and Monday at 9.");
+    }
+
     function handleSetAmount(id, quantity) {
-        //need to check if it's possible to set amount
-        //amounts of products can be set only between Monday after 9 and Saturday at 9:00
-        //amounts cannot be set on Sundays
-        const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
-        if(currentTime.day() === 0 || (currentTime.day() === 1 && currentTime.hour() < 9) || (currentTime.day() === 6 && currentTime.hour() > 8)){
-            setError("Sorry, amounts cannot be set between Saturday at 9 and Monday at 9.");
-            return;
-        }
         if(quantity > -1){
             props.setExpectedQuantityForProduct({id: id, quantity: quantity});
             setError("");
@@ -124,18 +127,24 @@ function ProductForm(props){
             setError("Impossible to set a negative/undefined amount. If you think you won't have this product next week, set 0");
     }
     return (
-        <Form>
-            <Form.Group controlId= {`amountOf${props.id}`} className = "mb-3">
-                <Form.Control size = "sm" type="number" placeholder="Insert here the expected amount" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
-            </Form.Group>
-            {error!=="" && 
-                <Alert variant='warning'>{error}</Alert>
-            }
-            {props.updatedQuantity.product === props.id && 
-                <Alert variant = 'success'>Product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
-            }
-            <Button onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
-        </Form>
+        <>
+        {invalidTime ? 
+            <Alert variant = "warning">Sorry, expected availabilities cannot be set between Saturday at 9 and Monday at 9. </Alert>
+        :
+            <Form>
+                <Form.Group controlId= {`amountOf${props.id}`} className = "mb-3">
+                    <Form.Control size = "sm" type="number" placeholder="Insert here the expected amount" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
+                </Form.Group>
+                {error!=="" && 
+                    <Alert variant='warning'>{error}</Alert>
+                }
+                {props.updatedQuantity.product === props.id && 
+                    <Alert variant = 'success'>Availability of product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Alert>
+                }
+                <Button onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
+            </Form>
+        }
+        </>
     );
 }
 export default Farmer;

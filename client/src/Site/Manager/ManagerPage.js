@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { Container, Row, Col, ListGroup, Alert, Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
@@ -15,14 +16,15 @@ function ManagerPage(props){
         <>
         <Container fluid className="below-nav vh-100 align-items-center">
             <Row id = "managerFunctions">
-                <AcknowledgeDeliveryButton /> 
+                <SeeFarmerOrdersButton /> 
             </Row>
         </Container>
         </>
       )
 }
 
-function AcknowledgeDeliveryButton (props) {
+function SeeFarmerOrdersButton () {
+    //this is a button shown in the mainpage of the manager that redirects to /manager/farmerOrders
     return(
         <Col lg = {4} sm = {6} id = "ackFarmerOrder">
             <Link to="/manager/farmerorders">
@@ -38,12 +40,15 @@ function ManagerPageFarmerOrders (props) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    
+    //orders from farmer are delivered from Monday 9:00 (after confirmation) to Tuesday evening (let's say 21:00)
+    let validTime = false;
+    const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
 
-     // show error message in console
-    const handleErrors = (err) => {
-        console.log(err);
-    }
-
+    if(currentTime.day() === 1 && currentTime.hour() > 8) //if it's Monday after 8.59, can set ack
+        validTime = true;
+    if(currentTime.day() === 2 && currentTime.hour() < 21) //if it's Tuesday before 21, can set ack for delivery
+        validTime = true;
 
     useEffect(() => {
         setLoading(true);
@@ -55,7 +60,7 @@ function ManagerPageFarmerOrders (props) {
             .catch(e => {
                 setLoading(false);
                 setOrders([]);
-                handleErrors(e)}
+            }
             );
       }, [])
    
@@ -65,11 +70,14 @@ function ManagerPageFarmerOrders (props) {
             {loading && <Alert variant='warning'> {alarm} Please wait while loading farmer orders... {alarm}</Alert>}
             {(orders.length && !loading) ?
                 <ListGroup variant = "primary"> 
-                    <ListGroup.Item variant="primary" key = {"title"} ><h5>List of all the farmer orders</h5></ListGroup.Item>
+                    <ListGroup.Item variant="primary" key = "title"><h5>List of all the farmer orders</h5></ListGroup.Item>
+                    <ListGroup.Item variant="secondary" key = "explaination">
+                        <h6>Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00</h6>
+                    </ListGroup.Item>
                     {/**TODO: Insert a search bar for filtering orders */}
                     {orders.map(order => {
                         return (
-                            <FarmerOrderItem key = {order.id} order = {order}/>  
+                            <FarmerOrderItem key = {order.id} order = {order} validTime = {validTime}/>  
                         ); 
                     })
                     }
@@ -140,7 +148,8 @@ function FarmerOrderItem(props) {
             </Col>
             <Col sm = {4}>
                 {/**CONTROLS AND ALERT */}
-                {   order.state === "pending" &&
+                {/**It's possible to set acknowledgment of delivery only at valid times */}
+                {   (order.state === "pending" && props.validTime) &&
                         <Button className = "mb-3" onClick = {() => ackClicked(order.id)}>Acknowledge delivery</Button>
                 }
                 {   

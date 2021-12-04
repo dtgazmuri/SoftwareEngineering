@@ -259,13 +259,13 @@ function App() {
           {/**Route for the main page of the manager */}
           <Route exact path="/manager"
             element={
-              isLogged ? <ManagerPage user = {user}/>
+              isLogged ? <ManagerPage user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
           <Route exact path="/manager/farmerorders"
             element={
-              isLogged ? <ManagerPageFarmerOrders user = {user}/>
+              isLogged ? <ManagerPageFarmerOrders user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
