@@ -436,13 +436,24 @@ module.exports = function (app, db, testUser) {
   //STORY NUMBER 9
   //getting the list of products selled by a specific farmer
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id/products", (req, res) => {
-    farmerDAO
-      .getFarmerProducts(db, req.params.id)
-      .then((products) => {
-        res.json(products);
-      })
-      .catch(() => res.status(500).end());
+  app.get("/api/farmer/:filter/products", (req, res) => {
+    // products of farmer can be also get through their name/surname
+    const farmerId = parseInt(req.params.filter);
+    if(Number.isNaN(farmerId)){
+      farmerDAO.getFarmerProductsByName(db, req.params.filter)
+        .then((products) => {
+          res.json(products);
+        })
+        .catch(() => res.status(500).end());
+    }
+    else {
+      farmerDAO
+        .getFarmerProducts(db, req.params.filter)
+        .then((products) => {
+          res.json(products);
+        })
+        .catch(() => res.status(500).end());
+    }
   });
 
   //setting the expected amount of availability for a specific product

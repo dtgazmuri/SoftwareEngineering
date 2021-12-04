@@ -28,6 +28,26 @@ exports.getFarmerProducts = (db, farmerId) => {
   });
 };
 
+//get the list of all the products of a specific farmer
+exports.getFarmerProductsByName = (db, string) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT P.ID, P.NAME, P.PRICE FROM product P INNER JOIN farmer F ON P.FARMER = F.ID WHERE upper(F.NAME) = upper(?) OR upper(F.SURNAME) = upper(?)";
+    db.all(sql, [string, string], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const products = rows.map((e) => ({
+        id: e.ID,
+        name: e.NAME,
+        price: e.PRICE,
+      }));
+      resolve(products);
+    });
+  });
+};
+
+
 //putting the expected availability for a specific product
 exports.addProductExpectedAmount = (db, product) => {
   return new Promise((resolve, reject) => {

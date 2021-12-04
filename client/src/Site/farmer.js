@@ -7,7 +7,7 @@ import API from '../FarmerAPI'
 function Farmer(props) {
     const farmerName = "Farmer1";
     const [trueIfNeverSearchedProducts, setTrueIfNeverSearchedProducts] = useState(true);
-    const [farmerId, setFarmerId] = useState(0);
+    const [farmerToSearch, setFarmerToSearch] = useState("");
     const [searchProducts, setSearchProducts] = useState(false);
     const [expectedQuantityForProduct, setExpectedQuantityForProduct] = useState({id: -1, quantity: 0});
     const [products, setProducts] = useState([]);
@@ -23,14 +23,14 @@ function Farmer(props) {
         if (searchProducts === true) {
             setTrueIfNeverSearchedProducts(false);
         
-          API.getProductsOfFarmer(farmerId)
+          API.getProductsOfFarmer(farmerToSearch)
             .then(farmer_products => {
                 setProducts(farmer_products);
             })
             .catch(e => handleErrors(e));
         }
         setSearchProducts(false);
-      }, [searchProducts, farmerId]);
+      }, [searchProducts, farmerToSearch]);
 
       //use effect for setting expected amount for a selected product
       useEffect(() => {
@@ -51,17 +51,24 @@ function Farmer(props) {
             </Row>
             <Row className ="my-3" align="center">
                 <Col className="d-sm-block col-12" sm= {4} id="farmer-sidebar">
-                    <Form className = "mb-3">
-                        <Form.Group controlId="farmer-id" className = "mb-3">
-                            <Form.Label>Insert here your farmer id</Form.Label>
-                            <Form.Control size = "lg" type="number" min = "0" value = {farmerId} onChange={(event) => setFarmerId(event.target.value)}/>       
-                        </Form.Group>
-                        <Button onClick={() => setSearchProducts(true)}>Search products</Button>
-                    </Form>
+                    <ListGroup variant = "flush">
+                        <ListGroup.Item key = "label-insert-farmer" className = "border-bottom-0">
+                            <h4>Search among you products</h4>
+                            <p>You can find your products by putting your id, name or surname</p>
+                        </ListGroup.Item>
+                        <ListGroup.Item key = "form-searching-farmer-products">
+                            <Form className = "mb-3">
+                                <Form.Group controlId="farmer-searching" className = "mb-3">
+                                    <Form.Control size = "lg"  value = {farmerToSearch} onChange={(event) => setFarmerToSearch(event.target.value)}/>       
+                                </Form.Group>
+                                <Button onClick={() => setSearchProducts(true)}>Search products</Button>
+                            </Form>
+                        </ListGroup.Item>
+                    </ListGroup>
                 </Col>
                 {searchProducts === true && <Alert variant='warning'>🕗Please wait while loading products...🕗</Alert>}
                 {(trueIfNeverSearchedProducts === false && products.length === 0) &&
-                    <Alert variant='danger'>Sorry, no products found for the specified farmer id.</Alert>
+                    <Alert variant='danger'>Sorry, no products found for the specified farmer.</Alert>
                 }
                 { products.length !== 0 &&
                     <ProductList products = {products} setExpectedQuantityForProduct = {setExpectedQuantityForProduct} updatedQuantity = {updatedQuantity}
