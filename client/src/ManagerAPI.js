@@ -14,7 +14,7 @@ async function getFarmerOrders() {
 async function ackFarmerOrder(orderid) {
     //building an obj containing the order id and "delivered" as newState
     const order = {id: orderid, newState: "delivered"};
-    let response = await fetch('/api/farmerOrders/'+orderid+"/ack", {
+    let response = await fetch('/api/farmerOrders/'+orderid+'/ack', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

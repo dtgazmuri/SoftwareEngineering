@@ -742,11 +742,9 @@ module.exports = function (app, db, testUser) {
     async (req, res) => {
       try {
         const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
-        //console.log(orders);
 
         //get all customers info
         const customers = await employeeDAO.getCustomers(db);
-        //console.log(customers);
 
         let resultArray = orders.map((order) => {
           let customer = customers.find(
@@ -810,7 +808,7 @@ module.exports = function (app, db, testUser) {
       }
       res.status(200).json(resultArray);
     } catch (err) {
-      res.status(404).end();
+      res.status(500).end();
     }
   });
 
@@ -819,7 +817,7 @@ module.exports = function (app, db, testUser) {
   app.post("/api/farmerOrders/:id/ack", isLogged, isManager, 
     [ 
     check("id").isNumeric().withMessage("farmer order id is incorrect"),
-    check("newState").isString().isLength({ min: 1 })
+    check("newState").isString().equals("delivered")
     ],
   async (req, res) => {
     // check validity of data
@@ -833,8 +831,7 @@ module.exports = function (app, db, testUser) {
     }
     const orderid = req.body.id;
     if(orderid != req.params.id){
-      console.log("ID in params and ID inside the body of the request don't match");
-      res.status(500).end();
+      res.status(422).json({msg: "ID in params and ID inside the body of the request don't match"});
       return;
     }
     //request to the db
@@ -843,7 +840,6 @@ module.exports = function (app, db, testUser) {
       res.status(200).json(result);
     }
     catch(err) {
-      console.log(err);
       if(err.code === "404")
         res.status(404).end();
       else 

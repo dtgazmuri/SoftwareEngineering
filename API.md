@@ -12,7 +12,7 @@ This document lists all of the methods and functions available in the API. They 
 
 ## General
 
-#### Check if a Given User ID is Already Present
+### Check if a Given User ID is Already Present
 
 * HTTP method: `GET`  URL: `/api/username/present/:id`
 * Description: Returns a boolean indicating the presence or absence of a certain user ID (True means the ID exists already)
@@ -35,7 +35,7 @@ or
 }
 ```
 
-#### Create New User
+### Create New User
 * HTTP method: `POST`  URL: `/api/users/registration
 * Description: Register a new user and adds it to the database
 * Request body: description of the user 
@@ -57,7 +57,7 @@ or
 ```
 * Error responses:  `500 Internal Server Error` (generic error), `409 Conflict` (user already exists), `400 Bad Request`
 
-#### Update Customer Wallet (Not ready)
+### Update Customer Wallet (Not ready)
 
 * HTTP method: `POST`  URL: `/api/customers/wallet/:id/:value`
 * Description: Adds money to a customer's wallet.
@@ -73,7 +73,7 @@ or
 * Error Response:  `500 DB error when updating wallet` or `422 Error in Parameters`
 * Response Body: _None_
 
-#### Login
+### Login
 
 * HTTP method: `POST`  URL: `/api/sessions`
 * Description: Uses the received credentials to try to log in a user.
@@ -99,7 +99,7 @@ or
 }
 ```
 
-#### Logout
+### Logout
 
 * HTTP method: `DELETE`  URL: `/api/sessions/current`
 * Description: Logs out the current logged in user.
@@ -108,7 +108,7 @@ or
 * Error Response:  `404 Not Found`
 * Response Body: _None_
 
-#### Check if User is an Administrator
+### Check if User is an Administrator
 
 * HTTP method: `GET`  URL: `/api/sessions/current`
 * Description: Authenticates the current user, checking if they are an administrator .
@@ -119,7 +119,7 @@ or
 
 ## Orders
 
-#### Get All Orders
+### Get All Orders
 
 * HTTP method: `GET`  URL: `/api/orders/all`
 * Description: Retrieves a list of all orders stored in the database.
@@ -159,7 +159,7 @@ or
 ]
 ```
 
-#### Add a New Order to the Database by Employee
+### Add a New Order to the Database by Employee
 
 * HTTP method: `POST`  URL: `/api/order/employee`
 * Description: Posts a new order to the database. Only an employee can post with this URL.
@@ -196,7 +196,7 @@ or
 }
 ```
 
-#### Add a New Order to the Database by Customer
+### Add a New Order to the Database by Customer
 
 * HTTP method: `POST`  URL: `/api/order/customer`
 * Description: Posts a new order to the database. The order is "pending" until an employee approves it.
@@ -233,7 +233,7 @@ or
 }
 ```
 
-#### Hand-Out Order
+### Hand-Out Order
 
 * HTTP method: `POST`  URL: `/api/orders/:id/handOut`
 * Description: Changes the status of an order from "Pending" to "Delivered"
@@ -242,7 +242,7 @@ or
 * Error Response:  `500 Server Error` or `422 Error in Parameters`
 
 
-#### Orders pending cancellation
+### Orders pending cancellation
 
 * HTTP method: `GET`  URL: `/api/orders/insufficientWallet`
 * Description: Retrieves a list of orders pending cancellation (i.e. their total amount is higher than current customer wallet)
@@ -270,7 +270,7 @@ or
 
 ## Products
 
-#### Get the List of Products
+### Get the List of Products
 
 * HTTP method: `GET`  URL: `/api/products/all`
 * Description: Retrieves the list of available products.
@@ -293,7 +293,7 @@ or
 ]
 ```
 
-#### Get the List of Products of a Specific Farmer
+### Get the List of Products of a Specific Farmer
 
 * HTTP method: `GET`  URL: `/api/farmer/+farmerId+/products`
 * Description: Retrieves the list of products a specific farmer offers.
@@ -315,7 +315,7 @@ or
 ]
 ```
 
-#### Set Expected Amount of Product for Next Week
+### Set Expected Amount of Product for Next Week
 
 * HTTP method: `POST`  URL: `/api/warehouse`
 * Description: A farmer saves in the database how much of a certain product they expect to have the following week.
@@ -336,7 +336,7 @@ or
 
 ## Customers
 
-#### Get the List of Customers
+### Get the List of Customers
 
 * HTTP method: `GET`  URL: `/api/customerlist`
 * Description: Retrieves a list of all customers stored in the database.
@@ -370,7 +370,7 @@ or
 ]
 ```
 
-#### Add a New Customer to the Database
+### Add a New Customer to the Database
 
 * HTTP method: `POST`  URL: `/api/customer`
 * Description: Posts a new customer to the database.
@@ -395,7 +395,7 @@ or
 }
 ```
 
-#### Get Customer by ID
+### Get Customer by ID
 
 * HTTP method: `GET`  URL: `/api/customers/:id`
 * Description: Retrieves the available information for the customer with that ID.
@@ -415,7 +415,7 @@ or
 
 ## Farmers
 
-#### Get Farmer by ID
+### Get Farmer by ID
 
 * HTTP method: `GET`  URL: `/api/farmer/:id`
 * Description: Retrieves the available information for the farmer with that ID.
@@ -431,3 +431,90 @@ or
     "surname":"Lamiera"
 }
 ```
+
+### Get all farmer orders and relative info
+
+* HTTP method: `GET`  URL: `/api/farmerOrders/all`
+* Description: Retrieves the available information for all the farmer orders along with their products.
+* Request Body: _None_
+* Successful Response: `200 OK`
+* Error Response: `500 Server Error` or `401 Not authenticated` or `401 Unauthorized action`
+* Response Body: An array of JSON objects describing the farmer orders.
+
+``` JSON
+[
+    {
+        "id": 1,
+        "farmerid": 1,
+        "farmerName": "Tunin",​
+        "farmerSurname": "Lamiera",
+        "state": "pending",​
+        "time": "2021-12-04 12:00",​
+        "total": 5.78,
+        "listitems": [{
+                "id": 1,
+                "name": "Red Apple",
+                ​​"price": 3.8,
+                "quantity": 2
+            },
+            {
+                "id": 3,
+                "name": "Banana",
+                ​​"price": 1.98,
+                "quantity": 2
+            }
+        ]
+    }
+]
+
+```
+
+### Acknowledge the delivery for a farmer order
+
+* HTTP method: `POST`  URL: `/api/farmerOrders/:id/ack`
+* Description: A manager can acknowledge the delivery of a farmer order after it has arrived to the warehouse.
+* Request Body: A JSON object specifying the order id and the new state as "delivered":
+
+``` JSON
+
+    {
+        "id": 1, 
+        "newState": "delivered"
+    }
+
+```
+
+* Successful Response: `200 OK`
+* Response Body (in case of success): A JSON object containing the id and the state of the updated object
+``` JSON
+
+    {
+        "id": 1, 
+        "state": "delivered"
+    }
+
+```
+* Error Response:  `422 Unprocessable entity` or `500 Server Error` or `404 Not Found`
+* Response Body (in case of failure): If 422 it returns a JSON object with the reason, otherwise just the status
+``` JSON
+    {
+        "msg": "ID in params and ID inside the body of the request don't match"
+    }
+
+    or
+
+    {
+        "errors": [
+            {
+                "location": "body",
+                ​​​"msg": "Invalid value",
+                ​​​"param": "<paramWrong>",
+                ​"value": "<valuePassed>"
+            }
+        ]
+    }
+
+
+```
+
+
