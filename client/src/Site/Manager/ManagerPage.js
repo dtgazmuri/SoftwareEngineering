@@ -66,6 +66,7 @@ function ManagerPageFarmerOrders (props) {
             {(orders.length && !loading) ?
                 <ListGroup variant = "primary"> 
                     <ListGroup.Item variant="primary" key = {"title"} ><h5>List of all the farmer orders</h5></ListGroup.Item>
+                    {/**TODO: Insert a search bar for filtering orders */}
                     {orders.map(order => {
                         return (
                             <FarmerOrderItem key = {order.id} order = {order}/>  
@@ -82,16 +83,29 @@ function ManagerPageFarmerOrders (props) {
 function FarmerOrderItem(props) {
     const [acked, setAcked] = useState(false);
     const [errorMsg, setErrorMsg] = useState(false);
+    const [ackedSuccessfully, setAckedSuccessfully] = useState(false);
     
     let order = props.order;
+
+    //useEffect for closing alert after 2 seconds
+    useEffect(() => {
+        if(ackedSuccessfully){
+            window.setTimeout(()=>{
+                setAckedSuccessfully(false);
+              },3000)
+        }
+      }, [ackedSuccessfully]);
     
     const ackClicked = (orderid) => {
         setAcked(true);
         API.ackFarmerOrder(orderid)
-            .then((newState) => {
+            .then((newOrder) => {
+                //returning an obj with id and state = "delivered"
+                order.state = newOrder.state; 
                 setAcked(false);
                 setErrorMsg(false);
-                order.state = newState; 
+                //this alert of successfully acked will disappear in 3 seconds
+                setAckedSuccessfully(true);
             })
             .catch(e => {
                 setAcked(false);
@@ -106,15 +120,17 @@ function FarmerOrderItem(props) {
             </Row>
             <Row>
             <Col sm = {4}>
+                {/**ORDER INFO */}
                 <h5><strong>Order info</strong></h5>
                 <p>
                     State: {acked ? <span className = "bg-warning">delivered</span> : <span>{order.state}</span>} <br></br>
                     Total: {order.total.toFixed(2)}€<br></br>
                     Date: {order.time}
                 </p>
-                {/**TODO: Here can be inserted a + button to show the products inside the farmer order in a dynamic way */}
+                {/**TODO: Here can be inserted a "show order info" button to show the products inside the farmer order in a dynamic way */}
             </Col>
             <Col sm = {4}>
+                {/**FARMER INFO */}
                 <h5><strong>Farmer info</strong></h5>
                 <p>
                     Farmer id: {order.farmerid} <br></br>
@@ -123,11 +139,15 @@ function FarmerOrderItem(props) {
                 </p>
             </Col>
             <Col sm = {4}>
+                {/**CONTROLS AND ALERT */}
                 {   order.state === "pending" &&
                         <Button className = "mb-3" onClick = {() => ackClicked(order.id)}>Acknowledge delivery</Button>
                 }
                 {   
                     errorMsg && <Alert variant = "danger">Error while trying to acknowledge delivery...</Alert>
+                }
+                {
+                    ackedSuccessfully && <Alert variant = "success">Order n.{order.id} acked successfully</Alert>
                 }
             </Col>
             </Row>

@@ -776,6 +776,7 @@ module.exports = function (app, db, testUser) {
 
 
   //STORY N.15
+  //Getting all farmer orders, along with their info (i.e. all the items they contain)
   // GET /api/farmerOrders/all
   app.get("/api/farmerOrders/all", isLogged, isManager, async (req, res) => {
     try {
@@ -812,5 +813,43 @@ module.exports = function (app, db, testUser) {
       res.status(404).end();
     }
   });
+
+
+  //ACKNOWLEDGE DELIVERY -> try to change the state of the order id from pending to delivered
+  app.post("/api/farmerOrders/:id/ack", isLogged, isManager, 
+    [ 
+    check("id").isNumeric().withMessage("farmer order id is incorrect"),
+    check("newState").isString().isLength({ min: 1 })
+    ],
+  async (req, res) => {
+    // check validity of data
+    // check if username does not exist
+    // add to corresponding table according to the role and then get userid and then add to users table
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    }
+    const orderid = req.body.id;
+    if(orderid != req.params.id){
+      console.log("ID in params and ID inside the body of the request don't match");
+      res.status(500).end();
+      return;
+    }
+    //request to the db
+    try {
+      let result = await farmerDAO.ackDeliveryFarmerOrder(db, orderid);
+      res.status(200).json(result);
+    }
+    catch(err) {
+      console.log(err);
+      if(err.code === "404")
+        res.status(404).end();
+      else 
+        res.status(500).end();
+      }
+  });
+
 
 };

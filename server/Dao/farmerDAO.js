@@ -66,6 +66,7 @@ exports.getFarmerOrders = (db) => {
   });
 };
 
+//getting the items inside the farmer order of id = orderid
 exports.getFarmerOrderItems= (db, orderid) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT PRODUCT, QUANTITY, NAME AS PRODUCTNAME , F.PRICE as PRICE FROM farmerorderitems F INNER JOIN product P ON F.PRODUCT = P.id WHERE orderid = ?";
@@ -81,6 +82,38 @@ exports.getFarmerOrderItems= (db, orderid) => {
         price: e.PRICE,
       }));
       resolve(products);
+    });
+  });
+
+};
+
+//setting the state to delivered of farmer order of id = orderid
+exports.ackDeliveryFarmerOrder= (db, orderid) => {
+  return new Promise((resolve, reject) => {
+    //first check if farmer order exists
+    const sql = "SELECT * FROM farmerorder WHERE id = ?";
+    db.all(sql, [orderid], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      else if (rows === undefined || rows.length === 0){
+        reject({code: "404", msg: "FARMER ORDER NOT FOUND;"});
+      }
+      else {
+        //try to update farmer order
+        const sql1 = "UPDATE farmerorder SET state = 'delivered' WHERE id = ?";
+        db.run(sql1, [orderid], (err) => {
+          if(err){
+            reject(err);
+            return;
+          }
+          else {
+            const newOrder = {id: orderid, state: "delivered"};
+            resolve(newOrder);
+          }
+        });
+      }
     });
   });
 
