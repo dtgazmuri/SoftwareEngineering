@@ -434,8 +434,8 @@ module.exports = function (app, db, testUser) {
   );
 
   //STORY NUMBER 9
-  //getting the list of products selled by a specific farmer
-  // GET /api/farmer/:id
+  //getting the list of products sold by a specific farmer
+  // GET /api/farmer/:filter/products
   app.get("/api/farmer/:filter/products", (req, res) => {
     // products of farmer can be also get through their name/surname
     const farmerId = parseInt(req.params.filter);

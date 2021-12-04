@@ -36,7 +36,7 @@ or
 ```
 
 ### Create New User
-* HTTP method: `POST`  URL: `/api/users/registration
+* HTTP method: `POST`  URL: `/api/users/registration`
 * Description: Register a new user and adds it to the database
 * Request body: description of the user 
 ``` JSON
@@ -295,8 +295,8 @@ or
 
 ### Get the List of Products of a Specific Farmer
 
-* HTTP method: `GET`  URL: `/api/farmer/+farmerId+/products`
-* Description: Retrieves the list of products a specific farmer offers.
+* HTTP method: `GET`  URL: `/api/farmer/:filter/products`
+* Description: Retrieves the list of products a specific farmer offers. The farmer can be filtered by id, name or surname
 * Request Body: _None_
 * Successful Response: `200 Ok`
 * Error Response:  `500 Server Error`
@@ -307,7 +307,6 @@ or
     {
         "id": "id",
         "name": "name",
-        "farmerid": "farmer id",
         "price":"price",
     },
     {},
