@@ -5,8 +5,8 @@ import { waitFor } from '@testing-library/dom';
 
 const mockLogin = jest.fn();
 
-//######################################################## SignupForm ########################################################//
-describe("test the SignupForm component", () => {
+//######################################################## LoginPage ########################################################//
+describe("test the LoginPage component", () => {
 
     //TEST #1
     test('check rendering', async () => {
