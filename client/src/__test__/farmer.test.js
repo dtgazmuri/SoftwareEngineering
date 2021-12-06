@@ -6,6 +6,12 @@ import { waitFor } from '@testing-library/dom';
 
 import dayjs from 'dayjs';
 
+//TEST MOCK
+import API from '../FarmerAPI.js';
+jest.mock('../FarmerAPI.js');
+//END TEST MOCK
+
+
 const mockUpdatedQuantity = jest.fn();
 const mockSetExpectedQuantityForProduct = jest.fn();
 const mockGetCurrentTime = jest.fn();
@@ -175,7 +181,7 @@ describe("test the ProductList component", () => {
 describe("test the Farmer component", () => {
 
     //TEST #1
-    test('check rendering', async () => {
+    test('check search farmer rendering', async () => {
 
         //Create a correct date
         let d1 = dayjs("2018-06-05");
@@ -184,6 +190,141 @@ describe("test the Farmer component", () => {
         //Render the component
         const elemet = render(<Farmer getCurrentTime={mockGetCurrentTimeGOOD} />);
 
+        const insertFarmerElement = screen.getByPlaceholderText("Insert id, name or surname");
+        const searchButton = screen.getByRole("button", {name: "Search products"});
+
+        expect(insertFarmerElement).toBeInTheDocument();
+        expect(searchButton).toBeInTheDocument();
+
     });
 
+    //TEST #2
+    test('check search farmer insertion', async () => {
+
+        //Create a correct date
+        let d1 = dayjs("2018-06-05");
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+
+        //Render the component
+        const elemet = render(<Farmer getCurrentTime={mockGetCurrentTimeGOOD} />);
+
+        const insertFarmerElement = screen.getByPlaceholderText("Insert id, name or surname");
+
+        //Check the isertion
+        fireEvent.change(insertFarmerElement, { target: { value: 1 } });
+        expect(insertFarmerElement.value).toBe("1");
+
+        fireEvent.change(insertFarmerElement, { target: { value: "peppino" } });
+        expect(insertFarmerElement.value).toBe("peppino");
+
+    });
+
+    //TEST #3
+    test('check search farmer button', async () => {
+
+        //Create a correct date
+        let d1 = dayjs("2018-06-05");
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+
+        //Render the component
+        const elemet = render(<Farmer getCurrentTime={mockGetCurrentTimeGOOD} />);
+
+        //get the elements I need
+        const insertFarmerElement = screen.getByPlaceholderText("Insert id, name or surname");
+        const searchButton = screen.getByRole("button", {name: "Search products"});
+
+        //Insert farmer id
+        fireEvent.change(insertFarmerElement, { target: { value: 1 } });
+        expect(insertFarmerElement.value).toBe("1");
+
+        
+        //Now I need to check if the API are called...
+        const mockGetProductsOfFarmer = jest.spyOn(API, 'getProductsOfFarmer');
+
+        const responseBody = [
+            {
+                "id":1,
+                "name":"Red Apple",
+                "price":1.9
+            },
+            {
+                "id":3,
+                "name":"Banana",
+                "price":0.99
+            }
+        ];
+
+        mockGetProductsOfFarmer.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Click the button
+        fireEvent.click(searchButton);
+
+        //Check if the function is called
+        expect(mockGetProductsOfFarmer).toHaveBeenCalled();
+
+        //Check if the products are showing! (need to wait)
+        await waitFor(() => {
+
+            const appleElement = screen.getByText(/Red Apple/i);
+            const bananaElement = screen.getByText(/Banana/i);
+
+            expect(appleElement).toBeInTheDocument();
+            expect(bananaElement).toBeInTheDocument();
+        });
+        
+        //Restore it
+        mockGetProductsOfFarmer.mockRestore();
+        
+
+    });
+
+
+    //TEST #4
+    test('check search farmer button with wrong response', async () => {
+
+        //Create a correct date
+        let d1 = dayjs("2018-06-05");
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+
+        //Render the component
+        const elemet = render(<Farmer getCurrentTime={mockGetCurrentTimeGOOD} />);
+
+        //get the elements I need
+        const insertFarmerElement = screen.getByPlaceholderText("Insert id, name or surname");
+        const searchButton = screen.getByRole("button", {name: "Search products"});
+
+        //Insert farmer id
+        fireEvent.change(insertFarmerElement, { target: { value: 100 } });
+        expect(insertFarmerElement.value).toBe("100");
+
+        
+        //Now I need to check if the API are called...
+        const mockGetProductsOfFarmer = jest.spyOn(API, 'getProductsOfFarmer');
+
+        const responseBody = {error: "error"};
+
+        mockGetProductsOfFarmer.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Click the button
+        fireEvent.click(searchButton);
+
+        //Check if the function is called
+        expect(mockGetProductsOfFarmer).toHaveBeenCalled();
+
+        //Check if the products are showing! (need to wait)
+        await waitFor(() => {
+
+            const errorElemet = screen.getByText(/[Ss]orry/i);
+            expect(errorElemet).toBeInTheDocument();
+        });
+        
+        //Restore it
+        mockGetProductsOfFarmer.mockRestore();
+        
+
+    });
+
+
 });
+
+
