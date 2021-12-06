@@ -126,4 +126,53 @@ describe("test the SignupForm component", () => {
 
     });
 
+    //TEST #5
+    test('check the handleClose function to be called', async () => {
+
+        
+        //Render the component
+        const elemet = render(<MockComponent show={true} addClient={mockAddClient} handleClose={mockHandleClose}/>);
+
+        const closeButton = screen.getByRole("button", {name: "Cancel"});
+
+
+
+        //check if the function is called
+        fireEvent.click(closeButton);
+
+        //Check if it's called later
+        await waitFor(() => expect(mockHandleClose).toHaveBeenCalled());
+
+    });
+
+    //TEST #6
+    test('check absence of parameters', async () => {
+
+        
+        //Render the component
+        const elemet = render(<MockComponent show={true} addClient={mockAddClient} handleClose={mockHandleClose}/>);
+
+        //Fills the fields
+        const nameForm = screen.getByTitle("insert-client-name");
+        const surnameForm = screen.getByTitle("insert-client-surname");
+        const usernameForm = screen.getByTitle("insert-client-username");
+        
+        //Check if whitout a field the function is not called
+
+        //Mock the events
+        fireEvent.change(nameForm, { target: { value: "pippo" } });
+        fireEvent.change(surnameForm, { target: { value: "pippo" } });
+        fireEvent.change(usernameForm, { target: { value: "pippo@pippo.it" } });
+
+        //Get the button
+        const saveButton = screen.getByRole("button", {name: "Save"});
+
+        //check if the function is called
+        fireEvent.click(saveButton);
+
+        //Check if it's called later
+        await waitFor(() => expect(mockAddClient).not.toHaveBeenCalled());
+
+    });
+
 });

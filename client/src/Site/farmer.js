@@ -83,7 +83,7 @@ function Farmer(props) {
     )
 }
 
-function ProductList(props) {
+export function ProductList(props) {
     
     return (
         <Col>
@@ -120,7 +120,7 @@ function ProductList(props) {
     )
 }
 
-function ProductForm(props){
+export function ProductForm(props){
     const [amount, setAmount] = useState(0);
     const [error, setError] = useState("");
     const [show, setShow] = useState(true);
