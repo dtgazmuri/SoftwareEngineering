@@ -326,5 +326,3 @@ describe("test the Farmer component", () => {
 
 
 });
-
-
