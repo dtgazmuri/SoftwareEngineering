@@ -30,6 +30,10 @@
     "supertest": "^6.1.6"
   },
   "jest": {
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter",
+    "collectCoverage": true
+  },
+  "jestSonar": {
+    "reportFile": "test-report.xml"
   }
 }
