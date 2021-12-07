@@ -93,6 +93,7 @@ function SignupForm(props) {
                                 <Form.Label>Name</Form.Label>
                                 <Form.Control
                                     required
+                                    test-id="name"
                                     type="text"
                                     value={name}
                                     onChange={ev => setName(ev.target.value)}
@@ -104,6 +105,7 @@ function SignupForm(props) {
                                 <Form.Label>Surname</Form.Label>
                                 <Form.Control
                                     required
+                                    test-id="surname"
                                     type="text"
                                     value={surname}
                                     onChange={ev => setSurname(ev.target.value)}
@@ -115,6 +117,7 @@ function SignupForm(props) {
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
                                     required
+                                    test-id="username"
                                     type="text"
                                     value={username}
                                     onChange={ev => setUsername(ev.target.value)}
@@ -125,6 +128,7 @@ function SignupForm(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
+                                    test-id="password"
                                     required
                                     type="password"
                                     value={password}
@@ -136,7 +140,7 @@ function SignupForm(props) {
                         </Modal.Body>
                         <Modal.Footer>
                             <Form.Group  className="mb-5">
-                                <Button onClick={handleSubmit}>Save</Button>
+                                <Button test-id="save-button" onClick={handleSubmit}>Save</Button>
                             </Form.Group>
                             <Form.Group  className="mb-5">
                                 <Link to="/home"><Button variant='secondary' onClick={props.handleClose}>Cancel</Button></Link>

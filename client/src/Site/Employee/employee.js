@@ -114,21 +114,20 @@ function CustomerList() {
                         <Form.Label>You can filter by customer name.</Form.Label>
                     </Col>
                     <Col sm = {6}>
-                        <Form.Control type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                        <Form.Control test-id="filter" type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
                     </Col>
                 </Row>
             </Form>
-            <ListGroup variant="primary">
+            <ListGroup variant="primary" test-id="list">
                 {customersToBeShown.length ?
                     customersToBeShown.map(customer => {
                         return (
-                            <ListGroup.Item id = {customer.id} key = {customer.id}>
+                            <ListGroup.Item id = {customer.username} key = {customer.id}  >
                                 <Row>
                                     <Col md = {6} lg = {6} sm = {6}>
-                                        <h5>{customer.name + " " + customer.surname}</h5>
-                                        <h5>ID: {customer.id} </h5>
-                                        {/*<h5>Username: {customer.username}</h5>*/}
-                                        <h5>Amount in Wallet: {customer.wallet} €</h5>
+                                        <h5 test-id={`name`}>{customer.name + " " + customer.surname}</h5>
+                                        <h5 test-id={`mail`}>Mail: {customer.username}</h5>
+                                        <h5 test-id={`wallet-amount`}>Amount in Wallet: {customer.wallet} €</h5>
                                     </Col>
                                     <Col>
                                         <CustomerForm id = {customer.id} customers = {customers} alertWalletUpdated = {alertWalletUpdated}
@@ -167,9 +166,9 @@ function CustomerForm(props) {
                 <Alert variant = {props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
             }
             <Form.Group controlId={props.id} className = "mb-3">
-                <Form.Control size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
+                <Form.Control test-id= "newamount" size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
             </Form.Group>
-            <Button onClick={() => walletTopUp(props.id, amount)}>Submit</Button>
+            <Button test-id="save-button" onClick={() => walletTopUp(props.id, amount)}>Submit</Button>
         </Form>
     );
 }

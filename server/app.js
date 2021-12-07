@@ -318,7 +318,7 @@ module.exports = function (app, db, testUser) {
   // STORY NUMBER 5
   app.get("/api/customers/all", isLogged, isEmployee, async (req, res) => {
     try {
-      const productsList = await employeeDAO.listCustomersAll(db);
+      const productsList = await employeeDAO.getCustomers(db);
       res.status(200).json(productsList);
     } catch (err) {
       res.status(404).end();

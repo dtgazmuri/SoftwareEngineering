@@ -177,8 +177,6 @@ function ProductListEmployee(props) {
     const handleSubmit = async () => {
 
         let total = 0;
-        // Delivery --> True or False
-        // Address  --> If Delivery is True, then client's entered address. Else, "Shop"
         let wantsDelivery = "False";
         let deladd = "Shop";
         if (delivery && address != "") {
@@ -201,7 +199,6 @@ function ProductListEmployee(props) {
             props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
         }
 
-        //Close modal
         setShow(false);
     }
 
@@ -262,7 +259,7 @@ function ProductListEmployee(props) {
                     </>
                     :
                     <>
-                        <Container fluid>
+                        <Container fluid id="time-elapsed">
                             <h1>
                                 You cannot place orders after Sunday 23:00.
                             </h1>
@@ -279,19 +276,19 @@ function ProductListEmployee(props) {
 //Create the confirm delivery panel
 export function ConfirmDeliveryPanel(props) {
     return (
-        <Container fluid>
-            <Card>
+        <Container fluid id="confirm">
+            <Card >
                 <Card.Body>
                     <Card.Title>Order Confirmation</Card.Title>
                     <div class="h-divider" />
                     <Card.Text>
-                        <Form.Group controlId="form-date">
+                        <Form.Group id="form-date" controlId="form-date">
                             <Form.Label>Date</Form.Label>
-                            <Form.Control title="insert-date" type="date" className="mb-3" name="date" format="dd/MM/yyyy" value={props.date} onChange={(ev) => props.setDate(ev.target.value)} />
+                            <Form.Control id="date" title="insert-date" type="date" className="mb-3" name="date" format="dd/MM/yyyy" value={props.date} onChange={(ev) => props.setDate(ev.target.value)} />
                         </Form.Group>
                         <Form.Group controlId="form-deadline-time">
                             <Form.Label>Time</Form.Label>
-                            <Form.Control title="insert-time" type="time" name="time" value={props.time} onChange={(ev) => props.setTime(ev.target.value)} />
+                            <Form.Control id="time" title="insert-time" type="time" name="time" value={props.time} onChange={(ev) => props.setTime(ev.target.value)} />
                         </Form.Group>
                     </Card.Text>
                     <br />
@@ -300,6 +297,7 @@ export function ConfirmDeliveryPanel(props) {
                             <Form.Check
                                 title="insert-delivery"
                                 type="checkbox"
+                                id="delivery"
                                 label="Delivery at home?"
                                 onChange={() => props.handleDelivery()}
                                 inline
@@ -309,7 +307,7 @@ export function ConfirmDeliveryPanel(props) {
                         {
                             props.delivery ?
                                 <Form.Group className="mb-3" controlId="delivery">
-                                    <Form.Control type="address" placeholder="Enter Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
+                                    <Form.Control id="address" type="address" placeholder="Enter Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
                                 </Form.Group>
                                 :
                                 <></>
@@ -318,7 +316,7 @@ export function ConfirmDeliveryPanel(props) {
                     </Card.Text>
                     <div class="h-divider" />
                     <br />
-                    <Button variant="primary" onClick={() => props.handleShow()}>Confirm Order</Button>
+                    <Button variant="primary" id = "confirm-button"onClick={() => props.handleShow()}>Confirm Order</Button>
 
                 </Card.Body>
             </Card>
@@ -335,7 +333,7 @@ export function ProductTable(props) {
     });
 
     return (
-        <Table responsive className="table-prod">
+        <Table id="table-prod" responsive className="table-prod">
             <thead>
                 <tr>
                     <th>Product</th>
@@ -365,28 +363,15 @@ export function ProductTableRow(props) {
     return (
 
         <>
-            {
-                bookedQTA > 0 ?
-                    <tr data-testid={`product-item-${id}`} key={"prod" + id} bgcolor="#99ff99">
+                    <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} bgcolor={bookedQTA>0? "#99ff99" : "" }>
                         <td>{prod.name}</td>
                         <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
                         <td>{prod.price} €</td>
                         <td>{prod.quantity} g</td>
-                        <td><Button onClick={() => props.addOrder(prod)}>+</Button></td>
-                        <td><Button onClick={() => props.removeOrder(prod)}>-</Button></td>
-                        <td>{bookedQTA === 0 ? '-' : bookedQTA}</td>
+                        <td><Button id="add" onClick={() => props.addOrder(prod)}>+</Button></td>
+                        <td><Button id="remove" onClick={() => props.removeOrder(prod)}>-</Button></td>
+                        <td id="booked">{bookedQTA === 0 ? '-' : bookedQTA}</td>
                     </tr>
-                    :
-                    <tr data-testid={`product-item-${id}`} key={"prod" + id}>
-                        <td>{prod.name}</td>
-                        <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                        <td>{prod.price} €</td>
-                        <td>{prod.quantity} g</td>
-                        <td><Button onClick={() => props.addOrder(prod)}>+</Button></td>
-                        <td><Button onClick={() => props.removeOrder(prod)}>-</Button></td>
-                        <td>{bookedQTA === 0 ? '-' : bookedQTA}</td>
-                    </tr>
-            }
         </>
     );
 
@@ -439,13 +424,13 @@ export function RecapCart(props) {
 
 
     return (
-        <Modal show={props.show} >
+        <Modal show={props.show} id="receipt">
             <Modal.Header closeButton={props.handleClose}>
                 <Modal.Title>Order Confirmation</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <h5>Your Products</h5>
-                <Table>
+                <Table id="items">
                     <thead>
                         <tr id="header">
                             <th>NAME</th>
@@ -465,7 +450,7 @@ export function RecapCart(props) {
                                 <b>Total:</b>
                             </td>
 
-                            <td>
+                            <td id="quantity">
                                 {
                                     total_weight
                                 }
@@ -484,13 +469,13 @@ export function RecapCart(props) {
                 </Table>
 
                 <h5>Delivery Details</h5>
-                <Table>
+                <Table id="delivery">
                     <tbody>
                         <tr>
                             <td>
                                 <b>Delivery Address:</b>
                             </td>
-                            <td colSpan="2">
+                            <td colSpan="2" id="address">
                                 {
                                     props.delivery ? props.address : "Pick-up at the shop"
                                 }
@@ -499,7 +484,7 @@ export function RecapCart(props) {
 
                         <tr>
                             <td><b>Delivery Date:</b></td>
-                            <td colSpan="2">{`${props.date} at ${props.time}`}</td>
+                            <td id= "date" colSpan="2">{`${props.date} at ${props.time}`}</td>
                             {props.setOrderDate(props.date)}
                             {props.setOrderTime(props.time)}
                         </tr>
@@ -507,11 +492,11 @@ export function RecapCart(props) {
                     </tbody>
                 </Table>
 
-                <Button onClick={props.handleSubmit}>Save</Button>
+                <Button id="sendorder" onClick={props.handleSubmit}>Save</Button>
                 &nbsp;
                 &nbsp;
                 &nbsp;
-                <Button variant='secondary' onClick={props.handleClose}>Cancel</Button>
+                <Button variant='secondary ' onClick={props.handleClose}>Cancel</Button>
 
             </Modal.Body>
 
