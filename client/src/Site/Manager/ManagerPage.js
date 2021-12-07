@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Container, Row, Col, ListGroup, Alert, Button } from "react-bootstrap";
+import { Container, Row, Col, ListGroup, Alert, Button, Form } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 import { deliverybig, alarm } from '../icons';
@@ -38,7 +38,9 @@ function SeeFarmerOrdersButton () {
 }
 function ManagerPageFarmerOrders (props) {
     const [orders, setOrders] = useState([]);
+    const [ordersToShow, setOrdersToShow] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [orderToSearch, setOrderToSearch] = useState("");
 
     
     //orders from farmer are delivered from Monday 9:00 (after confirmation) to Tuesday evening (let's say 21:00)
@@ -50,16 +52,44 @@ function ManagerPageFarmerOrders (props) {
     if(currentTime.day() === 2 && currentTime.hour() < 21) //if it's Tuesday before 21, can set ack for delivery
         validTime = true;
 
+    //use effect that when we type something in the searchbar, triggers the filtering
+    useEffect(() => {
+        const value = orderToSearch;
+        if(value === ""){
+            setOrdersToShow(orders);
+            return;
+        }
+        const tmp = orders.filter( order => {
+            if(order.id === Number.parseInt(value))
+                return true;
+            else if (order.farmerName.toUpperCase().startsWith(value.toUpperCase()))
+                return true;
+            else if (order.farmerSurname.toUpperCase().startsWith(value.toUpperCase()))
+                return true;
+            else if (order.state.toUpperCase().startsWith(value.toUpperCase()))
+                return true;
+            else if (order.listitems.find(item => item.name.toUpperCase().startsWith(value.toUpperCase())))
+                return true;
+            //missing search per product
+        
+            return false;
+        });
+        //TODO: complete this function
+        setOrdersToShow(tmp);
+    }, [orderToSearch, orders]);
+
     useEffect(() => {
         setLoading(true);
         API.getFarmerOrders()
             .then(all_orders => {
                 setOrders(all_orders);
+                setOrdersToShow(all_orders);
                 setLoading(false);
             })
             .catch(e => {
                 setLoading(false);
                 setOrders([]);
+                setOrdersToShow([]);
             }
             );
       }, [])
@@ -69,13 +99,23 @@ function ManagerPageFarmerOrders (props) {
         <Col>
             {loading && <Alert variant='warning'> {alarm} Please wait while loading farmer orders... {alarm}</Alert>}
             {(orders.length && !loading) ?
-                <ListGroup variant = "primary"> 
-                    <ListGroup.Item variant="primary" key = "title"><h5>List of all the farmer orders</h5></ListGroup.Item>
-                    <ListGroup.Item variant="secondary" key = "explaination">
-                        <h6>Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00</h6>
+                <ListGroup variant = "primary" className = "mb-5"> 
+                    <ListGroup.Item variant="primary" key = "title">
+                        <h5 id = "manager-farmer-orders-title">List of all the farmer orders</h5>
                     </ListGroup.Item>
-                    {/**TODO: Insert a search bar for filtering orders */}
-                    {orders.map(order => {
+                    <ListGroup.Item variant="secondary" key = "explaination">
+                        <h6 id = "manager-farmer-orders-explaination">Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00</h6>
+                    </ListGroup.Item>
+                    <ListGroup.Item variant="secondary" key = "search">
+                        <Form>
+                            <Form.Group controlId="manager-farmer-orders-searching">
+                                <Form.Control value = {orderToSearch} placeholder = "Filter farmer orders by id, farmer name, farmer surname, state or product"
+                                onChange={(event) => setOrderToSearch(event.target.value)}/>       
+                            </Form.Group>
+                        </Form>
+                    </ListGroup.Item>
+                    
+                    {ordersToShow.map(order => {
                         return (
                             <FarmerOrderItem key = {order.id} order = {order} validTime = {validTime}/>  
                         ); 
@@ -92,6 +132,7 @@ function FarmerOrderItem(props) {
     const [acked, setAcked] = useState(false);
     const [errorMsg, setErrorMsg] = useState(false);
     const [ackedSuccessfully, setAckedSuccessfully] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
     
     let order = props.order;
 
@@ -123,19 +164,38 @@ function FarmerOrderItem(props) {
 
     return (
         <ListGroup.Item id = {order.id} key = {order.id}>
-            <Row>
+            <Row key = "order-id">
                 <h4><strong>Order id: {order.id}</strong></h4>
             </Row>
-            <Row>
+            <Row key = "order-info">
             <Col sm = {4}>
                 {/**ORDER INFO */}
                 <h5><strong>Order info</strong></h5>
                 <p>
                     State: {acked ? <span className = "bg-warning">delivered</span> : <span>{order.state}</span>} <br></br>
                     Total: {order.total.toFixed(2)}€<br></br>
-                    Date: {order.time}
+                    Date: {order.time}<br></br>
                 </p>
-                {/**TODO: Here can be inserted a "show order info" button to show the products inside the farmer order in a dynamic way */}
+
+                {!showDetails ?
+                    <Button variant="link" className="p-0" onClick = {() => setShowDetails(true)}>Show more info</Button>
+                :
+                    <>
+                    <Button variant="link" className="p-0" onClick = {() => setShowDetails(false)}>Hide more info</Button><br></br>
+                    {/**This ol can be split into another function component */}
+                    <ol>
+                        {order.listitems.map(product => {
+                            return <li>
+                                <span><strong className = "pr-3">{product.name}</strong></span>
+                                <span className = "pr-3">Qty: <strong>{product.quantity}</strong></span>
+                                <span>Total: <strong>{product.price}€</strong></span>
+                            </li>
+                        })}
+                    </ol>
+                    
+                    </>
+                }
+                
             </Col>
             <Col sm = {4}>
                 {/**FARMER INFO */}
