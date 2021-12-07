@@ -55,7 +55,7 @@ function MyNavbar(props) {
   )
 }
 
-function LogoutButton(props) {
+export function LogoutButton(props) {
   return (
       <Link to="/">
         <Button variant="outline-light" onClick={props.logout}>Logout</Button>

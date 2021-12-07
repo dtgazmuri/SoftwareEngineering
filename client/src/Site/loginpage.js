@@ -41,11 +41,11 @@ function LoginPage(props) {
       {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
       <Form.Group controlId='username' >
           <Form.Label>email</Form.Label>
-          <Form.Control type='email' test-id="username" value={username} onChange={ev => setUsername(ev.target.value)} />
+          <Form.Control type='email' title="insert-email" test-id="username" value={username} onChange={ev => setUsername(ev.target.value)} />
       </Form.Group>
       <Form.Group controlId='password' >
           <Form.Label>Password</Form.Label>
-          <Form.Control type='password' test-id="password" value={password} onChange={ev => setPassword(ev.target.value)} />
+          <Form.Control type='password' title="insert-password" test-id="password" value={password} onChange={ev => setPassword(ev.target.value)} />
       </Form.Group>
       <Button test-id="login-button" onClick={handleSubmit}>Login</Button>
     </Form>

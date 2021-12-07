@@ -1,6 +1,7 @@
 /**API for getting product info of the products of a specific farmer (farmerId)*/
-async function getProductsOfFarmer(farmerId) {
-    let response = await fetch('/api/farmer/'+farmerId+'/products');
+async function getProductsOfFarmer(farmerToSearch) {
+    //need to distringuish if they have passed an id or a string (which represent name or surname)
+    let response = await fetch('/api/farmer/'+farmerToSearch+'/products');
     let responseBody = await response.json();
     if(response.ok) {
         return responseBody;

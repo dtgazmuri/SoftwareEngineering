@@ -92,6 +92,7 @@ function SignupForm(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Name</Form.Label>
                                 <Form.Control
+                                    title="insert-client-name"
                                     required
                                     test-id="name"
                                     type="text"
@@ -104,6 +105,7 @@ function SignupForm(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Surname</Form.Label>
                                 <Form.Control
+                                    title="insert-client-surname"
                                     required
                                     test-id="surname"
                                     type="text"
@@ -116,6 +118,7 @@ function SignupForm(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
+                                    title="insert-client-username"
                                     required
                                     test-id="username"
                                     type="text"
@@ -129,6 +132,7 @@ function SignupForm(props) {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     test-id="password"
+                                    title="insert-client-password"
                                     required
                                     type="password"
                                     value={password}

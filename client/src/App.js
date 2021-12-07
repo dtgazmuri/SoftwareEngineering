@@ -52,7 +52,6 @@ function App() {
           console.log(u);
           setURL(`/${u.role}`);
           setLogged(true);
-          console.log("logged in user");
           setMessage({
             type: "success",
             msg: `Welcome back, ${u.username}`,
@@ -71,7 +70,6 @@ function App() {
       const currentUser = await API.login(credentials);
       setUser(currentUser);
       setURL(`/${currentUser.role}`);
-      console.log(url);
       setLogged(true);
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
     } catch (err) {
@@ -261,13 +259,13 @@ function App() {
           {/**Route for the main page of the manager */}
           <Route exact path="/manager"
             element={
-              isLogged ? <ManagerPage user = {user}/>
+              isLogged ? <ManagerPage user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
           <Route exact path="/manager/farmerorders"
             element={
-              isLogged ? <ManagerPageFarmerOrders user = {user}/>
+              isLogged ? <ManagerPageFarmerOrders user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
@@ -297,7 +295,7 @@ function App() {
             }
           />
           <Route exact path="/customer/:id/basket"
-            element={<Basket 
+            element={<Basket user= {user}
               notifyBalance={notifyBalance} 
               notifyQuantity={notifyQuantity}/>
             }

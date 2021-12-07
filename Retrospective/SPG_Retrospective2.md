@@ -12,9 +12,13 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed vs done: ? vs ? 
-- Total points committed vs done: ? vs ? 
+- Number of stories committed vs done: 3 vs 0 
+
+- Total points committed vs done: 13 vs 0
+
 - Nr of hours planned vs spent (as a team): 96 vs 102
+
+  (For one story only the frontend test was left and the two others missed the backend test and partially the fronted test)
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -26,9 +30,8 @@ sections:
 
 - Unit testing done
 
-- E2E testing done
 
-> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing and E2E testing as part od DoD.
+> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing as part od DoD.
 
 
 ### Detailed statistics
@@ -118,7 +121,7 @@ NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
   We learned the importance of testing since it proved to be very useful and insightful for our purposes. Moreover, we divided the work load in a better way compared to the previous sprint.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
- 
+
     We managed very well to include most of the testing phase in the sprint.
 
 - Which ones you were not able to achieve? Why?

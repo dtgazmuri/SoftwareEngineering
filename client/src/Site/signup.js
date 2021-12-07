@@ -77,6 +77,7 @@ function SignupForm(props) {
                             <Form.Control
                                 required
                                 test-id="name"
+                                title="name-insertion"
                                 type="text"
                                 value={name}
                                 onChange={ev => setName(ev.target.value)}
@@ -89,6 +90,7 @@ function SignupForm(props) {
                             <Form.Control
                                 required
                                 test-id="surname"
+                                title="surname-insertion"
                                 type="text"
                                 value={surname}
                                 onChange={ev => setSurname(ev.target.value)}
@@ -101,6 +103,7 @@ function SignupForm(props) {
                             <Form.Control
                                 required
                                 test-id="username"
+                                title="username-insertion"
                                 type="email"
                                 value={username}
                                 onChange={ev => setUsername(ev.target.value)}
@@ -114,6 +117,7 @@ function SignupForm(props) {
                                 required
                                 type="password"
                                 test-id="password1"
+                                title="password1-insertion"
                                 value={password}
                                 onChange={ev => setPassword(ev.target.value)}
                             />
@@ -126,6 +130,7 @@ function SignupForm(props) {
                                 required
                                 test-id="password2"
                                 type="password"
+                                title="password2-insertion"
                                 value={rpassword}
                                 onChange={ev => setRPassword(ev.target.value)}
                             />
