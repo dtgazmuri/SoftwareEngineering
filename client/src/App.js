@@ -303,7 +303,9 @@ function App() {
             }
           />
           <Route exact path="/customer/:id/basket"
-            element={<Basket user= {user}
+            element={<Basket 
+              user= {user}
+              setMessage={setMessage}
               notifyBalance={notifyBalance} 
               notifyQuantity={notifyQuantity}/>
             }

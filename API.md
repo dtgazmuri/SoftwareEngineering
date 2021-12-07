@@ -57,7 +57,7 @@ or
 ```
 * Error responses:  `500 Internal Server Error` (generic error), `409 Conflict` (user already exists), `400 Bad Request`
 
-### Update Customer Wallet (Not ready)
+### Update Customer Wallet
 
 * HTTP method: `POST`  URL: `/api/customers/wallet/:id/:value`
 * Description: Adds money to a customer's wallet.
