@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert } from "react-bootstrap";
-import API from '../FarmerAPI'
-import {littleX} from './icons';
+import API from '../../FarmerAPI'
+import {littleX} from '../icons';
 
 
 function Farmer(props) {

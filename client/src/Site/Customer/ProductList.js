@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
-import BasketButton from "./BasketButton";
+import {BasketButton} from "./Basket";
 
-import API from "../API";
+import API from "../../API";
 
 function ProductList(props) {
   const [products, setProducts] = useState([]);

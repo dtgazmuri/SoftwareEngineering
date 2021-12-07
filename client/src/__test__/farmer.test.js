@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductList, ProductForm } from '../Site/farmer.js'
-import Farmer from '../Site/farmer.js'
+import { ProductList, ProductForm } from '../Site/Farmer/farmer.js'
+import Farmer from '../Site/Farmer/farmer.js'
 
 import { waitFor } from '@testing-library/dom';
 
