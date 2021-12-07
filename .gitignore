@@ -6,4 +6,7 @@ node_modules
 Thumbs.db
 Desktop.ini
 
+# Testing
+server/coverage/*
+
 .vscode
