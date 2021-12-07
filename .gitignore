@@ -8,5 +8,6 @@ Desktop.ini
 
 # Testing
 server/coverage/*
+client/coverage/*
 
 .vscode
