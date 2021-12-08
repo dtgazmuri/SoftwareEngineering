@@ -396,7 +396,7 @@ export function RecapCart(props) {
   )
 }
 
-function BasketItem(props) {
+export function BasketItem(props) {
   return (
     <>
       {props.product && (

@@ -1,16 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BasketButton } from '../Site/Customer/Basket.js'
+import { BasketButton, BasketItem, Basket } from '../Site/Customer/Basket.js'
 
 import { waitFor } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 
 
-const mockNotifyBelance = jest.fn();
-const mockNotifyQuantity = jest.fn();
-const fake_wallet = 100;
 
 //######################################################## BasketButton ########################################################//
 describe("test the BasketButton component", () => {
+
+    const mockNotifyBelance = jest.fn();
+    const mockNotifyQuantity = jest.fn();
+    const fake_wallet = 100;
 
     const fake_product = {
         id:3,
@@ -108,4 +109,98 @@ describe("test the BasketButton component", () => {
     });
 
     
+});
+
+
+//######################################################## BasketItem ########################################################//
+describe("test the BasketItem component", () => {
+
+    const mockNotifyBelance = jest.fn();
+    const mockNotifyQuantity = jest.fn();
+    const mockSetChangeBasket = jest.fn();
+
+    const fake_product = {
+        id:3,
+        name:"Banana",
+        farmer: {name: "piero", surname: "pappino"},
+        price:0.99,
+        quantity:2
+    };
+
+    //TEST #1
+    test('check rendering', async () => {
+
+        //Render the component
+        const elemet = render(<BasketItem product={fake_product} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} setChangeBasket={mockSetChangeBasket}/>);
+
+        const nameEl = screen.getByText(/[Bb]anana/i);
+        const buttons = screen.getAllByRole("button");
+        const priceEl = screen.getByText(/1.98/i);            //product of quantity * price
+
+        expect(nameEl).toBeInTheDocument();
+        expect(priceEl).toBeInTheDocument();
+        expect(buttons.length).toBe(2);
+
+    });
+
+    //TEST #2
+    test('check button pressed', async () => {
+
+        //Render the component
+        const elemet = render(<BasketItem product={fake_product} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} setChangeBasket={mockSetChangeBasket}/>);
+
+        const buttons = screen.getAllByRole("button");
+
+        //Check pressed
+        fireEvent.click(buttons[0]);
+        await waitFor(() => expect(mockSetChangeBasket).toHaveBeenCalled());
+
+        fireEvent.click(buttons[1]);
+        await waitFor(() => expect(mockSetChangeBasket).toHaveBeenCalled());
+    });
+});
+
+
+
+//######################################################## Basket ########################################################//
+describe("test the Basket component", () => {
+
+    const fake_user = {userid: 1, username: "pippo@pippo.it"};
+
+    const mockSetMessage = jest.fn();
+    const mockNotifyBelance = jest.fn();
+    const mockNotifyQuantity = jest.fn();
+
+    //TEST #1
+    test('check rendering', async () => {
+
+        //Render the component
+        const elemet = render(<Basket user={fake_user} setMessage={mockSetMessage} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} />);
+
+        //Check major components rendering
+        /*
+        await waitFor(() => {
+            screen.debug();
+            const nameEl = screen.getByText(/[Nn]ame/i);
+            expect(nameEl).toBeInTheDocument();
+        });
+
+        screen.debug();
+        */
+       
+        //const priceEl = await screen.findByText(/[Pp]rice/i);
+
+        /*
+        const nameEl = screen.getByText(/[Nn]ame/i);
+        const priceEl = screen.getByText(/[Pp]rice/i);
+        const walletEl = screen.getByText(/[Ww]allet/i);
+        const totalEl = screen.getByText(/[Tt]otal/i);
+
+        expect(nameEl).toBeInTheDocument();
+        expect(priceEl).toBeInTheDocument();
+        expect(walletEl).toBeInTheDocument();
+        expect(totalEl).toBeInTheDocument();
+        */
+
+    });
 });
