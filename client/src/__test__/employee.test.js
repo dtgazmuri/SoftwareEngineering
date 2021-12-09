@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CustomerForm } from '../Site/Employee/employee.js'
-
+import { CustomerForm, OrderList } from '../Site/Employee/employee.js'
 import { waitFor } from '@testing-library/dom';
-//import API from '../API.js';
+import dayjs from 'dayjs';
 
 
-import API from '../API.js';
-jest.mock('../API.js'); 
+import API from '../EmployeeAPI.js';
+import { act } from 'react-dom/test-utils';
+jest.mock('../EmployeeAPI.js'); 
 
 
 
@@ -14,7 +14,7 @@ const mockAlertWalletUpdated = jest.fn();
 const mockSetCustomerList = jest.fn();
 const mockSetWalletUpdated = jest.fn();
 
-//Create a descrie block for the test for that component
+//########################################################## CustomerForm ##########################################################//
 describe("test the CustomerForm component", () => {
 
     //TEST #1
@@ -133,13 +133,198 @@ describe("test the CustomerForm component", () => {
 
 
 
-//Create a descrie block for the test for that component
+//########################################################## OrderList ##########################################################//
 describe("test the OrderList component", () => {
 
+    const mockGetCurrentTime = jest.fn().mockImplementation(
+        () => {
+            return dayjs("2018-06-03");
+        }
+    );
+
+    const fake_orders = [
+        { 
+            "id": 1, 
+            "customerid": 1, 
+            "state": "delivered", 
+            "delivery": "no", 
+            "total": 72.25, 
+            "listitems": 
+            [
+                { 
+                    "id": 1, 
+                    "orderid": 1, 
+                    "productid": 1, 
+                    "quantity": 10, 
+                    "price": 19 
+                }, 
+                { 
+                    "id": 2, 
+                    "orderid": 1, 
+                    "productid": 2, 
+                    "quantity": 15, 
+                    "price": 53.25 
+                }
+            ] 
+        }, 
+        { 
+            "id": 2, 
+            "customerid": 2, 
+            "state": "delivered", 
+            "delivery": "false", 
+            "total": 7.6, 
+            "listitems": 
+            [
+                { 
+                    "id": 3, 
+                    "orderid": 2, 
+                    "productid": 1, 
+                    "quantity": 4, 
+                    "price": 1.9 
+                }
+            ] 
+        }
+    ];
+
+    
+
     //TEST #1
+    test('test if the page shows only in the right days', async () => {
+
+        const mockBadTime = (jest.fn().mockImplementation(
+            () => {
+                return dayjs("2021-12-11");
+            }
+        ));
+
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getOrders');
+        const responseBody = fake_orders;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        const elemet = render(<OrderList getCurrentTime={mockBadTime}/>);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+
+            //needs to have two sorry because we have two orders
+            const sorryEl = screen.getAllByText(/[Ss]orry/i);
+            expect(sorryEl.length).toBe(2);
+        });
+
+        
+        //Restore the API
+        mockGetOrders.mockRestore();
+
+
+
+     });
+
+    //TEST #2
     test('check form useEffect to trigger and display right', async () => {
 
-        const fake_orders = [
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getOrders');
+        const responseBody = fake_orders;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        const elemet = render(<OrderList getCurrentTime={mockGetCurrentTime}/>);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            //Check display right
+            const no_found = screen.queryByText(/no order/i);
+            expect(no_found).not.toBeInTheDocument();
+
+            const orderNUM = screen.queryAllByText(/Order number/i);
+            expect(orderNUM.length).toBe(2);
+            
+            const elOrderNumber1 = screen.queryByText(/Order number: 1/i);
+            expect(elOrderNumber1).toBeInTheDocument();
+
+            
+            const elOrderNumber2 = screen.queryByText(/Order number: 2/i);
+            expect(elOrderNumber2).toBeInTheDocument();
+
+            const elOrderNumber3 = screen.queryByText(/Order number: 3/i);
+            expect(elOrderNumber3).not.toBeInTheDocument();
+        });
+
+        mockGetOrders.mockRestore();
+
+    });
+
+
+    //TEST #3
+    test('check button presence', async () => {
+
+        //Define a fake order (only one, easier to test)
+        const fake_order = [
+            { 
+                "id": 1, 
+                "customerid": 1, 
+                "state": "pending", 
+                "delivery": "no", 
+                "total": 72.25, 
+                "listitems": 
+                [
+                    { 
+                        "id": 1, 
+                        "orderid": 1, 
+                        "productid": 1, 
+                        "quantity": 10, 
+                        "price": 19 
+                    }, 
+                    { 
+                        "id": 2, 
+                        "orderid": 1, 
+                        "productid": 2, 
+                        "quantity": 15, 
+                        "price": 53.25 
+                    }
+                ] 
+            }
+        ];
+
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getOrders');
+        const responseBody = fake_order;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        const elemet = render(<OrderList getCurrentTime={mockGetCurrentTime}/>);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            
+            //get the button
+            const handoutButton = screen.getByRole("button", {name : "Hand out order"});
+            expect(handoutButton).toBeInTheDocument();
+
+
+
+        });
+
+        mockGetOrders.mockRestore();
+
+    });
+
+    //TEST #4
+    test('check button absence', async () => {
+
+        //Define a fake order (only one, easier to test)
+        const fake_order = [
             { 
                 "id": 1, 
                 "customerid": 1, 
@@ -163,86 +348,192 @@ describe("test the OrderList component", () => {
                         "price": 53.25 
                     }
                 ] 
-            }, 
+            }
+        ];
+
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getOrders');
+        const responseBody = fake_order;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        const elemet = render(<OrderList getCurrentTime={mockGetCurrentTime}/>);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            
+            //get the button
+            const handoutButton = screen.queryByRole("button", {name : "Hand out order"});
+            expect(handoutButton).not.toBeInTheDocument();
+
+
+
+        });
+
+        mockGetOrders.mockRestore();
+
+    });
+
+
+    //TEST #5
+    test('check button click', async () => {
+
+        //Define a fake order (only one, easier to test)
+        const fake_order = [
             { 
-                "id": 2, 
-                "customerid": 2, 
-                "state": "delivered", 
-                "delivery": "false", 
-                "total": 7.6, 
+                "id": 1, 
+                "customerid": 1, 
+                "state": "pending", 
+                "delivery": "no", 
+                "total": 72.25, 
                 "listitems": 
                 [
                     { 
-                        "id": 3, 
-                        "orderid": 2, 
+                        "id": 1, 
+                        "orderid": 1, 
                         "productid": 1, 
-                        "quantity": 4, 
-                        "price": 1.9 
+                        "quantity": 10, 
+                        "price": 19 
+                    }, 
+                    { 
+                        "id": 2, 
+                        "orderid": 1, 
+                        "productid": 2, 
+                        "quantity": 15, 
+                        "price": 53.25 
                     }
                 ] 
             }
         ];
 
-        //Another mock test...
-        /*
-        getOrders.mockResolvedValue(fake_orders);
-        const wrapper = shallow(<OrderList />);
-        
-        const updatedEmailInput = simulateChangeOnInput(wrapper, 'input#email-input', 'test@gmail.com')
-        const updatedPasswordInput = simulateChangeOnInput(wrapper, 'input#password-input', 'cats'); 
-        wrapper.find('form').simulate('submit', {
-        preventDefault: () =>{}
-        });
-        
-
-
-
-        await waitFor(() => expect(getOrders).toHaveBeenCalled());
-        */
-
-        /*
+        //Define a mock function
         const mockGetOrders = jest.spyOn(API, 'getOrders');
-        mockGetOrders.mockResolvedValue(fake_orders);
+        const responseBody = fake_order;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Define another mock funtion (update the order)
+        const mockUpdateOrder = jest.spyOn(API, 'handOutOrder');
+        mockUpdateOrder.mockImplementation((ord) => Promise.resolve({success : "success" }));
         
         //Render the component
-        const elemet = render(<OrderList />);
+        const elemet = render(<OrderList getCurrentTime={mockGetCurrentTime}/>);
 
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
 
-        //Await for the API to be called
+        await waitFor(() => {
+            
+            //get the button
+            const handoutButton = screen.getByRole("button", {name : "Hand out order"});
+            expect(handoutButton).toBeInTheDocument();
 
-        //await waitFor(() => expect(mockGetOrders).toHaveBeenCalled());
+        });
 
-        const el = await screen.findAllByText(/number/i);
+        act(() => {
+            const handoutButton = screen.getByRole("button", {name : "Hand out order"});
+            expect(handoutButton).toBeInTheDocument();
+    
+            fireEvent.click(handoutButton);
+        });
+        
+        
+        expect(mockUpdateOrder).toHaveBeenCalled();
+
+        //Check message
+        await waitFor(() => {
+            
+            //get the button
+            const successEl = screen.getByText(/success/i);
+            expect(successEl).toBeInTheDocument();
+
+        });
 
         mockGetOrders.mockRestore();
-        */
+        mockUpdateOrder.mockRestore();
 
-        /*
-        //Mock the API request
-        jest.mock('../API.js', () => ({
-            redirect: jest.fn()
-        }));
-        */
+    });
+
+
+    //TEST #6
+    test('check button click - error', async () => {
+
+        //Define a fake order (only one, easier to test)
+        const fake_order = [
+            { 
+                "id": 1, 
+                "customerid": 1, 
+                "state": "pending", 
+                "delivery": "no", 
+                "total": 72.25, 
+                "listitems": 
+                [
+                    { 
+                        "id": 1, 
+                        "orderid": 1, 
+                        "productid": 1, 
+                        "quantity": 10, 
+                        "price": 19 
+                    }, 
+                    { 
+                        "id": 2, 
+                        "orderid": 1, 
+                        "productid": 2, 
+                        "quantity": 15, 
+                        "price": 53.25 
+                    }
+                ] 
+            }
+        ];
+
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getOrders');
+        const responseBody = fake_order;
+        mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Define another mock funtion (update the order)
+        const mockUpdateOrder = jest.spyOn(API, 'handOutOrder');
+        mockUpdateOrder.mockImplementation((ord) => Promise.reject({error : "error" }));
         
+        //Render the component
+        const elemet = render(<OrderList getCurrentTime={mockGetCurrentTime}/>);
 
-        
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
 
-        //Test
-        //const no_found = await screen.findByText(/no order/i);
+        await waitFor(() => {
+            
+            //get the button
+            const handoutButton = screen.getByRole("button", {name : "Hand out order"});
+            expect(handoutButton).toBeInTheDocument();
 
-        //Wait for the useEffect
-        //const elOrderNumber1 = await screen.findByText(/Order number/i);
-        //expect(elOrderNumber1).toBeInTheDocument();
+        });
 
-        /*
-        const elOrderNumber2 = await screen.findByText(/Order number: 2/i);
-        expect(elOrderNumber2).toBeInTheDocument();
+        act(() => {
+            const handoutButton = screen.getByRole("button", {name : "Hand out order"});
+            expect(handoutButton).toBeInTheDocument();
+    
+            fireEvent.click(handoutButton);
+        });
 
-        const elOrderNumber3 = await screen.queryByText(/Order number: 3/i);
-        expect(elOrderNumber3).not.toBeInTheDocument();
-        */
-        
+        //Check message
+        await waitFor(() => {
+            
+            //get the button
+            const errorEl = screen.getByText(/unable/i);
+            expect(errorEl).toBeInTheDocument();
 
+        });
+
+        mockGetOrders.mockRestore();
+        mockUpdateOrder.mockRestore();
 
     });
 
