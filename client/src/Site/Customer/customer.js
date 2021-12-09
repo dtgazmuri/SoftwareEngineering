@@ -2,7 +2,7 @@ import { Button, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductList from "./ProductList";
-import API from "client/src/API.js";
+import API from "../../API";
 import "react-toastify/dist/ReactToastify.css";
 
 function CustomerHome(props) {

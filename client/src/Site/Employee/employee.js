@@ -114,21 +114,20 @@ function CustomerList() {
                         <Form.Label>You can filter by customer name.</Form.Label>
                     </Col>
                     <Col sm = {6}>
-                        <Form.Control type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                        <Form.Control test-id="filter" type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
                     </Col>
                 </Row>
             </Form>
-            <ListGroup variant="primary">
+            <ListGroup variant="primary" test-id="list">
                 {customersToBeShown.length ?
                     customersToBeShown.map(customer => {
                         return (
-                            <ListGroup.Item id = {customer.id} key = {customer.id}>
+                            <ListGroup.Item id = {customer.username} key = {customer.id}  >
                                 <Row>
                                     <Col md = {6} lg = {6} sm = {6}>
-                                        <h5>{customer.name + " " + customer.surname}</h5>
-                                        <h5>ID: {customer.id} </h5>
-                                        {/*<h5>Username: {customer.username}</h5>*/}
-                                        <h5>Amount in Wallet: {customer.wallet} €</h5>
+                                        <h5 test-id={`name`}>{customer.name + " " + customer.surname}</h5>
+                                        <h5 test-id={`mail`}>Mail: {customer.username}</h5>
+                                        <h5 test-id={`wallet-amount`}>Amount in Wallet: {customer.wallet} €</h5>
                                     </Col>
                                     <Col>
                                         <CustomerForm id = {customer.id} customers = {customers} alertWalletUpdated = {alertWalletUpdated}
@@ -149,9 +148,10 @@ function CustomerList() {
 
 function CustomerForm(props) {
     const [amount, setAmount] = useState("");
+    const [showAlert, setShowAlert] = useState(true);
 
     function walletTopUp(id, amount_to_add) {
-
+        setShowAlert(true);
         var value = Number(amount_to_add);
         props.customers.forEach((customer) => {
             if (customer.id === id) {
@@ -161,15 +161,24 @@ function CustomerForm(props) {
         })
     }
 
+    //useEffect for closing alert after 3 seconds
+    useEffect(() => {
+        if(showAlert){
+            window.setTimeout(()=>{
+                setShowAlert(false);
+              },3000)
+        }
+      }, [showAlert]);
+
     return (
         <Form>
-            {props.alertWalletUpdated.id === props.id &&
+            {(props.alertWalletUpdated.id === props.id && showAlert) &&
                 <Alert variant = {props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
             }
             <Form.Group controlId={props.id} className = "mb-3">
-                <Form.Control size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
+                <Form.Control test-id= "newamount" size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
             </Form.Group>
-            <Button onClick={() => walletTopUp(props.id, amount)}>Submit</Button>
+            <Button test-id="save-button" onClick={() => walletTopUp(props.id, amount)}>Submit</Button>
         </Form>
     );
 }
@@ -185,6 +194,16 @@ function OrderList(props) {
         console.log(err);
     }
 
+    //need to check if handout is possible
+    //"Pickups take place from Wednesday morning until Friday evening"
+    //handout is possible from Wednesday at 9:00 until Friday 21:00
+    let invalidTime = false;
+    const currentTime = dayjs(props.getCurrentTime());
+    if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
+        invalidTime = false;
+    else 
+        invalidTime = true;
+
 
     useEffect(() => {
           API.getOrders()
@@ -197,11 +216,6 @@ function OrderList(props) {
 
    
     function handOutOrder(id) {
-        //need to check if handout is possible
-        //"Pickups take place from Wednesday morning until Friday evening"
-        //handout is possible from Wednesday at 9:00 until Friday 21:00
-        const currentTime = dayjs(props.getCurrentTime());
-        if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21)){
             var tmp = [];
 
             orders.forEach((order) => {
@@ -215,9 +229,6 @@ function OrderList(props) {
             });
             setOrderList(tmp);
             setUpdateOrder(id);
-        }
-        else 
-            setUpdated({id: id, variant: "danger", msg:"Sorry, handouts are possible between Wednesday at 9 and Friday at 21."});
     }
 
     useEffect(() => {
@@ -232,6 +243,15 @@ function OrderList(props) {
                 setUpdateOrder(-1);
            }
     }, [updateOrder])
+
+    //useEffect for closing alert after 3 seconds
+    useEffect(() => {
+        if(updated!== {}){
+            window.setTimeout(()=>{
+                setUpdated({});
+              },3000)
+        }
+      }, [updated]);
 
     return (
         <Col>
@@ -248,7 +268,12 @@ function OrderList(props) {
                                     <Row>Order total: {order.total.toFixed(2)}</Row>
                                 </Col>
                                 <Col>
-                                    {   order.state === "pending" &&
+                                    {invalidTime &&
+                                        <Alert variant = "warning" >
+                                            Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
+                                        </Alert>
+                                    }
+                                    {   (order.state === "pending" && !invalidTime) &&
                                         <Button onClick = {() => handOutOrder(order.id)}>Hand out order</Button>
                                     }
                                     {

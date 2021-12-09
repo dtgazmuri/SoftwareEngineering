@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
-import BasketButton from "./BasketButton";
+import {BasketButton} from "./Basket";
 
-import API from "../API";
+import API from "../../API";
 
 function ProductList(props) {
-  const [products, setProducts] = useState([]);
+
+  let ini_prod_list = [];
+  if (props.debug_product_list){
+    ini_prod_list = props.debug_product_list;
+  }
+
+  const [products, setProducts] = useState(ini_prod_list);
 
   //PRODUCTS FETCH
   useEffect(() => {
@@ -61,7 +67,7 @@ function ProductList(props) {
             <th>Farmer</th>
             <th>Price of 1 kg</th>
             <th>Expected Quantity</th>
-            <th>Add to the basket</th>
+            <th>Add to the Basket</th>
           </tr>
         </thead>
         <tbody>{productlist}</tbody>

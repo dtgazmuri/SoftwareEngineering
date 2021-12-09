@@ -14,16 +14,15 @@ import { Calendar } from 'react-bootstrap-icons';
 //Our components
 import MyBody from './Site/homepage'
 import MyNavbar from './Site/navbar';
-import SigninPage from './Site/signinpage';
 import LoginPage from './Site/loginpage'
 import EmployeePage from './Site/Employee/shopemployeepage';
-import ProductList from './Site/Employee/ProductList';
+import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
-import Farmer from './Site/farmer';
+import Farmer from './Site/Farmer/farmer';
 import { SignupForm } from "./Site/signup";
-import { CustomerHome } from "./Site/customer";
-import Basket from "./Site/Basket";
+import { CustomerHome } from "./Site/Customer/customer";
+import {Basket} from "./Site/Customer/Basket";
 import { Clock, ModalDate } from './Clock';
 import { ManagerPage, ManagerPageFarmerOrders } from './Site/Manager/ManagerPage';
 
@@ -52,11 +51,13 @@ function App() {
           console.log(u);
           setURL(`/${u.role}`);
           setLogged(true);
-          console.log("logged in user");
           setMessage({
             type: "success",
             msg: `Welcome back, ${u.username}`,
           });
+          setTimeout(() => {
+            setMessage({ type: "", msg: "" })}
+            ,3000)
         });
       } catch (err) {
         setLogged(false);
@@ -64,18 +65,23 @@ function App() {
       }
     };
     checkAuth();
-  }, [url]);
+  }, []);
 
   const doLogin = async (credentials) => {
     try {
       const currentUser = await API.login(credentials);
       setUser(currentUser);
       setURL(`/${currentUser.role}`);
-      console.log(url);
       setLogged(true);
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
+      setTimeout(() => {
+        setMessage({ type: "", msg: "" })}
+        ,3000)
     } catch (err) {
       setMessage({ type: "danger", msg: `Login failed. ${err}` });
+      setTimeout(() => {
+        setMessage({ type: "", msg: "" })}
+        ,3000)
       throw err;
     }
   };
@@ -104,6 +110,9 @@ function App() {
     setURL("");
     setUser("");
     setMessage({ type: "success", msg: "Logout accomplished" });
+    setTimeout(() => {
+      setMessage({ type: "", msg: "" })},3000
+      )
   };
 
   const notifySuccess = () =>
@@ -198,9 +207,6 @@ function App() {
           <Route path="/home" element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
           />
 
-          {/*Route di Login*/}
-          <Route path="/sign-in" element={<SigninPage />} />
-
           <Route path="/loginpage/" element={isLogged ?
             <Navigate replace to={url} />
             :
@@ -261,13 +267,13 @@ function App() {
           {/**Route for the main page of the manager */}
           <Route exact path="/manager"
             element={
-              isLogged ? <ManagerPage user = {user}/>
+              isLogged ? <ManagerPage user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
           <Route exact path="/manager/farmerorders"
             element={
-              isLogged ? <ManagerPageFarmerOrders user = {user}/>
+              isLogged ? <ManagerPageFarmerOrders user = {user} getCurrentTime = {getCurrentTime}/>
                : <Navigate replace to="/" />
             }
           />
@@ -298,16 +304,17 @@ function App() {
           />
           <Route exact path="/customer/:id/basket"
             element={<Basket 
+              user= {user}
+              setMessage={setMessage}
               notifyBalance={notifyBalance} 
               notifyQuantity={notifyQuantity}/>
             }
           />
-          {/**if the url does not match anyone of the above, navitage to error page 
           <Route 
             element={
                  <Navigate replace to="/error" />
             }
-          />*/}
+          />
         </Routes>
       </Container>
       <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>

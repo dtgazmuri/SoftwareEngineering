@@ -288,6 +288,91 @@ module.exports = function (app, db, testUser) {
     }
   );
 
+  // POST /api/order/customer
+  app.post(
+    "/api/order/customer",
+    /*isLogged,*/
+    [
+      check("customerid").isNumeric().withMessage("Customer ID is incorrect"),
+      check("state")
+        .isString()
+        .isLength({ min: 1 })
+        .withMessage("State is incorrect"),
+      check("delivery")
+        .isString()
+        .isLength({ min: 1 })
+        .withMessage("Delivery is incorrect"),
+      check("total").isNumeric().withMessage("Total is incorrect"),
+      check("listitems").isArray().withMessage("Listitems array is incorrect"),
+      /* Check the parameters of the array */
+      check("listitems.*.id")
+        .isNumeric()
+        .withMessage("Listitems : Productid field is incorrect"),
+      check("listitems.*.quantity")
+        .isNumeric()
+        .withMessage("Listitems : Quantity field is incorrect"),
+      check("listitems.*.price")
+        .isNumeric()
+        .withMessage("Listitems : Price field is incorrect"),
+    ],
+    async (req, res) => {
+      //Check the result of the validation
+      const errors = validationResult(req);
+      console.log("Errors in validation");
+      console.log(errors);
+
+      if (!errors.isEmpty()) {
+        console.log("Errors 2");
+        return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
+      }
+
+      //Devo aspettare che la promise sia risolta! Metto await
+      try {
+        //1) We need to add the order to the clientorder tabel first
+        const orderINST = {
+          customerid: req.body.customerid,
+          state: req.body.state,
+          delivery: req.body.delivery,
+          total: req.body.total,
+          date: req.body.date,
+          address: req.body.address
+        };
+
+        //2) post on DB and get the new Order ID back
+        const order_id = await customerDao.createClientOrder(db, orderINST);
+
+        //3) now I have the Order ID; I need now to store the orderitems
+
+        //3.1) Get items
+        const itemArray = req.body.listitems;
+
+        //Check the length
+        if (itemArray.length > 0) {
+          //Post them
+          for (let i = 0; i < itemArray.length; i++) {
+            const el = itemArray[i];
+
+            const itemINST = {
+              orderid: order_id,
+              productid: el.id,
+              quantity: el.quantity,
+              price: el.price,
+            };
+
+            console.log(`item instance : ${itemINST}`);
+
+            //POST IT
+            // const id_item = await employeeDAO.createOrderItem(itemINST);
+          }
+        }
+
+        res.status(200).json({ orderid: order_id }); //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
+      } catch (err) {
+        res.status(500).end(); //Mando errore!
+      }
+    }
+  );
+
   //SERVER SIDE FOR THE STORIES NUMBER 4-5-9
   //STORY NUMBER 4
 
@@ -318,7 +403,7 @@ module.exports = function (app, db, testUser) {
   // STORY NUMBER 5
   app.get("/api/customers/all", isLogged, isEmployee, async (req, res) => {
     try {
-      const productsList = await employeeDAO.listCustomersAll(db);
+      const productsList = await employeeDAO.getCustomers(db);
       res.status(200).json(productsList);
     } catch (err) {
       res.status(404).end();
@@ -349,15 +434,26 @@ module.exports = function (app, db, testUser) {
   );
 
   //STORY NUMBER 9
-  //getting the list of products selled by a specific farmer
-  // GET /api/farmer/:id
-  app.get("/api/farmer/:id/products", (req, res) => {
-    farmerDAO
-      .getFarmerProducts(db, req.params.id)
-      .then((products) => {
-        res.json(products);
-      })
-      .catch(() => res.status(500).end());
+  //getting the list of products sold by a specific farmer
+  // GET /api/farmer/:filter/products
+  app.get("/api/farmer/:filter/products", (req, res) => {
+    // products of farmer can be also get through their name/surname
+    const farmerId = parseInt(req.params.filter);
+    if(Number.isNaN(farmerId)){
+      farmerDAO.getFarmerProductsByName(db, req.params.filter)
+        .then((products) => {
+          res.json(products);
+        })
+        .catch(() => res.status(500).end());
+    }
+    else {
+      farmerDAO
+        .getFarmerProducts(db, req.params.filter)
+        .then((products) => {
+          res.json(products);
+        })
+        .catch(() => res.status(500).end());
+    }
   });
 
   //setting the expected amount of availability for a specific product
@@ -657,11 +753,9 @@ module.exports = function (app, db, testUser) {
     async (req, res) => {
       try {
         const orders = await employeeDAO.getOrderAll(db); //get all the orders from the db
-        //console.log(orders);
 
         //get all customers info
         const customers = await employeeDAO.getCustomers(db);
-        //console.log(customers);
 
         let resultArray = orders.map((order) => {
           let customer = customers.find(
@@ -691,6 +785,7 @@ module.exports = function (app, db, testUser) {
 
 
   //STORY N.15
+  //Getting all farmer orders, along with their info (i.e. all the items they contain)
   // GET /api/farmerOrders/all
   app.get("/api/farmerOrders/all", isLogged, isManager, async (req, res) => {
     try {
@@ -698,36 +793,70 @@ module.exports = function (app, db, testUser) {
       const resultArray = [];
 
       //0) Get the orders from the table
-      const orders = await farmerDAO.getFarmerOrderAll(db);
+      const orders = await farmerDAO.getFarmerOrders(db);
 
       //1) Then, for each order I need to get the farmerOrderItems
       for (let i = 0; i < orders.length; i++) {
-        //Get the i-th order
-        const orderid = orders[i].id;
+        //Get the i-th order id
+        let orderid = orders[i].id;
 
         //Get the orderitems from the DB
         let items = await farmerDAO.getFarmerOrderItems(db, orderid);
 
         //Create the order object
-        const order = {
+        let order = {
           id: orderid,
           farmerid: orders[i].farmerid,
           farmerName: orders[i].name,
           farmerSurname: orders[i].surname,
           state: orders[i].state,
           total: orders[i].total,
-          time: order[i].datetime,
+          time: orders[i].datetime,
           listitems: items,
         };
-
         //Add it to the res array
         resultArray.push(order);
       }
-
       res.status(200).json(resultArray);
     } catch (err) {
-      res.status(404).end();
+      res.status(500).end();
     }
   });
+
+
+  //ACKNOWLEDGE DELIVERY -> try to change the state of the order id from pending to delivered
+  app.post("/api/farmerOrders/:id/ack", isLogged, isManager, 
+    [ 
+    check("id").isNumeric().withMessage("farmer order id is incorrect"),
+    check("newState").isString().equals("delivered")
+    ],
+  async (req, res) => {
+    // check validity of data
+    // check if username does not exist
+    // add to corresponding table according to the role and then get userid and then add to users table
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        errors: errors.array(),
+      });
+    }
+    const orderid = req.body.id;
+    if(orderid != req.params.id){
+      res.status(422).json({msg: "ID in params and ID inside the body of the request don't match"});
+      return;
+    }
+    //request to the db
+    try {
+      let result = await farmerDAO.ackDeliveryFarmerOrder(db, orderid);
+      res.status(200).json(result);
+    }
+    catch(err) {
+      if(err.code === "404")
+        res.status(404).end();
+      else 
+        res.status(500).end();
+      }
+  });
+
 
 };

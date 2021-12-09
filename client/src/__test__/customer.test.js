@@ -1,5 +1,5 @@
 import { render, screen} from '@testing-library/react';
-import { CustomerHome } from '../Site/customer.js'
+import { CustomerHome } from '../Site/Customer/customer.js'
 import { BrowserRouter } from 'react-router-dom';
 
 const mockNotifyBelance = jest.fn();
