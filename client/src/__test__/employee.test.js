@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CustomerForm, OrderList } from '../Site/Employee/employee.js'
+import { CustomerForm, OrderList, CustomerList } from '../Site/Employee/employee.js'
 import { waitFor } from '@testing-library/dom';
 import dayjs from 'dayjs';
 
@@ -539,4 +539,246 @@ describe("test the OrderList component", () => {
 
 });
 
+
+
+//########################################################## CustomerList ##########################################################//
+describe("test the CustomerList component", () => {
+
+    const fake_customers = [
+        {
+            "id": 1,
+            "name": "Giovanna",
+            "surname": "Arco",
+            "wallet": 90
+        },
+        {
+            "id": 2,
+            "name": "Marcello",
+            "surname": "Fumagalli",
+            "wallet": 0
+        }
+    ];
+
+    //TEST #1
+    test('check rendering', async () => {
+
+        //Define a mock function
+        const mockGetCustomers = jest.spyOn(API, 'getCustomers');
+        const responseBody = fake_customers;
+        mockGetCustomers.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Render the component (need to use act beacuse we are updating a component's state)
+        act(() => {
+            const elemet = render(<CustomerList />);
+        });
+
+        //Check rendering
+        const nameElG = await screen.findByText(/Giovanna Arco/i);
+        const nameElM = await screen.findByText(/Marcello Fumagalli/i);
+
+        //get search bar
+        const searchBar = await screen.findByPlaceholderText("Search customer by name");
+
+        expect(nameElG).toBeInTheDocument();
+        expect(nameElM).toBeInTheDocument();
+        expect(searchBar).toBeInTheDocument();
+
+        //Restore the function
+        mockGetCustomers.mockRestore();
+
+    });
+
+    //TEST #2
+    test('check search by customer name', async () => {
+
+        //Define a mock function
+        const mockGetCustomers = jest.spyOn(API, 'getCustomers');
+        const responseBody = fake_customers;
+        mockGetCustomers.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Render the component (need to use act beacuse we are updating a component's state)
+        act(() => {
+            const elemet = render(<CustomerList />);
+        });
+
+        //get search bar
+        const searchBar = await screen.findByPlaceholderText("Search customer by name");
+
+        //Fire the event
+        fireEvent.change(searchBar, { target: { value: "giov" } });
+
+        //Check the value
+        expect(searchBar.value).toBe("giov");
+
+        //Wait for dom change in order to see if the customer marcello is not present anymore
+        waitFor(() => {
+
+            const nameElG = screen.queryByText(/Giovanna Arco/i);
+            const nameElM = screen.queryByText(/Marcello Fumagalli/i);
+
+            expect(nameElG).toBeInTheDocument();
+            expect(nameElM).not.toBeInTheDocument();
+            
+
+        });
+
+        //Restore the function
+        mockGetCustomers.mockRestore();
+
+    });
+
+    //TEST #3
+    test('test top up wallet button & text area to be present', async () => {
+
+        //Put only one customer to be earier to test
+        const fake_customer = [
+            {
+                "id": 1,
+                "name": "Giovanna",
+                "surname": "Arco",
+                "wallet": 90
+            }
+        ];
+
+        //Define a mock function
+        const mockGetCustomers = jest.spyOn(API, 'getCustomers');
+        const responseBody = fake_customer;
+        mockGetCustomers.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Render the component (need to use act beacuse we are updating a component's state)
+        act(() => {
+            const elemet = render(<CustomerList />);
+        });
+
+        //Now wait the function to be called
+        await waitFor(() => {
+            expect(mockGetCustomers).toHaveBeenCalled();
+        });
+
+        //At this point the page is loaded
+
+        //Get the top up wallet button and textbox
+        const topUpWalletText = screen.getByPlaceholderText("Insert amount to add to wallet");
+        const topUpWalletButton = screen.getByRole("button", {name : "Submit"});
+
+        //Expect their presence
+        expect(topUpWalletText).toBeInTheDocument();
+        expect(topUpWalletButton).toBeInTheDocument();
+
+        //Restore the function
+        mockGetCustomers.mockRestore();
+
+    });
+
+    //TEST #4
+    test('test top up wallet - with no input', async () => {
+
+        //Put only one customer to be earier to test
+        const fake_customer = [
+            {
+                "id": 1,
+                "name": "Giovanna",
+                "surname": "Arco",
+                "wallet": 90
+            }
+        ];
+
+        //Define a mock function
+        const mockGetCustomers = jest.spyOn(API, 'getCustomers');
+        const responseBody = fake_customer;
+        mockGetCustomers.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Mock the update customer wallet
+        const mockUpdateCustomerWallet = jest.spyOn(API, 'updateCustomerWallet');
+        mockUpdateCustomerWallet.mockImplementation((a, b) => Promise.resolve( { success: "success" } ));
+
+        //Render the component (need to use act beacuse we are updating a component's state)
+        act(() => {
+            const elemet = render(<CustomerList />);
+        });
+
+        //Now wait the function to be called
+        await waitFor(() => {
+            expect(mockGetCustomers).toHaveBeenCalled();
+        });
+
+        //At this point the page is loaded
+
+        //Get the top up wallet button and textbox
+        const topUpWalletText = screen.getByPlaceholderText("Insert amount to add to wallet");
+        const topUpWalletButton = screen.getByRole("button", {name : "Submit"});
+
+        //Check if pressing without doying anything result in an error
+        
+        fireEvent.click(topUpWalletButton);
+
+        //Now wait the function to be called
+        await waitFor(() => {
+            expect(mockUpdateCustomerWallet).toHaveBeenCalled();
+        });
+
+
+        //Restore the function
+        mockGetCustomers.mockRestore();
+        mockUpdateCustomerWallet.mockRestore();
+
+    });
+
+    //TEST #5
+    test('test top up wallet - with input', async () => {
+
+        //Put only one customer to be earier to test
+        const fake_customer = [
+            {
+                "id": 1,
+                "name": "Giovanna",
+                "surname": "Arco",
+                "wallet": 90
+            }
+        ];
+
+        //Define a mock function
+        const mockGetCustomers = jest.spyOn(API, 'getCustomers');
+        const responseBody = fake_customer;
+        mockGetCustomers.mockImplementation(() => Promise.resolve(responseBody));
+
+        //Mock the update customer wallet
+        const mockUpdateCustomerWallet = jest.spyOn(API, 'updateCustomerWallet');
+        mockUpdateCustomerWallet.mockImplementation((a, b) => Promise.resolve( { success: "success" } ));
+
+        //Render the component (need to use act beacuse we are updating a component's state)
+        act(() => {
+            const elemet = render(<CustomerList />);
+        });
+
+        //Now wait the function to be called
+        await waitFor(() => {
+            expect(mockGetCustomers).toHaveBeenCalled();
+        });
+
+        //At this point the page is loaded
+
+        //Get the top up wallet button and textbox
+        const topUpWalletText = screen.getByPlaceholderText("Insert amount to add to wallet");
+        const topUpWalletButton = screen.getByRole("button", {name : "Submit"});
+
+        //Check if pressing without doying anything result in an error
+        fireEvent.change(topUpWalletText, {target: {value: 100}});
+
+        fireEvent.click(topUpWalletButton);
+
+        //Now wait the function to be called
+        await waitFor(() => {
+            expect(mockUpdateCustomerWallet).toHaveBeenCalled();
+        });
+
+
+        //Restore the function
+        mockGetCustomers.mockRestore();
+        mockUpdateCustomerWallet.mockRestore();
+
+    });
+
+
+});
 
