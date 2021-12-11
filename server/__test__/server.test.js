@@ -276,7 +276,7 @@ describe("Test api's", () => {
         expect(res.body.surname).toEqual("test");
       });
   });
-  /* removed because all tests are logged
+  /* removed because all tests are logged in 
   test("response to api/orders/insufficientWallet if unlogged", async () => {
     const res = await request(app).get("/api/orders/insufficientWallet");
     expect(res.statusCode).toEqual(401);
@@ -369,5 +369,86 @@ describe("Test api's", () => {
     const id = "id";
     const res = await request(app).post(`/api/orders/${id}/handOut`);
     expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/warehouse", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: 1,
+      quantity: 2,
+    });
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/warehouse with incorrect product", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: "apple",
+      quantity: 2,
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/warehouse with incorrect quantity", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: 1,
+      quantity: "wrwert",
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/users/registration", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(201);
+  });
+
+  test("response to /api/users/registration with invalid username", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration => without password", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration => without role", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      password: "123456",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration without name", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+  test("response to /api/users/registration without surname", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+    });
+    expect(res.statusCode).toBe(400);
   });
 });
