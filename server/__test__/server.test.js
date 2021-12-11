@@ -451,4 +451,19 @@ describe("Test api's", () => {
     });
     expect(res.statusCode).toBe(400);
   });
+
+  /*
+  test("response to /api/username/present/:id when id exists", async () => {
+    const id = 1;
+    const res = await request(app).get(`/api/username/present/${id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.present).toEqual(true);
+  });
+*/
+  test("response to /api/username/present/:id when id does not exist", async () => {
+    const id = 100;
+    const res = await request(app).get(`/api/username/present/${id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.present).toEqual(false);
+  });
 });
