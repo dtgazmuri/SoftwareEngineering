@@ -1,13 +1,7 @@
 const express = require("express");
 const db = require("../dbTest");
 const app = express();
-let user = {
-  id: 10,
-  username: "pappa@pappa.it",
-  role: "shopemployee",
-  userid: 20,
-};
-let server = require("../app")(app, db, user);
+const server = require("../app")(app, db, true);
 const request = require("supertest");
 const functions = require("./basicFunctions");
 const farmerDao = require("../Dao/farmerDAO");
@@ -343,16 +337,8 @@ describe("Test api's", () => {
       "11111111",
       "shopemployee"
     );
-    user = {
-      id: id,
-      username: "lorenzo@polito.it",
-      role: "shopemployee",
-      userid: 1,
-    };
-    //server = require("../app")(app, db, user);
+
     const response = await request(app).get("/api/orders/insufficientWallet");
-    //NEED TO SET THE TOKEN FOR THE AUTH
-    //  it's not working right now
     expect(response.body).toEqual([]);
     expect(response.statusCode).toBe(200);
   });
