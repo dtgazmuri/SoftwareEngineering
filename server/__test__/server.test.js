@@ -360,4 +360,14 @@ describe("Test api's", () => {
       });
     expect(res.statusCode).toBe(422);
   });
+  test("response to /api/orders/:id/handOut", async () => {
+    const id = 1;
+    const res = await request(app).post(`/api/orders/${id}/handOut`);
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/orders/:id/handOut with incorrect id", async () => {
+    const id = "id";
+    const res = await request(app).post(`/api/orders/${id}/handOut`);
+    expect(res.statusCode).toBe(422);
+  });
 });
