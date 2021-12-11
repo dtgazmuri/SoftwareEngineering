@@ -10,6 +10,12 @@ import { waitFor } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 
 
+import Customer from "../Site/data/customer";
+
+import API from '../API.js'
+jest.mock('../API.js');
+
+
 
 //######################################################## BasketButton ########################################################//
 describe("test the BasketButton component", () => {
@@ -155,6 +161,11 @@ describe("test the BasketItem component", () => {
         const elemet = render(<BasketItem product={fake_product} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} setChangeBasket={mockSetChangeBasket}/>);
 
         const buttons = screen.getAllByRole("button");
+        const QTAel = screen.getByText("2");
+
+        //Check if the QTA shows right
+        expect(QTAel).toBeInTheDocument();
+
 
         //Check pressed
         fireEvent.click(buttons[0]);
@@ -182,6 +193,26 @@ describe("test the Basket component", () => {
         //Render the component
         const elemet = render(<Basket user={fake_user} setMessage={mockSetMessage} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} />);
 
+        //Mock the 
+        //fetchCustomerById
+
+        const mockFetchCustomerById = jest.spyOn(API, 'fetchCustomerById');
+        
+        const obj = {
+          ID:1,
+          NAME:"Giovanna",
+          SURNAME:"Arco",
+          WALLET:100
+        }
+        const responseBody = Customer.from(obj);
+
+        console.log("CUST_BODY");
+        console.log(responseBody);
+
+        mockFetchCustomerById.mockImplementation((cust_id) => Promise.resolve(responseBody));
+
+
+
         //Check major components rendering
         /*
         await waitFor(() => {
@@ -195,17 +226,33 @@ describe("test the Basket component", () => {
        
         //const priceEl = await screen.findByText(/[Pp]rice/i);
 
+        //Wait
         /*
-        const nameEl = screen.getByText(/[Nn]ame/i);
-        const priceEl = screen.getByText(/[Pp]rice/i);
-        const walletEl = screen.getByText(/[Ww]allet/i);
-        const totalEl = screen.getByText(/[Tt]otal/i);
+        await waitFor(() => {
 
-        expect(nameEl).toBeInTheDocument();
-        expect(priceEl).toBeInTheDocument();
-        expect(walletEl).toBeInTheDocument();
-        expect(totalEl).toBeInTheDocument();
+          console.log("DEBUG TEST BASKET");
+          screen.debug();
+
+          
+          const nameEl = screen.getByText("Farmer");
+          
+          const priceEl = screen.getByText(/[Pp]rice/i);
+          const walletEl = screen.getByText(/[Ww]allet/i);
+          const totalEl = screen.getByText(/[Tt]otal/i);
+  
+          expect(nameEl).toBeInTheDocument();
+          expect(priceEl).toBeInTheDocument();
+          expect(walletEl).toBeInTheDocument();
+          expect(totalEl).toBeInTheDocument();
+          
+          
+        });
         */
+
+        
+
+        mockFetchCustomerById.mockRestore();
+        
 
     });
 });

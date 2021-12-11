@@ -47,8 +47,19 @@ describe("test the ProductList component", () => {
         let i = 0;
         for (i = 0; i < fake_products.length; i++){
             const el = screen.getByText(fake_products[i].name);
+            const priceEl = screen.getByText(`${fake_products[i].price} €`);
+
             expect(el).toBeInTheDocument();
+            expect(priceEl).toBeInTheDocument();
         }
+
+        //Check farmers
+        const farmerEl = screen.getAllByText(/piero pappino/i);
+        expect(farmerEl.length).toBe(3);
+
+        //Check buttons
+        const buttons = screen.getAllByRole("button");
+        expect(buttons.length).toBe(6);
         
     });
 });
