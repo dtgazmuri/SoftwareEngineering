@@ -16,7 +16,7 @@ import MyBody from './Site/homepage'
 import MyNavbar from './Site/navbar';
 import LoginPage from './Site/loginpage'
 import EmployeePage from './Site/Employee/shopemployeepage';
-import ProductList from './Site/Employee/ProductList';
+import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
 import Farmer from './Site/Farmer/farmer';
@@ -303,7 +303,9 @@ function App() {
             }
           />
           <Route exact path="/customer/:id/basket"
-            element={<Basket user= {user}
+            element={<Basket 
+              user= {user}
+              setMessage={setMessage}
               notifyBalance={notifyBalance} 
               notifyQuantity={notifyQuantity}/>
             }

@@ -1,7 +1,12 @@
 const express = require("express");
 const db = require("../dbTest");
 const app = express();
-let user = undefined;
+let user = {
+  id: 10,
+  username: "pappa@pappa.it",
+  role: "shopemployee",
+  userid: 20,
+};
 let server = require("../app")(app, db, user);
 const request = require("supertest");
 const functions = require("./basicFunctions");
@@ -247,7 +252,7 @@ describe("Test api's", () => {
           role: "shopemployee",
           userid: 2,
         };
-        server = require("../app")(app, db, user);
+        //server = require("../app")(app, db, user);
         // let req = request(app).get("/api/orders/all");
         // req.field
         //   req.set("Content-Type", "multipart/form-data");
@@ -344,11 +349,11 @@ describe("Test api's", () => {
       role: "shopemployee",
       userid: 1,
     };
-    server = require("../app")(app, db, user);
+    //server = require("../app")(app, db, user);
     const response = await request(app).get("/api/orders/insufficientWallet");
-    /*NEED TO SET THE TOKEN FOR THE AUTH
-      it's not working right now
-      expect(response.body).toBe({});
-      expect(response.statusCode).toBe(200);*/
+    //NEED TO SET THE TOKEN FOR THE AUTH
+    //  it's not working right now
+    expect(response.body).toEqual([]);
+    expect(response.statusCode).toBe(200);
   });
 });

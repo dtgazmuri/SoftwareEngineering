@@ -24,6 +24,22 @@ function Basket(props) {
   const [cartError, setCartError] = React.useState(false);
   const [cartErrorMessage, setCartErrorMessage] = React.useState("");
 
+  const [customer, setCustomer] = React.useState({});
+
+  React.useEffect(() => {
+    const getCustomer = async (id) => {
+        try {
+          const customerInfo = await API.fetchCustomerById(id);
+          setCustomer(customerInfo);
+        } catch (err) {
+          console.log(err.error);
+        }
+    };
+    if (props.user) 
+      getCustomer(props.user.userid);
+    
+  }, [props.user]);
+
   React.useEffect(() => {
     setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
   }, [changeBasket]);
@@ -33,12 +49,23 @@ function Basket(props) {
     let good = true;
     setCartError(false);
     setCartErrorMessage("");
-    console.log("User:");
-    console.log(props.user);
+    console.log(items);
+
+    let total = 0;
+
+    for (let o of items) {
+      total += o.price * o.quantity;
+    }
+
+    if (customer.wallet < total) {
+      setCartError(true);
+      setCartErrorMessage("You don't have enough money");
+      good = false;
+    }
 
     if (items.length <= 0 && good) {
       setCartError(true);
-      setCartErrorMessage("Cart is empty");
+      setCartErrorMessage("Your cart is empty");
       good = false;
     }
 
@@ -105,17 +132,17 @@ function Basket(props) {
     let deliveryDate = orderDate;
     let deliveryTime = orderTime;
     let dateTime = deliveryDate + " " + deliveryTime;
-    let customerid = props.user.id;
+    let customerid = customer.id;
     for (let o of items) {
       total += o.price * o.quantity;
     }
     try {
       await API.postOrderByCustomer({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: items, date: dateTime, address: deladd });
-      //props.setMessage({ type: "success", msg: `Order added correctly` })
+      props.setMessage({ type: "success", msg: `Order request added correctly. Now it has to be approved by an employee` });
 
     } catch (err) {
       console.log(err.error);
-      //props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
+      props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
     }
 
     //Close modal
@@ -124,6 +151,8 @@ function Basket(props) {
 
   return (
     <>
+      {Object.keys(customer).length !== 0 ? (
+      <>
       <Container className="below-nav justify-content-center">
         {items && (
           <ListGroup>
@@ -131,9 +160,9 @@ function Basket(props) {
               as={Row}
               className="d-flex justify-content-between align-items-start"
             >
-              <Col>Product Name</Col>
-              <Col>Product Quantity (kg)</Col>
-              <Col>Price</Col>
+              <Col><b>Product Name</b></Col>
+              <Col><b>Product Quantity (kg)</b></Col>
+              <Col><b>Price</b></Col>
             </ListGroup.Item>
 
             {items.map((item) => (
@@ -147,23 +176,23 @@ function Basket(props) {
             ))}
 
             <ListGroup.Item as={Row} className="d-flex justify-content-between align-items-start">
-              <Col>Your total: {total.toFixed(2)} €</Col>
-              <Col></Col>
-              <Col>
-                {items.length != 0 &&
-                  <Link to={`/customer`}>
-                    <Button>Place Order Request</Button>
-                  </Link>
-                }
+              <Col><b>Your wallet:
+                <Badge pill bg="light" text="dark">
+                  {customer.wallet.toFixed(2)} €
+                </Badge></b>
               </Col>
+              <Col></Col>
+              <Col><b>Your total:
+                <Badge pill bg="light" text="dark">
+                  {total.toFixed(2)} €
+                </Badge></b>
+              </Col>
+              
             </ListGroup.Item>
 
           </ListGroup>
         )}
         <br></br>
-        <Link to={`/customer`}>
-          <Button>Return</Button>
-        </Link>
         <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow}></ConfirmDeliveryPanel>
 
         {
@@ -173,6 +202,10 @@ function Basket(props) {
             <RecapCart items={items} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate} />
         }
       </Container>
+      </>
+      ) : (
+        <h1>Loading</h1>
+      )}
     </>
   );
 }
@@ -220,17 +253,19 @@ export function ConfirmDeliveryPanel(props) {
           </Card.Text>
           <div class="h-divider" />
           <br />
-          <ListGroup.Item className="d-flex justify-content-between align-items-start">
+          <Row>
+          <Col></Col>
             <Col>
-              <Button variant="primary" onClick={() => props.handleShow()}>Confirm Order Request</Button>
+              <Button variant="primary" onClick={() => props.handleShow()}>Place Order Request</Button>
             </Col>
+            <Col></Col>
             <Col>
               <Link to={`/customer`}>
                 <Button>Return</Button>
               </Link>
             </Col>
-          </ListGroup.Item>
-
+            <Col></Col>
+          </Row>
         </Card.Body>
       </Card>
     </Container>
@@ -361,7 +396,7 @@ export function RecapCart(props) {
   )
 }
 
-function BasketItem(props) {
+export function BasketItem(props) {
   return (
     <>
       {props.product && (
