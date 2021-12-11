@@ -473,4 +473,22 @@ describe("Test api's", () => {
       expect(res.body).toEqual([]);
     });
   });
+
+  test("resonse to /api/customerlist", () => {
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get("/api/customerlist");
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    });
+  });
+
+  test("resonse to /api/customers/:id when customer does not exist", () => {
+    const id = 10;
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get(`/api/customers/${id}`);
+      // console.log(res.body);
+      expect(res.statusCode).toBe(404);
+      //  expect(res.body).toEqual([]);
+    });
+  });
 });
