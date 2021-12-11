@@ -193,10 +193,16 @@ function ProductListEmployee(props) {
         try {
             await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: order, date: dateTime, address: deladd});
             props.setMessage({ type: "success", msg: `Order added correctly` })
+            setTimeout(() => {
+                    props.setMessage({ type: "", msg: "" })}
+                ,3000)
 
         } catch (err) {
             console.log(err.error);
             props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
+            setTimeout(() => {
+                props.setMessage({ type: "", msg: "" })}
+            ,3000)
         }
 
         setShow(false);
