@@ -8,6 +8,7 @@ const farmerDao = require("../Dao/farmerDAO");
 const userDao = require("../Dao/userDao");
 const customerDao = require("../Dao/customerDao");
 const employeeDAO = require("../Dao/employeeDBAccess");
+const { response } = require("express");
 
 describe("Test Dao classes", () => {
   describe("Test userDao functions", () => {
@@ -285,5 +286,78 @@ describe("Test api's", () => {
     const response = await request(app).get("/api/orders/insufficientWallet");
     expect(response.body).toEqual({});
     expect(response.statusCode).toBe(404);
+  });
+  test("response to /api/order/employee", async () => {
+    const res = await request(app)
+      .post("/api/order/employee")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: 9.99,
+        address: "via paolo borsellino 40",
+        listitems: [{ id: 1, quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/order/employee with incorrect customerid", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: "string",
+      state: "pending",
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect state", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: 12,
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect delivery", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect total", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "true",
+      total: "total",
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/order/employee with incorrect listitems", async () => {
+    const res = await request(app)
+      .post("/api/order/employee")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: "9.99",
+        address: "via paolo borsellino 40",
+        listitems: [{ id: "id", quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(422);
   });
 });
