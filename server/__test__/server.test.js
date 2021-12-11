@@ -230,37 +230,11 @@ describe("Test Dao classes", () => {
 describe("Test api's", () => {
   test("responds to /api/orders/all", async () => {
     // needs to be completed
-    functions
-      .addUserForTest(
-        {
-          username: "pappa@pappa.it",
-        },
-        2,
-        "123456",
-        "shopemployee"
-      )
-      .then((id) => {
-        user = {
-          id: id,
-          username: "pappa@pappa.it",
-          role: "shopemployee",
-          userid: 2,
-        };
-        //server = require("../app")(app, db, user);
-        // let req = request(app).get("/api/orders/all");
-        // req.field
-        //   req.set("Content-Type", "multipart/form-data");
-        //  req.field("user", JSON.stringify(u));
-        // req.attach("user", JSON.stringify(u));
-        request(app)
-          .get("/api/orders/all")
-          .then((res) => {
-            // console.log(res);
-            expect(res.statusCode).toBe(200);
-          })
-          .catch((err) => {
-            return err;
-          });
+
+    request(app)
+      .get("/api/orders/all")
+      .then((res) => {
+        expect(res.statusCode).toBe(200);
       })
       .catch((err) => {
         return err;
@@ -284,7 +258,6 @@ describe("Test api's", () => {
             expect(res.statusCode).toBe(200);
             expect(res.body[0].name).toEqual(newProduct.NAME);
             expect(res.body[0].price).toEqual(newProduct.PRICE);
-            //   expect(res.body[0].id).toEqual(id);
           })
           .catch((err) => {
             return err;
