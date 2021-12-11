@@ -466,4 +466,11 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.present).toEqual(false);
   });
+  test("resonse to /api/customers/all", () => {
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get("/api/customers/all");
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    });
+  });
 });
