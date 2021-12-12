@@ -465,6 +465,34 @@ module.exports = function (app, db, testUser) {
     }
   });
 
+  //setting the expected amount of availability for a specific product
+  //it's an insert inside the warehouse table
+  //POST /api/warehouse
+  app.post(
+    "/api/warehouse",
+    [
+      //validation on product (which is the product id) and quantity. Both have to be integers
+      check("product").isInt(),
+      check("quantity").isInt(),
+    ],
+    async (req, res) => {
+      const errors = validationResult(req); //looking for errors thrown by the validation
+      if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() }); //unprocessable entity in case of errors
+
+      const product = req.body;
+      try {
+        let result = await farmerDAO.addProductExpectedAmount(db, product);
+        return res.status(200).json(result);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "DB error during the add/update of a product availability",
+        });
+      }
+    }
+  );
+
   // GET /api/username/present
   app.get(
     "/api/username/present/:id",
