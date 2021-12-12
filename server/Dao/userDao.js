@@ -48,8 +48,6 @@ exports.addNewUser = (db, user, role) => {
               reject(err);
               return;
             }
-            console.log("resolving");
-            console.log(userId);
             resolve(userId);
           });
         });

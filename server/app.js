@@ -64,7 +64,7 @@ module.exports = function (app, db, testUser) {
   const isLogged = (req, res, next) => {
     if (testUser) {
       // console.log(testUser);
-      req.user = testUser;
+      return next();
     }
     if (req.isAuthenticated()) {
       return next();
@@ -73,6 +73,9 @@ module.exports = function (app, db, testUser) {
   };
 
   const isEmployee = (req, res, next) => {
+    if (testUser) {
+      return next();
+    }
     if (req.user.role == "shopemployee") {
       return next();
     }
@@ -80,6 +83,9 @@ module.exports = function (app, db, testUser) {
   };
 
   const isManager = (req, res, next) => {
+    if (testUser) {
+      return next();
+    }
     if (req.user.role == "manager") {
       return next();
     }
@@ -88,6 +94,9 @@ module.exports = function (app, db, testUser) {
 
   // custom middleware: check if a given request is coming from an authenticated user
   const isLoggedIn = (req, res, next) => {
+    if (testUser) {
+      return next();
+    }
     if (req.isAuthenticated()) return next();
 
     return res.status(401).json({ error: "not authenticated" });
@@ -250,7 +259,7 @@ module.exports = function (app, db, testUser) {
           delivery: req.body.delivery,
           total: req.body.total,
           date: req.body.date,
-          address: req.body.address
+          address: req.body.address,
         };
 
         //2) post on DB and get the new Order ID back
@@ -335,7 +344,7 @@ module.exports = function (app, db, testUser) {
           delivery: req.body.delivery,
           total: req.body.total,
           date: req.body.date,
-          address: req.body.address
+          address: req.body.address,
         };
 
         //2) post on DB and get the new Order ID back
@@ -439,14 +448,14 @@ module.exports = function (app, db, testUser) {
   app.get("/api/farmer/:filter/products", (req, res) => {
     // products of farmer can be also get through their name/surname
     const farmerId = parseInt(req.params.filter);
-    if(Number.isNaN(farmerId)){
-      farmerDAO.getFarmerProductsByName(db, req.params.filter)
+    if (Number.isNaN(farmerId)) {
+      farmerDAO
+        .getFarmerProductsByName(db, req.params.filter)
         .then((products) => {
           res.json(products);
         })
         .catch(() => res.status(500).end());
-    }
-    else {
+    } else {
       farmerDAO
         .getFarmerProducts(db, req.params.filter)
         .then((products) => {
@@ -480,88 +489,6 @@ module.exports = function (app, db, testUser) {
         return res.status(500).json({
           error: "DB error during the add/update of a product availability",
         });
-      }
-    }
-  );
-
-  // TODO : the customer if FOR NOW is passed in the request, for the client side we need to get it from the cookie, so we probably need another route!
-  // NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie
-  // POST /api/order/employee
-  app.post(
-    "/api/order/employee",
-    isLogged,
-    isEmployee,
-    [
-      check("customerid").isNumeric().withMessage("customer id is incorrect"),
-      check("state")
-        .isString()
-        .isLength({ min: 1 })
-        .withMessage("state is incorrect"),
-      check("delivery")
-        .isString()
-        .isLength({ min: 1 })
-        .withMessage("delivery is incorrect"),
-      check("total").isNumeric().withMessage("total is incorrect"),
-      check("listitems").isArray().withMessage("listitems array is incorrect"),
-      /* Check the parameters of the array */
-      check("listitems.*.id")
-        .isNumeric()
-        .withMessage("listitems : productid field is incorrect"),
-      check("listitems.*.quantity")
-        .isNumeric()
-        .withMessage("listitems : quantity field is incorrect"),
-      check("listitems.*.price")
-        .isNumeric()
-        .withMessage("listitems : price field is incorrect"),
-    ],
-    async (req, res) => {
-      //Check the result of the validation
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
-      }
-
-      try {
-        //1) We need to add the order to the clientorder tabel first
-        const orderINST = {
-          customerid: req.body.customerid,
-          state: req.body.state,
-          delivery: req.body.delivery,
-          total: req.body.total,
-        };
-
-        //2) post on DB and get the new Order ID back
-        const order_id = await employeeDAO.createClientOrder(db, orderINST);
-
-        //3) now I have the Order ID; I need now to store the orderitems
-
-        //3.1) Get items
-        const itemArray = req.body.listitems;
-
-        //Check the length
-        if (itemArray.length > 0) {
-          //Post them
-          for (let i = 0; i < itemArray.length; i++) {
-            const el = itemArray[i];
-
-            const itemINST = {
-              orderid: order_id,
-              productid: el.id,
-              quantity: el.quantity,
-              price: el.price,
-            };
-
-            console.log(`item instance : ${itemINST}`);
-
-            //POST IT
-            // const id_item = await employeeDAO.createOrderItem(itemINST);
-          }
-        }
-
-        res.status(200).json({ orderid: order_id });
-      } catch (err) {
-        res.status(500).end();
       }
     }
   );
@@ -865,40 +792,40 @@ module.exports = function (app, db, testUser) {
     }
   });
 
-
   //ACKNOWLEDGE DELIVERY -> try to change the state of the order id from pending to delivered
-  app.post("/api/farmerOrders/:id/ack", isLogged, isManager, 
-    [ 
-    check("id").isNumeric().withMessage("farmer order id is incorrect"),
-    check("newState").isString().equals("delivered")
+  app.post(
+    "/api/farmerOrders/:id/ack",
+    isLogged,
+    isManager,
+    [
+      check("id").isNumeric().withMessage("farmer order id is incorrect"),
+      check("newState").isString().equals("delivered"),
     ],
-  async (req, res) => {
-    // check validity of data
-    // check if username does not exist
-    // add to corresponding table according to the role and then get userid and then add to users table
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({
-        errors: errors.array(),
-      });
-    }
-    const orderid = req.body.id;
-    if(orderid != req.params.id){
-      res.status(422).json({msg: "ID in params and ID inside the body of the request don't match"});
-      return;
-    }
-    //request to the db
-    try {
-      let result = await farmerDAO.ackDeliveryFarmerOrder(db, orderid);
-      res.status(200).json(result);
-    }
-    catch(err) {
-      if(err.code === "404")
-        res.status(404).end();
-      else 
-        res.status(500).end();
+    async (req, res) => {
+      // check validity of data
+      // check if username does not exist
+      // add to corresponding table according to the role and then get userid and then add to users table
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({
+          errors: errors.array(),
+        });
       }
-  });
-
-
+      const orderid = req.body.id;
+      if (orderid != req.params.id) {
+        res.status(422).json({
+          msg: "ID in params and ID inside the body of the request don't match",
+        });
+        return;
+      }
+      //request to the db
+      try {
+        let result = await farmerDAO.ackDeliveryFarmerOrder(db, orderid);
+        res.status(200).json(result);
+      } catch (err) {
+        if (err.code === "404") res.status(404).end();
+        else res.status(500).end();
+      }
+    }
+  );
 };
