@@ -184,7 +184,7 @@ function App() {
 
       <Container fluid className="below-nav" >
 
-      <Container fluid className="d-flex justify-content-center align-items-center">
+      <Container fluid className="d-flex justify-content-center align-items-center" style={{ paddingBottom: 8}}>
         <b><Clock time={time} faketime={faketime} setTime={setTime} setFakeTime={setFakeTime} setDirty={setDirty} dirty={dirty} /></b>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <Button onClick={handleOpenModal}><Calendar /> Set Date and Time </Button>
