@@ -1,21 +1,31 @@
-import { Row, Col, Container, ListGroup, Button, Card, Form, Modal, Table, Badge } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  ListGroup,
+  Button,
+  Card,
+  Form,
+  Modal,
+  Table,
+  Badge,
+} from "react-bootstrap";
 import { CartPlus, CartDash } from "react-bootstrap-icons";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import React from "react";
 import API from "../../API";
 
 function Basket(props) {
-
   const [date, setDate] = React.useState();
   const [time, setTime] = React.useState();
   const [delivery, setDelivery] = React.useState(false);
   const [address, setAddress] = React.useState("");
   const [items, setItems] = React.useState(
-    JSON.parse(sessionStorage.getItem("shopping-basket") || "")
+    JSON.parse(sessionStorage.getItem("shopping-basket") || "[]")
   );
   const [changeBasket, setChangeBasket] = React.useState(true);
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = React.useState(false);
 
   const [orderTime, setOrderTime] = React.useState();
   const [orderDate, setOrderDate] = React.useState();
@@ -28,24 +38,21 @@ function Basket(props) {
 
   React.useEffect(() => {
     const getCustomer = async (id) => {
-        try {
-          const customerInfo = await API.fetchCustomerById(id);
-          setCustomer(customerInfo);
-        } catch (err) {
-          console.log(err.error);
-        }
+      try {
+        const customerInfo = await API.fetchCustomerById(id);
+        setCustomer(customerInfo);
+      } catch (err) {
+        console.log(err.error);
+      }
     };
-    if (props.user) 
-      getCustomer(props.user.userid);
-    
+    if (props.user) getCustomer(props.user.userid);
   }, [props.user]);
 
   React.useEffect(() => {
-    setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || ""));
+    setItems(JSON.parse(sessionStorage.getItem("shopping-basket") || "[]"));
   }, [changeBasket]);
 
   const handleShow = () => {
-
     let good = true;
     setCartError(false);
     setCartErrorMessage("");
@@ -87,25 +94,23 @@ function Basket(props) {
       good = false;
     }
 
-
     setShow(true);
-  }
+  };
 
   const handleClose = () => {
     setShow(false);
-  }
+  };
 
   const [total, setTotal] = React.useState(0);
 
   //SET DELIVERY BOOL
-  const handleDelivery = (() => {
+  const handleDelivery = () => {
     if (delivery) {
       setDelivery(false);
-    }
-    else {
+    } else {
       setDelivery(true);
     }
-  });
+  };
 
   React.useEffect(() => {
     const basketItems = JSON.parse(
@@ -119,7 +124,6 @@ function Basket(props) {
   }, [changeBasket]);
 
   const handleSubmit = async () => {
-
     let total = 0;
     // Delivery --> True or False
     // Address  --> If Delivery is True, then client's entered address. Else, "Shop"
@@ -137,72 +141,125 @@ function Basket(props) {
       total += o.price * o.quantity;
     }
     try {
-      await API.postOrderByCustomer({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: items, date: dateTime, address: deladd });
-      props.setMessage({ type: "success", msg: `Order request added correctly. Now it has to be approved by an employee` });
-
+      await API.postOrderByCustomer({
+        customerid: customerid,
+        state: "pending",
+        delivery: wantsDelivery,
+        total: total,
+        listitems: items,
+        date: dateTime,
+        address: deladd,
+      });
+      props.setMessage({
+        type: "success",
+        msg: `Order request added correctly. Now it has to be approved by an employee`,
+      });
     } catch (err) {
       console.log(err.error);
-      props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
+      props.setMessage({
+        type: "danger",
+        msg: `Error on processing the order, try again`,
+      });
     }
 
     //Close modal
     setShow(false);
-  }
+  };
 
   return (
     <>
       {Object.keys(customer).length !== 0 && items.length !== 0 ? (
-      <>
-      <Container className="below-nav justify-content-center">
-        {items && (
-          <ListGroup>
-            <ListGroup.Item
-              as={Row}
-              className="d-flex justify-content-between align-items-start"
-            >
-              <Col><b>Product Name</b></Col>
-              <Col><b>Product Quantity (kg)</b></Col>
-              <Col><b>Price</b></Col>
-            </ListGroup.Item>
+        <>
+          <Container className="below-nav justify-content-center">
+            {items && (
+              <ListGroup>
+                <ListGroup.Item
+                  as={Row}
+                  className="d-flex justify-content-between align-items-start"
+                >
+                  <Col>
+                    <b>Product Name</b>
+                  </Col>
+                  <Col>
+                    <b>Product Quantity (kg)</b>
+                  </Col>
+                  <Col>
+                    <b>Price</b>
+                  </Col>
+                </ListGroup.Item>
 
-            {items.map((item) => (
-              <BasketItem
-                product={item}
-                setChangeBasket={setChangeBasket}
-                basket={true}
-                notifyBalance={props.notifyBalance}
-                notifyQuantity={props.notifyQuantity}
+                {items.map((item) => (
+                  <BasketItem
+                    product={item}
+                    setChangeBasket={setChangeBasket}
+                    basket={true}
+                    notifyBalance={props.notifyBalance}
+                    notifyQuantity={props.notifyQuantity}
+                  />
+                ))}
+
+                <ListGroup.Item
+                  as={Row}
+                  className="d-flex justify-content-between align-items-start"
+                >
+                  <Col>
+                    <b>
+                      Your wallet:
+                      <Badge pill bg="light" text="dark">
+                        {customer.wallet.toFixed(2)} €
+                      </Badge>
+                    </b>
+                  </Col>
+                  <Col></Col>
+                  <Col>
+                    <b>
+                      Your total:
+                      <Badge pill bg="light" text="dark">
+                        {total.toFixed(2)} €
+                      </Badge>
+                    </b>
+                  </Col>
+                </ListGroup.Item>
+              </ListGroup>
+            )}
+            <br></br>
+            <ConfirmDeliveryPanel
+              handleDelivery={handleDelivery}
+              address={address}
+              setAddress={setAddress}
+              delivery={delivery}
+              date={date}
+              time={time}
+              setTime={setTime}
+              setDate={setDate}
+              handleShow={handleShow}
+              getCurrentTime={props.getCurrentTime}
+            ></ConfirmDeliveryPanel>
+
+            {cartError ? (
+              <ErrorCartModal
+                handleClose={handleClose}
+                show={show}
+                errorMessage={cartErrorMessage}
               />
-            ))}
-
-            <ListGroup.Item as={Row} className="d-flex justify-content-between align-items-start">
-              <Col><b>Your wallet:
-                <Badge pill bg="light" text="dark">
-                  {customer.wallet.toFixed(2)} €
-                </Badge></b>
-              </Col>
-              <Col></Col>
-              <Col><b>Your total:
-                <Badge pill bg="light" text="dark">
-                  {total.toFixed(2)} €
-                </Badge></b>
-              </Col>
-              
-            </ListGroup.Item>
-
-          </ListGroup>
-        )}
-        <br></br>
-        <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow} getCurrentTime={props.getCurrentTime}></ConfirmDeliveryPanel>
-
-        {
-          cartError ?
-            <ErrorCartModal handleClose={handleClose} show={show} errorMessage={cartErrorMessage} />
-            :
-            <RecapCart items={items} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate} />
-        }
-      </Container>
-      </>
+            ) : (
+              <RecapCart
+                items={items}
+                handleClose={handleClose}
+                show={show}
+                handleSubmit={handleSubmit}
+                address={address}
+                delivery={delivery}
+                date={date}
+                time={time}
+                setOrderDate={setOrderDate}
+                setOrderTime={setOrderTime}
+                orderTime={orderTime}
+                orderDate={orderDate}
+              />
+            )}
+          </Container>
+        </>
       ) : (
         <>
           <br></br>
@@ -217,16 +274,18 @@ function Basket(props) {
   );
 }
 
-
 //Create the confirm delivery panel
 export function ConfirmDeliveryPanel(props) {
   let invalidTime = false;
-    const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
-    console.log(currentTime.day()+" "+currentTime.hour());
-    if ((currentTime.day() === 7 && currentTime.hour() > 23) || (currentTime.day() === 1 && currentTime.hour() < 9)) {
-        invalidTime = true;
-        //Orders can only be confirmed from Monday at 9 am to Sunday at 11 pm
-    }
+  const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
+  console.log(currentTime.day() + " " + currentTime.hour());
+  if (
+    (currentTime.day() === 7 && currentTime.hour() > 23) ||
+    (currentTime.day() === 1 && currentTime.hour() < 9)
+  ) {
+    invalidTime = true;
+    //Orders can only be confirmed from Monday at 9 am to Sunday at 11 pm
+  }
   return (
     <Container fluid>
       <Card>
@@ -236,11 +295,25 @@ export function ConfirmDeliveryPanel(props) {
           <Card.Text>
             <Form.Group controlId="form-date">
               <Form.Label>Date</Form.Label>
-              <Form.Control title="insert-date" type="date" className="mb-3" name="date" format="dd/MM/yyyy" value={props.date} onChange={(ev) => props.setDate(ev.target.value)} />
+              <Form.Control
+                title="insert-date"
+                type="date"
+                className="mb-3"
+                name="date"
+                format="dd/MM/yyyy"
+                value={props.date}
+                onChange={(ev) => props.setDate(ev.target.value)}
+              />
             </Form.Group>
             <Form.Group controlId="form-deadline-time">
               <Form.Label>Time</Form.Label>
-              <Form.Control title="insert-time" type="time" name="time" value={props.time} onChange={(ev) => props.setTime(ev.target.value)} />
+              <Form.Control
+                title="insert-time"
+                type="time"
+                name="time"
+                value={props.time}
+                onChange={(ev) => props.setTime(ev.target.value)}
+              />
             </Form.Group>
           </Card.Text>
           <br />
@@ -255,26 +328,37 @@ export function ConfirmDeliveryPanel(props) {
               />
             </Form.Group>
 
-            {
-              props.delivery ?
-                <Form.Group className="mb-3" controlId="delivery">
-                  <Form.Control type="address" placeholder="Enter Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
-                </Form.Group>
-                :
-                <></>
-            }
-
+            {props.delivery ? (
+              <Form.Group className="mb-3" controlId="delivery">
+                <Form.Control
+                  type="address"
+                  placeholder="Enter Address"
+                  value={props.address}
+                  onChange={(ev) => props.setAddress(ev.target.value)}
+                />
+              </Form.Group>
+            ) : (
+              <></>
+            )}
           </Card.Text>
           <div class="h-divider" />
           <br />
           <Row>
-          <Col></Col>
+            <Col></Col>
             <Col>
-            {invalidTime ? 
-              <Button disabled variant="primary" onClick={() => props.handleShow()}>Place Order Request</Button>
-              :
-              <Button variant="primary" onClick={() => props.handleShow()}>Place Order Request</Button>
-            }
+              {invalidTime ? (
+                <Button
+                  disabled
+                  variant="primary"
+                  onClick={() => props.handleShow()}
+                >
+                  Place Order Request
+                </Button>
+              ) : (
+                <Button variant="primary" onClick={() => props.handleShow()}>
+                  Place Order Request
+                </Button>
+              )}
             </Col>
             <Col></Col>
             <Col>
@@ -298,23 +382,19 @@ export function ErrorCartModal(props) {
       </Modal.Header>
 
       <Modal.Body>
+        <div>{props.errorMessage}</div>
         <div>
-          {props.errorMessage}
-        </div>
-        <div>
-          <Button variant='secondary' onClick={props.handleClose}>Ok</Button>
+          <Button variant="secondary" onClick={props.handleClose}>
+            Ok
+          </Button>
         </div>
       </Modal.Body>
-
-
-
     </Modal>
   );
 }
 
 export function RecapCart(props) {
-
-  let total = 0
+  let total = 0;
   let total_weight = 0;
   for (let o of props.items) {
     total += o.price * o.quantity;
@@ -330,11 +410,10 @@ export function RecapCart(props) {
         </tr>
       </>
     );
-  })
-
+  });
 
   return (
-    <Modal show={props.show} >
+    <Modal show={props.show}>
       <Modal.Header closeButton={props.handleClose}>
         <Modal.Title>Order Confirmation</Modal.Title>
       </Modal.Header>
@@ -349,35 +428,23 @@ export function RecapCart(props) {
             </tr>
           </thead>
 
-          <tbody>
-            {cartlist}
-          </tbody>
+          <tbody>{cartlist}</tbody>
 
           <tfoot>
-
             <tr>
               <td>
                 <b>Total:</b>
               </td>
 
-              <td>
-                {
-                  total_weight
-                }
-              </td>
+              <td>{total_weight}</td>
 
               <td>
-                {
-                  total.toFixed(2)
-                }
+                {total.toFixed(2)}
                 &nbsp;€
               </td>
             </tr>
-
           </tfoot>
-
         </Table>
-
         <h5>Delivery Details</h5>
         <Table>
           <tbody>
@@ -386,32 +453,28 @@ export function RecapCart(props) {
                 <b>Delivery Address:</b>
               </td>
               <td colSpan="2">
-                {
-                  props.delivery ? props.address : "Pick-up at the shop"
-                }
+                {props.delivery ? props.address : "Pick-up at the shop"}
               </td>
             </tr>
 
             <tr>
-              <td><b>Delivery Date:</b></td>
+              <td>
+                <b>Delivery Date:</b>
+              </td>
               <td colSpan="2">{`${props.date} at ${props.time}`}</td>
               {props.setOrderDate(props.date)}
               {props.setOrderTime(props.time)}
             </tr>
-
           </tbody>
         </Table>
-
         <Button onClick={props.handleSubmit}>Save</Button>
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        <Button variant='secondary' onClick={props.handleClose}>Cancel</Button>
-
+        &nbsp; &nbsp; &nbsp;
+        <Button variant="secondary" onClick={props.handleClose}>
+          Cancel
+        </Button>
       </Modal.Body>
-
     </Modal>
-  )
+  );
 }
 
 export function BasketItem(props) {
@@ -452,7 +515,6 @@ export function BasketItem(props) {
     </>
   );
 }
-
 
 // props.product => { id, name, price, quantity}   , props.mode {add or delete} , changeFlag
 function BasketButton(props) {
@@ -524,5 +586,4 @@ function BasketButton(props) {
   );
 }
 
-
-export  { Basket, BasketButton }
+export { Basket, BasketButton };
