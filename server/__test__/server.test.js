@@ -290,6 +290,18 @@ describe("Test Dao classes", () => {
       const id = await employeeDAO.updateCustomerWallet(db, customerId, 2000);
       expect(id).toEqual(customerId);
     });
+    test("test handOutOrder", async () => {
+      const fakeOrder = {
+        customerid: 1,
+        state: "pending",
+        delivery: false,
+        total: 17.31,
+        date: "2021-12-01 12:00",
+      };
+      const orderId = await employeeDAO.createClientOrder(db, fakeOrder);
+      const id = await employeeDAO.handOutOrder(db, orderId);
+      expect(id).toEqual(orderId);
+    });
   });
 });
 
