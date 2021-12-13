@@ -755,8 +755,8 @@ module.exports = function (app, db, testUser) {
 
   //STORY N.15
   //Getting all farmer orders, along with their info (i.e. all the items they contain)
-  // GET /api/farmerOrders/all
-  app.get("/api/farmerOrders/all", isLogged, isManager, async (req, res) => {
+  // GET /api/farmerOrders
+  app.get("/api/farmerOrders", isLogged, isManager, async (req, res) => {
     try {
       //0) Create an empty array as an answer
       const resultArray = [];

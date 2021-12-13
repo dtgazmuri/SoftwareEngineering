@@ -28,7 +28,7 @@ function SeeFarmerOrdersButton () {
     return(
         <Col lg = {4} sm = {6} id = "ackFarmerOrder">
             <Link to="/manager/farmerorders">
-                <Container fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
+                <Container id="del-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
                 {deliverybig}
                 <h3>See farmer orders</h3>
                 </Container>
@@ -70,7 +70,6 @@ function ManagerPageFarmerOrders (props) {
                 return true;
             else if (order.listitems.find(item => item.name.toUpperCase().startsWith(value.toUpperCase())))
                 return true;
-            //missing search per product
         
             return false;
         });
@@ -99,7 +98,7 @@ function ManagerPageFarmerOrders (props) {
         <Col>
             {loading && <Alert variant='warning'> {alarm} Please wait while loading farmer orders... {alarm}</Alert>}
             {(orders.length && !loading) ?
-                <ListGroup variant = "primary" className = "mb-5"> 
+                <ListGroup id="list" variant = "primary" className = "mb-5"> 
                     <ListGroup.Item variant="primary" key = "title">
                         <h5 id = "manager-farmer-orders-title">List of all the farmer orders</h5>
                     </ListGroup.Item>
@@ -183,9 +182,9 @@ function FarmerOrderItem(props) {
                     <>
                     <Button variant="link" className="p-0" onClick = {() => setShowDetails(false)}>Hide more info</Button><br></br>
                     {/**This ol can be split into another function component */}
-                    <ol>
+                    <ol data-testid="farmer-order-products">
                         {order.listitems.map(product => {
-                            return <li>
+                            return <li key = {product.id}>
                                 <span><strong className = "pr-3">{product.name}</strong></span>
                                 <span className = "pr-3">Qty: <strong>{product.quantity}</strong></span>
                                 <span>Total: <strong>{product.price}€</strong></span>
@@ -224,4 +223,4 @@ function FarmerOrderItem(props) {
     )
 }
 
-export {ManagerPage, ManagerPageFarmerOrders};
+export {ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem};

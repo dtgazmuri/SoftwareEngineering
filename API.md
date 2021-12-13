@@ -433,7 +433,7 @@ or
 
 ### Get all farmer orders and relative info
 
-* HTTP method: `GET`  URL: `/api/farmerOrders/all`
+* HTTP method: `GET`  URL: `/api/farmerOrders`
 * Description: Retrieves the available information for all the farmer orders along with their products.
 * Request Body: _None_
 * Successful Response: `200 OK`

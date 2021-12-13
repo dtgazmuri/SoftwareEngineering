@@ -45,6 +45,9 @@ function ProductList(props) {
           ></BasketButton>{" "}
         </td>
         <td>
+          
+        </td>
+        <td>
           <BasketButton
             product={prod}
             mode={"delete"}
@@ -65,9 +68,10 @@ function ProductList(props) {
             <th>#</th>
             <th>Product Name</th>
             <th>Farmer</th>
-            <th>Price of 1 kg</th>
-            <th>Expected Quantity</th>
+            <th>Price/Package</th>
+            <th>Qta/Package</th>
             <th>Add to the Basket</th>
+            <th>Remove from the Basket</th>
           </tr>
         </thead>
         <tbody>{productlist}</tbody>

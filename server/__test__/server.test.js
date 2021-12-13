@@ -534,9 +534,16 @@ describe("Test api's", () => {
     const id = 10;
     functions.deleteTable("customer").then(async () => {
       const res = await request(app).get(`/api/customers/${id}`);
-      // console.log(res.body);
       expect(res.statusCode).toBe(404);
-      //  expect(res.body).toEqual([]);
     });
   });
+  /*
+  test("resonse to /api/customers/:id when customer exists", async () => {
+    const newCustomer = { name: "setare", surname: "askari", init_wallet: 500 };
+    const id = await employeeDAO.createNewCustomer(db, newCustomer);
+    console.log(id);
+    const res = await request(app).get(`/api/customers/${id}`);
+    expect(res.statusCode).toBe(200);
+  });
+  */
 });
