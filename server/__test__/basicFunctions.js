@@ -11,6 +11,19 @@ exports.deleteTable = (tableName) => {
     });
   });
 };
+
+exports.deleteTableWhereId = (tableName, id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM " + tableName+" WHERE ID = ?";
+    db.run(sql, [id], (err) => {
+      if (err) {
+        reject(err);
+        return;
+      } else resolve();
+    });
+  });
+};
+
 exports.addCustomerForTest = (customer) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? , ?)";
@@ -80,3 +93,30 @@ exports.addUserForTest = (user, userId, hash, role) => {
     });
   });
 };
+
+
+exports.addFarmerOrderForTest = (order, farmerid) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO farmerorder(farmerid, state, total, datetime) VALUES (?, ?, ?, ?)";
+    db.run(sql, [farmerid, order.state, order.total, order.datetime], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(this.lastID);
+    });
+  });
+}
+
+exports.addFarmerOrderItemForTest = (orderId, product) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO farmerorderitems(orderid, product, quantity, price) VALUES (?, ?, ?, ?)";
+    db.run(sql, [orderId, product.id, product.quantity, product.price], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(this.lastID);
+    });
+  });
+}

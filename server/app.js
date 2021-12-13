@@ -793,8 +793,7 @@ module.exports = function (app, db, testUser) {
   });
 
   //ACKNOWLEDGE DELIVERY -> try to change the state of the order id from pending to delivered
-  app.post(
-    "/api/farmerOrders/:id/ack",
+  app.post("/api/farmerOrders/:id/ack",
     isLogged,
     isManager,
     [
