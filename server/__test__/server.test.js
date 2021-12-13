@@ -314,6 +314,11 @@ describe("Test Dao classes", () => {
       const orders = await functions.getClientOrderById(orderId);
       expect(orders[0].customer).toEqual(1000);
     });
+    test("test creatOrderItem", async () => {
+      newItem = { orderid: 100, productid: 10, quantity: 50, price: 102 };
+      const itemId = employeeDAO.createOrderItem(db, newItem);
+      expect(typeof itemId).toBe("object");
+    });
   });
 });
 
