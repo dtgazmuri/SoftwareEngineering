@@ -6,16 +6,18 @@ class Product {
      * @param {*} farmer farmer who sell the product
      * @param {*} price price of the product
      * @param {*} quantity ?
+     * @param {*} availability ?
     
     */
 
 
-    constructor(id, name, farmer, price, quantity){
+    constructor(id, name, farmer, price, quantity, availability){
         this.id = id;
         this.name = name;
         this.farmer = farmer;
         this.price = price;
         this.quantity = quantity;
+        this.availability = availability;
 
     }
 

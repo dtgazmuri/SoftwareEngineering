@@ -74,7 +74,7 @@ async function fetchAllProducts() {
         const list = []; 
         for (const ex of responseBody){
            const farmername =  await fetchFarmerById(ex.farmerid);
-           list.push(new Product(ex.id, ex.name, farmername, ex.price, ex.quantity))
+           list.push(new Product(ex.id, ex.name, farmername, ex.price, ex.quantity, ex.availability))
           }
         return list;
       }

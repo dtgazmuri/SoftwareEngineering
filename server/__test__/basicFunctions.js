@@ -94,12 +94,58 @@ exports.addUserForTest = (user, userId, hash, role) => {
   });
 };
 
+exports.addFarmerAndOrderForTest = (farmer, product) => {
+  return new Promise((resolve, reject) => {
+    const sql1 = "INSERT INTO farmer(NAME, SURNAME) VALUES (?, ?)";
+    db.run(sql, [farmer.NAME, farmer.SURNAME], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      fid = this.lastID;
+      const sql2 = "INSERT INTO product(NAME, FARMER, PRICE) VALUES(?, ?, ?)"
+      db.run(sql2, [product.NAME, fid, product.PRICE], function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        pid = this.lastID;
+        const sql3 = "INSERT INTO farmerorderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?)"
+        db.run(sql3, [0, pid, 1, 1], function (err) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          
+          resolve();
+        });
+        resolve();
+      });
+      resolve();
+    });
+  });
+};
+
+exports.addOrderForTest = () => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "INSERT INTO farmerorder(id, farmerid, state, datetime) VALUES (?, ? , ? , ?)";
+    db.run(sql, [0, pending, "2021-12-01 12:00"], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(this.lastID);
+    });
+  });
+};
+
 
 exports.addFarmerOrderForTest = (order, farmerid) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO farmerorder(farmerid, state, total, datetime) VALUES (?, ?, ?, ?)";
     db.run(sql, [farmerid, order.state, order.total, order.datetime], function (err) {
-      if (err) {
+if (err) {
         reject(err);
         return;
       }

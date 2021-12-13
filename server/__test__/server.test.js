@@ -36,7 +36,7 @@ describe("Test Dao classes", () => {
             userDao.checkIfUserNotExists(db, "setare@polito.it")
           ).rejects.toEqual({ code: 409, msg: "user already exits." });
         })
-        .catch(() => {});
+        .catch(() => { });
     });
   });
 
@@ -168,6 +168,27 @@ describe("Test Dao classes", () => {
     
 
   });
+    /*test("test getOrdersOfFarmer", async () => {
+      functions
+        .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
+        .then((farmerId) => {
+          return farmerDao.getOrdersForFarmer(db, farmerId).then((data) => {
+            expect(data[0]).toEqual({ name: "test", quantity: 1 });
+          });
+        });
+    });
+
+    test("test confirmOrder", async () => {
+      functions
+        .addOrderForTest()
+        .then(() => {
+          return farmerDao.confirmOrder(db, 0).then((res) => {
+            expect(res.statusCode).toBe(200);
+          });
+        });
+    });
+  });*/
+
 
   describe("Test customerDao functions", () => {
     test("test getCustomerByUserId when id does not exist", async () => {
@@ -318,6 +339,33 @@ describe("Test api's", () => {
         expect(res.body.surname).toEqual("test");
       });
   });
+
+  /*test("responds to /api/farmerOrders/:id with invalid id", async () => {
+    const res = await request(app).get(`/api/farmerOrders/tt`);
+    expect(res.statusCode).toBe(500);
+  });
+
+  test("responds to /api/farmerOrders/:id", () => {
+    functions
+      .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
+      .then(async (id) => {
+        const res = await request(app).get(`/api/farmerOrders/${id}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body.id).toEqual(0);
+        expect(res.body.products).toEqual([{ name: "test", quantity: 1 }]);
+      });
+  });
+
+  test("responds to /api/confirmOrder/", () => {
+    functions
+      .addOrderForTest()
+      .then(async (id) => {
+        farmerDao.confirmOrder(id).then(async () => {
+          expect(res.statusCode).toBe(200);
+        });
+      });
+  });*/
+
   /* removed because all tests are logged in 
   test("response to api/orders/insufficientWallet if unlogged", async () => {
     const res = await request(app).get("/api/orders/insufficientWallet");

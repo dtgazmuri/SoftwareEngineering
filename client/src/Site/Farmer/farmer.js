@@ -244,13 +244,9 @@ export function ProductForm(props) {
 function ConfirmOrdersSection(props) {
     let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
-    if ((currentTime.day() === 6 && currentTime.hour() > 23) || (currentTime.day() === 0 && currentTime.hour() < 9)) {
+    if ((currentTime.day() === 7 && currentTime.hour() > 23) || (currentTime.day() === 1 && currentTime.hour() < 9)) {
         invalidTime = true;
         //Orders can only be confirmed from Monday at 9 am to Sunday at 11 pm
-    }
-
-    function confirmOrder(id) {
-        
     }
 
     return (

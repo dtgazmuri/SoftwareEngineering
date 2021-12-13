@@ -35,13 +35,13 @@ exports.listProductsAll = (db) => {
         reject(err);
         return;
       }
-
       const products = rows.map((e) => ({
         id: e.ID,
         name: e.NAME,
         farmerid: e.FARMER,
         price: e.PRICE,
         quantity: e.QUANTITY,
+        availability: e.AVAILABILITY
       }));
       resolve(products);
     });
