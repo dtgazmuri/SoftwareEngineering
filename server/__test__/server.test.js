@@ -315,9 +315,14 @@ describe("Test Dao classes", () => {
       expect(orders[0].customer).toEqual(1000);
     });
     test("test creatOrderItem", async () => {
-      newItem = { orderid: 100, productid: 10, quantity: 50, price: 102 };
-      const itemId = employeeDAO.createOrderItem(db, newItem);
-      expect(typeof itemId).toBe("object");
+      const newItem = { orderid: 100, productid: 10, quantity: 50, price: 102 };
+      const itemId = await employeeDAO.createOrderItem(db, newItem);
+      expect(typeof itemId).toBe("number");
+    });
+    test("test createNewCustomer", async () => {
+      const newCustomer = { name: "setare", surname: "askari", wallet: 50 };
+      const id = await employeeDAO.createNewCustomer(db, newCustomer);
+      expect(typeof id).toBe("number");
     });
   });
 });
