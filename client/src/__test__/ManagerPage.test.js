@@ -408,6 +408,29 @@ describe("test the ManagerPageFarmerOrders component", () => {
  
          mockGetOrders.mockRestore(); 
     });
+
+    //TEST #7
+    test('check rendering in case API returning error', async () => {
+        //Define a mock function
+        const mockGetOrders = jest.spyOn(API, 'getFarmerOrders');
+        const responseBody = [];
+        mockGetOrders.mockImplementation(() => Promise.reject(responseBody));
+        
+        //Render the component
+        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockGetOrders).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            //Check if there is an alert "No orders found."
+            expect(screen.getByText('No orders found.')).toBeInTheDocument();
+        });
+
+        mockGetOrders.mockRestore(); 
+   });
     
 
 });
