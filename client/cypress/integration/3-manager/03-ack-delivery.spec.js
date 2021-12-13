@@ -2,30 +2,28 @@
 
 const dayjs = require("dayjs");
 
-context("Add order", () => {
+context("Ack a order", () => {
     beforeEach("Login", () => {
         cy.visit("localhost:3000");
         cy.clearLocalStorage();
         cy.getById("login-col").click()
         cy.url().should('eq', "http://localhost:3000/loginpage")
-        cy.getByTestId("username").type("stestrippoli@gmail.com").should("have.value", "stestrippoli@gmail.com")
-        cy.getByTestId("password").type("stestrippoli").should("have.value", "stestrippoli")
+        cy.getByTestId("username").type("manager@gmail.com").should("have.value", "manager@gmail.com")
+        cy.getByTestId("password").type("manager").should("have.value", "manager")
         cy.getByTestId("login-button").click()
-        cy.url().should('eq', "http://localhost:3000/shopemployee")
-        cy.intercept("GET", {
-            url: "/api/sessions/current",
-            statusCode: 200,
-            timeout: 3000
-        })
-    })
-    it("create a new order", () => {
-        cy.getByTestId("show-button").click()
-        cy.url().should('eq', "http://localhost:3000/shopemployee/products")
-        cy.getById("time-elapsed").should("not.exist")
-        cy.getById("filter").type("CustomerTest")
-        cy.getById("filter-select").select("CustomerTest Customer")
+        cy.location('pathname', {timeout: 10000 }).should('eq', '/manager');
 
-        cy.getById('table-prod').within(() => {
+
+        
+    })
+
+
+    it("Create a new order", () => {
+        cy.getByTestId("del-button").click()
+        cy.url().should('eq', "/manager/farmerorders")
+        cy.getById("time-elapsed").should("not.exist")
+        
+        cy.getById('table').within(() => {
             cy.get("tbody").find('tr').should('have.not.length', 0)
             cy.get("tbody").getByTestId('product-item-1').within(() => {
                 cy.getById("add").click()

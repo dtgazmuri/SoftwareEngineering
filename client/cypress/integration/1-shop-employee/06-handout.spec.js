@@ -2,7 +2,7 @@
 
 const dayjs = require("dayjs");
 
-context("Add order", () => {
+context("Handout Order", () => {
     beforeEach("Login", () => {
         cy.visit("localhost:3000");
         cy.clearLocalStorage();
@@ -18,8 +18,8 @@ context("Add order", () => {
             timeout: 3000
         })
     })
-    it("create a new order", () => {
-        cy.getByTestId("show-button").click()
+    it("handout order", () => {
+        cy.getByTestId("handout-button").click()
         cy.url().should('eq', "http://localhost:3000/shopemployee/products")
         cy.getById("time-elapsed").should("not.exist")
         cy.getById("filter").type("CustomerTest")
