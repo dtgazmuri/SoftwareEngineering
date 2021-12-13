@@ -74,6 +74,7 @@ function ProductListEmployee(props) {
         const getProducts = async () => {
             try {
                 const current_products = await API.fetchAllProducts();
+                console.log(current_products);
                 setProducts(current_products);
             } catch (err) {
                 //setLogged(false)
@@ -191,7 +192,7 @@ function ProductListEmployee(props) {
             total += o.price * o.quantity;
         }
         try {
-            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: order, date: dateTime, address: deladd});
+            await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: order, date: dateTime, address: deladd });
             props.setMessage({ type: "success", msg: `Order added correctly` })
 
         } catch (err) {
@@ -231,8 +232,8 @@ function ProductListEmployee(props) {
                             {
                                 customer.name === "" ?
                                     <>
-                                       { customerlist.length !== 0 &&
-                                        <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
+                                        {customerlist.length !== 0 &&
+                                            <CustomerSelection customers={customerlist} handleCustomer={handleCustomer} />
                                         }
                                     </>
                                     :
@@ -243,7 +244,7 @@ function ProductListEmployee(props) {
                                             cartError ?
                                                 <ErrorCartModal handleClose={handleClose} show={show} errorMessage={cartErrorMessage} />
                                                 :
-                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate}/>
+                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate} />
                                         }
 
 
@@ -317,7 +318,7 @@ export function ConfirmDeliveryPanel(props) {
                     </Card.Text>
                     <div class="h-divider" />
                     <br />
-                    <Button variant="primary" id = "confirm-button"onClick={() => props.handleShow()}>Confirm Order</Button>
+                    <Button variant="primary" id="confirm-button" onClick={() => props.handleShow()}>Confirm Order</Button>
 
                 </Card.Body>
             </Card>
@@ -341,6 +342,7 @@ export function ProductTable(props) {
                     <th>Farmer</th>
                     <th>Price/Package</th>
                     <th>Qta/Package</th>
+                    <th>Availability</th>
                     <th>Add to cart</th>
                     <th>Remove from cart</th>
                     <th>Booked quantity</th>
@@ -364,15 +366,24 @@ export function ProductTableRow(props) {
     return (
 
         <>
-                    <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} bgcolor={bookedQTA>0? "#99ff99" : "" }>
-                        <td>{prod.name}</td>
-                        <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                        <td>{prod.price} €</td>
-                        <td>{prod.quantity} g</td>
-                        <td><Button id="add" onClick={() => props.addOrder(prod)}>+</Button></td>
-                        <td><Button id="remove" onClick={() => props.removeOrder(prod)}>-</Button></td>
-                        <td id="booked">{bookedQTA === 0 ? '-' : bookedQTA}</td>
-                    </tr>
+            <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} bgcolor={bookedQTA > 0 ? "#99ff99" : ""}>
+                <td>{prod.name}</td>
+                <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
+                <td>{prod.price} €</td>
+                <td>{prod.quantity} g</td>
+                <td>{prod.availability}</td>
+                {bookedQTA >= prod.quantity ?
+                    <td><Button disabled id="add" onClick={() => props.addOrder(prod)}>+</Button></td>
+                    :
+                    <td><Button id="add" onClick={() => props.addOrder(prod)}>+</Button></td>
+                }
+                {bookedQTA === 0 ?
+                    <td><Button disabled id="remove" onClick={() => props.removeOrder(prod)}>-</Button></td>
+                    :
+                    <td><Button id="remove" onClick={() => props.removeOrder(prod)}>-</Button></td>
+                }
+                <td id="booked">{bookedQTA === 0 ? '-' : bookedQTA}</td>
+            </tr>
         </>
     );
 
@@ -485,7 +496,7 @@ export function RecapCart(props) {
 
                         <tr>
                             <td><b>Delivery Date:</b></td>
-                            <td id= "date" colSpan="2">{`${props.date} at ${props.time}`}</td>
+                            <td id="date" colSpan="2">{`${props.date} at ${props.time}`}</td>
                             {props.setOrderDate(props.date)}
                             {props.setOrderTime(props.time)}
                         </tr>
