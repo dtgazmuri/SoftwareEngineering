@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import dayjs from 'dayjs';
-import { Form, Modal, Button } from 'react-bootstrap';
+import { Form, Modal, Button, Container } from 'react-bootstrap';
 
 
 let newday;
@@ -55,7 +55,9 @@ function ModalDate(props) {
         <>
             <Modal show={props.show}>
                 <Modal.Title>
-                    Pick a date.
+                    <Container className="d-flex justify-content-center align-items-center">
+                        <b>Pick a Date:</b>
+                    </Container>
                 </Modal.Title>
                 <Form>
                     <Modal.Body>
@@ -69,9 +71,14 @@ function ModalDate(props) {
                         </Form.Group>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="light" onClick={setToday}> Today </Button>
-                        <Button variant="secondary" onClick={props.handleClose}>Close</Button>
-                        <Button variant="primary" type="submit" onClick={handleSubmit}>Save</Button>
+                        <Container className="d-flex justify-content-center align-items-center">
+                            <Button variant="info" onClick={setToday}>Today</Button>
+                            &nbsp;&nbsp;
+                            <Button variant="primary" type="submit" onClick={handleSubmit}>Save</Button>
+                            &nbsp;&nbsp;
+                            <Button variant="secondary" onClick={props.handleClose}>Close</Button>
+                            &nbsp;&nbsp;
+                        </Container>
                     </Modal.Footer>
                 </Form>
 

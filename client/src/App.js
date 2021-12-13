@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 //REACT COMPONENTS
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Alert, Container, Button } from 'react-bootstrap';
+import { Alert, Container, Button, Table, Row, Col, Card } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { Calendar } from 'react-bootstrap-icons';
@@ -23,7 +23,7 @@ import Farmer from './Site/Farmer/farmer';
 import ConfirmOrdersPage from './Site/Farmer/farmer';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
-import {Basket} from "./Site/Customer/Basket";
+import { Basket } from "./Site/Customer/Basket";
 import { Clock, ModalDate } from './Clock';
 import { ManagerPage, ManagerPageFarmerOrders } from './Site/Manager/ManagerPage';
 
@@ -57,8 +57,9 @@ function App() {
             msg: `Welcome back, ${u.username}`,
           });
           setTimeout(() => {
-            setMessage({ type: "", msg: "" })}
-            ,3000)
+            setMessage({ type: "", msg: "" })
+          }
+            , 3000)
         });
       } catch (err) {
         setLogged(false);
@@ -76,13 +77,15 @@ function App() {
       setLogged(true);
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
       setTimeout(() => {
-        setMessage({ type: "", msg: "" })}
-        ,3000)
+        setMessage({ type: "", msg: "" })
+      }
+        , 3000)
     } catch (err) {
       setMessage({ type: "danger", msg: `Login failed. ${err}` });
       setTimeout(() => {
-        setMessage({ type: "", msg: "" })}
-        ,3000)
+        setMessage({ type: "", msg: "" })
+      }
+        , 3000)
       throw err;
     }
   };
@@ -112,8 +115,9 @@ function App() {
     setUser("");
     setMessage({ type: "success", msg: "Logout accomplished" });
     setTimeout(() => {
-      setMessage({ type: "", msg: "" })},3000
-      )
+      setMessage({ type: "", msg: "" })
+    }, 3000
+    )
   };
 
   const notifySuccess = () =>
@@ -166,9 +170,9 @@ function App() {
 
   /**USE THIS FUNCTION TO GET THE CURRENT TIME OF THE APPLICATION */
   const getCurrentTime = () => {
-    if(!dirty)
+    if (!dirty)
       return time;
-    else 
+    else
       return faketime;
   }
 
@@ -179,13 +183,19 @@ function App() {
       <Container fluid className="below-nav vh-100 backg" />
 
       <Container fluid className="below-nav" >
-        <Clock time={time} faketime={faketime} setTime={setTime} setFakeTime={setFakeTime} setDirty={setDirty} dirty={dirty} />
-        <Button onClick={handleOpenModal}><Calendar/> S</Button>
-        <ModalDate show={showModal} 
-          handleClose={handleCloseModal} 
-          setFakeTime={setFakeTime} 
-          setDirty={setDirty} 
-          dirty={dirty} 
+
+      <Container fluid className="d-flex justify-content-center align-items-center">
+        <b><Clock time={time} faketime={faketime} setTime={setTime} setFakeTime={setFakeTime} setDirty={setDirty} dirty={dirty} /></b>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <Button onClick={handleOpenModal}><Calendar /> Set Date and Time </Button>
+      </Container>
+
+
+        <ModalDate show={showModal}
+          handleClose={handleCloseModal}
+          setFakeTime={setFakeTime}
+          setDirty={setDirty}
+          dirty={dirty}
           setTime={setTime} />
         {message.msg !== "" ? (
           <Alert className="" variant={message.type}>
@@ -201,8 +211,8 @@ function App() {
           />
 
           {/* Generic Error Page */}
-          <Route path="/error" 
-          element={<ErrorPage />} />
+          <Route path="/error"
+            element={<ErrorPage />} />
 
           {/* BODY PER HOMEPAGE */}
           <Route path="/home" element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
@@ -219,29 +229,29 @@ function App() {
           {/**SHOP EMPLOYEE ROUTES */}
           <Route path="/shopemployee/selection/"
             element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
-               : 
-                <Navigate replace to="/home" />
-              
+              :
+              <Navigate replace to="/home" />
+
             }
           />
 
           <Route path="/shopemployee/products/"
             element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
-               : 
-                <Navigate replace to="/home" />
-              
+              :
+              <Navigate replace to="/home" />
+
             }
           />
 
           <Route
             path="/shopemployee/handout/"
-            element={isLogged ? <OrderList getCurrentTime = {getCurrentTime}/> : <Navigate replace to="/home" />}
+            element={isLogged ? <OrderList getCurrentTime={getCurrentTime} /> : <Navigate replace to="/home" />}
           />
 
           <Route
             path="/shopemployee/topupwallet/"
             element={
-              isLogged ? <CustomerList  /> : <Navigate replace to="/home" />
+              isLogged ? <CustomerList /> : <Navigate replace to="/home" />
             }
           />
 
@@ -253,39 +263,39 @@ function App() {
           {/**Route for the main page of the shop employee */}
           <Route exact path="/shopemployee/"
             element={
-              isLogged ? <EmployeePage 
+              isLogged ? <EmployeePage
                 addClient={addClient} />
-               : <Navigate replace to="/" />
+                : <Navigate replace to="/" />
             }
           />
 
           {/**FARMER ROUTES */}
           {/**Route for the main page of the farmer */}
-          <Route exact path="/farmer/" element={<Farmer getCurrentTime = {getCurrentTime}/>} />
+          <Route exact path="/farmer/" element={<Farmer getCurrentTime={getCurrentTime} />} />
 
 
           {/**MANAGER ROUTER */}
           {/**Route for the main page of the manager */}
           <Route exact path="/manager"
             element={
-              isLogged ? <ManagerPage user = {user} getCurrentTime = {getCurrentTime}/>
-               : <Navigate replace to="/" />
+              isLogged ? <ManagerPage user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
             }
           />
           <Route exact path="/manager/farmerorders"
             element={
-              isLogged ? <ManagerPageFarmerOrders user = {user} getCurrentTime = {getCurrentTime}/>
-               : <Navigate replace to="/" />
+              isLogged ? <ManagerPageFarmerOrders user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
             }
           />
 
 
           <Route path="/sign-up" element={
-              <SignupForm
-                notifySuccess={notifySuccess}
-                notifyError={notifyError}
-              />
-            }
+            <SignupForm
+              notifySuccess={notifySuccess}
+              notifyError={notifyError}
+            />
+          }
           />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
@@ -304,21 +314,21 @@ function App() {
             }
           />
           <Route exact path="/customer/:id/basket"
-            element={<Basket 
-              user= {user}
+            element={<Basket
+              user={user}
               setMessage={setMessage}
-              notifyBalance={notifyBalance} 
-              notifyQuantity={notifyQuantity}/>
+              notifyBalance={notifyBalance}
+              notifyQuantity={notifyQuantity} />
             }
           />
-          <Route 
+          <Route
             element={
-                 <Navigate replace to="/error" />
+              <Navigate replace to="/error" />
             }
           />
         </Routes>
       </Container>
-      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover/>
+      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </Router>
   );
 }
