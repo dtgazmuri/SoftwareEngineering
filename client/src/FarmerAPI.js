@@ -29,6 +29,34 @@ async function setExpectedQuantityForProduct(productId, quantity) {
       }
 }
 
+/**API that gets the orders given the farmer id*/
+async function getOrdersOfFarmer(farmerId) {
+  let response = await fetch('/api/farmerOrders/'+farmerId);
+  let responseBody = await response.json();
+  if(response.ok) {
+      return responseBody;
+  }
+  else {
+      throw responseBody;  // an object with the error coming from the server
+  }
+}
 
-const API = { getProductsOfFarmer, setExpectedQuantityForProduct };
+/**API that sets an order as confirmed*/
+async function confirmOrder(orderId) {
+  const response = await fetch('/api/confirmOrder/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({id: orderId}),
+  });
+  const responseBody = await response.json();
+  if (response.ok) {
+    return responseBody;
+  } else { 
+    throw responseBody;
+  }
+}
+
+const API = { getProductsOfFarmer, setExpectedQuantityForProduct, getOrdersOfFarmer, confirmOrder };
 export default API;

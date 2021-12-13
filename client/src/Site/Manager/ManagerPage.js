@@ -185,7 +185,7 @@ function FarmerOrderItem(props) {
                     {/**This ol can be split into another function component */}
                     <ol>
                         {order.listitems.map(product => {
-                            return <li>
+                            return <li key = {product.id}>
                                 <span><strong className = "pr-3">{product.name}</strong></span>
                                 <span className = "pr-3">Qty: <strong>{product.quantity}</strong></span>
                                 <span>Total: <strong>{product.price}€</strong></span>

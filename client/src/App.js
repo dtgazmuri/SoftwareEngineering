@@ -20,6 +20,7 @@ import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
 import Farmer from './Site/Farmer/farmer';
+import ConfirmOrdersPage from './Site/Farmer/farmer';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import {Basket} from "./Site/Customer/Basket";

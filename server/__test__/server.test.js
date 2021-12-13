@@ -1,32 +1,14 @@
 const express = require("express");
 const db = require("../dbTest");
 const app = express();
-let user = {
-  id: 10,
-  username: "pappa@pappa.it",
-  role: "shopemployee",
-  userid: 20,
-};
-let server = require("../app")(app, db, user);
+const server = require("../app")(app, db, true);
 const request = require("supertest");
 const functions = require("./basicFunctions");
 const farmerDao = require("../Dao/farmerDAO");
 const userDao = require("../Dao/userDao");
 const customerDao = require("../Dao/customerDao");
 const employeeDAO = require("../Dao/employeeDBAccess");
-
-const initializeDB = () => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "DELETE FROM orderitems; DELETE FROM clientorder; DELETE FROM users; DELETE FROM customer; DELETE FROM shopemployee; DELETE FROM product; DELETE FROM farmer; DELETE FROM warehouse;";
-    db.run(sql, [], (err) => {
-      if (err) {
-        reject(err);
-        return;
-      } else resolve();
-    });
-  });
-};
+const { response } = require("express");
 
 describe("Test Dao classes", () => {
   describe("Test userDao functions", () => {
@@ -134,7 +116,6 @@ describe("Test Dao classes", () => {
         });
     });
   });
-
   /**Lorenzo Molteni trying to test  getOrderAll and getCustomers functions in employeeDBAccess.js*/
   describe("Test employeeDAO functions", () => {
     //TESTING getCustomers
@@ -234,126 +215,280 @@ describe("Test Dao classes", () => {
 });
 
 describe("Test api's", () => {
-  test("responds to /api/orders/all", async () => {
-    // needs to be completed
-    functions
-      .addUserForTest(
-        {
-          username: "pappa@pappa.it",
-        },
-        2,
-        "123456",
-        "shopemployee"
-      )
-      .then((id) => {
-        user = {
-          id: id,
-          username: "pappa@pappa.it",
-          role: "shopemployee",
-          userid: 2,
-        };
-        //server = require("../app")(app, db, user);
-        // let req = request(app).get("/api/orders/all");
-        // req.field
-        //   req.set("Content-Type", "multipart/form-data");
-        //  req.field("user", JSON.stringify(u));
-        // req.attach("user", JSON.stringify(u));
-        request(app)
-          .get("/api/orders/all")
-          .then((res) => {
-            // console.log(res);
-            expect(res.statusCode).toBe(200);
-          })
-          .catch((err) => {
-            return err;
-          });
-      })
-      .catch((err) => {
-        return err;
+  /* test("responds to /api/orders/all with no order present", () => {
+    functions.deleteTable("clientorder").then(async () => {
+      const res = await request(app).get("/api/orders/all");
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    });
+  }); */
+  test("responds to /api/orders/all with order present", () => {
+    functions.deleteTable("clientorder").then(() => {
+      const fakeOrder = {
+        customerid: 1,
+        state: "pending",
+        delivery: true,
+        total: 16.3,
+        date: "2021-12-01 12:15",
+      };
+      employeeDAO.createClientOrder(db, fakeOrder).then(async (id) => {
+        const res = await request(app).get("/api/orders/all");
+        console.log(res.body[0].state);
+        expect(res.statusCode).toBe(200);
+        expect(res.body[0].state).toEqual("pending");
+        //  expect(res.body[0].delivery.toEqual(true));
+        //  expect(res.body[0].total.toEqual(17.3));
       });
+    });
   });
   test("responds to /api/products/all", async () => {
     const res = await request(app).get("/api/products/all");
     expect(res.statusCode).toBe(200);
   });
 
-  test("responds to /api/products/all", async () => {
+  test("responds to /api/products/all", () => {
     const newProduct = {
       NAME: "lemon",
       PRICE: 200,
     };
     functions.addProductForTest(newProduct, 10).then((id) => {
-      functions.addProductToWarehouse(id).then(() => {
-        request(app)
-          .get("/api/products/all")
-          .then((res) => {
-            expect(res.statusCode).toBe(200);
-            expect(res.body[0].name).toEqual(newProduct.NAME);
-            expect(res.body[0].price).toEqual(newProduct.PRICE);
-            //   expect(res.body[0].id).toEqual(id);
-          })
-          .catch((err) => {
-            return err;
-          });
+      functions.addProductToWarehouse(id).then(async () => {
+        const res = await request(app).get("/api/products/all");
+        expect(res.statusCode).toBe(200);
+        expect(res.body[0].name).toEqual(newProduct.NAME);
+        expect(res.body[0].price).toEqual(newProduct.PRICE);
       });
     });
   });
 
   test("responds to api/farmer/:id with invalid id", async () => {
-    request(app)
-      .get(`/api/farmer/tt`)
-      .then((res) => {
-        expect(res.statusCode).toBe(500);
-      })
-      .catch((err) => {
-        return err;
-      });
+    const res = await request(app).get(`/api/farmer/tt`);
+    expect(res.statusCode).toBe(500);
   });
 
-  test("responds to api/farmer/:id", async () => {
-    functions.addFarmerForTest({ NAME: "test", SURNAME: "test" }).then((id) => {
-      request(app)
-        .get(`/api/farmer/${id}`)
-        .then((res) => {
-          expect(res.statusCode).toBe(200);
-          expect(res.body.name).toEqual("test");
-          expect(res.body.surname).toEqual("test");
-        })
-        .catch((err) => {
-          return err;
-        });
+  test("responds to api/farmer/:id", () => {
+    functions
+      .addFarmerForTest({ NAME: "test", SURNAME: "test" })
+      .then(async (id) => {
+        const res = await request(app).get(`/api/farmer/${id}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body.name).toEqual("test");
+        expect(res.body.surname).toEqual("test");
+      });
+  });
+  /* removed because all tests are logged in 
+  test("response to api/orders/insufficientWallet if unlogged", async () => {
+    const res = await request(app).get("/api/orders/insufficientWallet");
+    expect(res.statusCode).toEqual(401);
+  });
+*/
+  test("response to api/orders/insufficientWallet if logged", async () => {
+    const response = await request(app).get("/api/orders/insufficientWallet");
+    expect(response.body).toEqual({});
+    expect(response.statusCode).toBe(404);
+  });
+  test("response to /api/order/employee", async () => {
+    const res = await request(app)
+      .post("/api/order/employee")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: 9.99,
+        address: "via paolo borsellino 40",
+        listitems: [{ id: 1, quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/order/employee with incorrect customerid", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: "string",
+      state: "pending",
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect state", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: 12,
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect delivery", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+
+  test("response to /api/order/employee with incorrect total", async () => {
+    const res = await request(app).post("/api/order/employee").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "true",
+      total: "total",
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/order/employee with incorrect listitems", async () => {
+    const res = await request(app)
+      .post("/api/order/employee")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: "9.99",
+        address: "via paolo borsellino 40",
+        listitems: [{ id: "id", quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/orders/:id/handOut", async () => {
+    const id = 1;
+    const res = await request(app).post(`/api/orders/${id}/handOut`);
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/orders/:id/handOut with incorrect id", async () => {
+    const id = "id";
+    const res = await request(app).post(`/api/orders/${id}/handOut`);
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/warehouse", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: 1,
+      quantity: 2,
+    });
+    expect(res.statusCode).toBe(200);
+  });
+  test("response to /api/warehouse with incorrect product", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: "apple",
+      quantity: 2,
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/warehouse with incorrect quantity", async () => {
+    const res = await request(app).post("/api/warehouse").send({
+      product: 1,
+      quantity: "wrwert",
+    });
+    expect(res.statusCode).toBe(422);
+  });
+  test("response to /api/users/registration", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(201);
+  });
+
+  test("response to /api/users/registration with invalid username", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration => without password", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      role: "customer",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration => without role", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari",
+      password: "123456",
+      name: "setare",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  test("response to /api/users/registration without name", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      surname: "askari",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+  test("response to /api/users/registration without surname", async () => {
+    const res = await request(app).post("/api/users/registration").send({
+      username: "setareaskari@gmail.com",
+      password: "123456",
+      role: "customer",
+      name: "setare",
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  /*
+  test("response to /api/username/present/:id when id exists", async () => {
+    const id = 1;
+    const res = await request(app).get(`/api/username/present/${id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.present).toEqual(true);
+  });
+*/
+  test("response to /api/username/present/:id when id does not exist", async () => {
+    const id = 100;
+    const res = await request(app).get(`/api/username/present/${id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.present).toEqual(false);
+  });
+  test("resonse to /api/customers/all", () => {
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get("/api/customers/all");
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
     });
   });
 
-  test("response to api/orders/insufficientWallet if unlogged", async () => {
-    request(app)
-      .get("/api/orders/insufficientWallet")
-      .then((res) => {
-        expect(res.statusCode).toEqual(401);
-      })
-      .catch((err) => {
-        return err;
-      });
+  test("resonse to /api/customerlist", () => {
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get("/api/customerlist");
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    });
   });
 
-  test("response to api/orders/insufficientWallet if logged", async () => {
-    const id = await functions.addUserForTest(
-      { username: "lorenzo@polito.it" },
-      1,
-      "11111111",
-      "shopemployee"
-    );
-    user = {
-      id: id,
-      username: "lorenzo@polito.it",
-      role: "shopemployee",
-      userid: 1,
-    };
-    //server = require("../app")(app, db, user);
-    const response = await request(app).get("/api/orders/insufficientWallet");
-    //NEED TO SET THE TOKEN FOR THE AUTH
-    //  it's not working right now
-    expect(response.body).toEqual([]);
-    expect(response.statusCode).toBe(200);
+  test("resonse to /api/customers/:id when customer does not exist", () => {
+    const id = 10;
+    functions.deleteTable("customer").then(async () => {
+      const res = await request(app).get(`/api/customers/${id}`);
+      // console.log(res.body);
+      expect(res.statusCode).toBe(404);
+      //  expect(res.body).toEqual([]);
+    });
   });
 });
