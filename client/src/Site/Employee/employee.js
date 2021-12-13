@@ -255,7 +255,7 @@ function OrderList(props) {
 
     return (
         <Col>
-            <ListGroup variant = "primary"> 
+            <ListGroup id="orders" variant = "primary"> 
                 {orders.length ?
                     orders.map(order => {
                         return (
