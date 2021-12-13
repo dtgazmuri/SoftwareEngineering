@@ -70,7 +70,6 @@ function ManagerPageFarmerOrders (props) {
                 return true;
             else if (order.listitems.find(item => item.name.toUpperCase().startsWith(value.toUpperCase())))
                 return true;
-            //missing search per product
         
             return false;
         });

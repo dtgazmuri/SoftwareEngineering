@@ -319,7 +319,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
     });
 
     //TEST #5
-    test('check click on show more info button', async () => {
+    test('check click on show more info / hide more info button', async () => {
         //getting the first fake order (only one, easier to test)
         const prod1 = {
             "id": 1,
@@ -381,6 +381,23 @@ describe("test the ManagerPageFarmerOrders component", () => {
             expect(screen.getByText(prod1.name)).toBeInTheDocument();
             expect(screen.getByText(prod2.name)).toBeInTheDocument();
         });
+        
+        act(() => {
+            const info = screen.getByRole('button', {name : "Hide more info"});
+            expect(info).toBeInTheDocument();
+            //click on button
+            fireEvent.click(info);
+        });
+        
+        //Check the absence of the order info (products)
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'Show more info' })).toBeInTheDocument();
+            expect(screen.queryByTestId('farmer-order-products')).not.toBeInTheDocument();
+    
+            expect(screen.queryByText(prod1.name)).not.toBeInTheDocument();
+            expect(screen.queryByText(prod2.name)).not.toBeInTheDocument();
+        });
+        
 
         mockGetOrders.mockRestore();
 
@@ -432,5 +449,135 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockRestore(); 
    });
     
+   //TEST #8
+   test('check the rendering in case of filtering using the searchbar (all possible cases)', async () => {
+
+    //Define a mock function
+    const mockGetOrders = jest.spyOn(API, 'getFarmerOrders');
+    const responseBody = fake_orders;
+    mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
+    
+    //Render the component
+    render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+
+    //Check if the function is called
+    await waitFor(() => {
+        expect(mockGetOrders).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+        //Check display right
+        //absence of warning "No orders found"        
+        expect(screen.queryByText('No orders found.')).not.toBeInTheDocument();
+
+        //presence of title
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        //presence of specifications on when it's possible to ack delivery from farmers
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+        //presence of the searchbar
+        expect(screen.getByPlaceholderText('Filter farmer orders by id, farmer name, farmer surname, state or product')).toBeInTheDocument();
+        //presence of 2 "complete" orders with the acknowledge button, since we have 2 orders pending
+        expect(screen.queryAllByText('Acknowledge delivery')).toHaveLength(2);
+
+        //Here we can add all the other checks, but they are useless since this type of test was part of TEST #2
+    });
+   
+    const searchbar = screen.getByPlaceholderText('Filter farmer orders by id, farmer name, farmer surname, state or product');
+    expect(searchbar).toBeInTheDocument();
+    
+    //changing the value inside the searchbar. Nothing to show
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: 'prova' } });
+    });
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('prova');
+        //expecting no orders shown
+        expect(screen.queryAllByText('Order id:', {exact: false})).toHaveLength(0);
+    });
+
+    //changing the value inside the searchbar. Showing only the order with id=2
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: '2' } });
+    });
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('2');
+        //expecting to show order n.2
+        expect(screen.getByText('Order id: 2')).toBeInTheDocument();
+    });        
+
+    //changing the value inside the searchbar. Showing first order
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: 'Tunin' } });
+    });
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('Tunin');
+        //expecting to show order n.1
+        expect(screen.getByText('Order id: 1')).toBeInTheDocument();
+    });
+
+    //changing the value inside the searchbar. Showing order n.2
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: 'Rossi' } });
+    });
+
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('Rossi');
+        //expecting no orders shown
+        expect(screen.getByText('Order id: 2')).toBeInTheDocument();
+    });
+
+    //changing the state of searchbar, showing both orders cause they are both pending
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: 'pending' } });
+    });
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('pending');
+        //expecting no orders shown
+        expect(screen.queryAllByText('Order id:', {exact: false})).toHaveLength(2);
+    });
+
+    //changing the state of searchbar, showing second order cause it has kiwi
+    act(() => {
+        fireEvent.change(searchbar, { target: { value: 'Kiwi' } });
+    });
+    await waitFor(() => {
+        //still presence of title, subtitle
+        expect(screen.getByText('List of all the farmer orders')).toBeInTheDocument();
+        expect(screen.getByText('Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00')).toBeInTheDocument();
+
+        //expecting searchbar to show the value put
+        expect(searchbar.value).toBe('Kiwi');
+        //expecting no orders shown
+        expect(screen.getByText('Order id: 2')).toBeInTheDocument();
+    });
+
+    mockGetOrders.mockRestore();
+
+});
 
 });
