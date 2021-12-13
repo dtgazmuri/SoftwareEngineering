@@ -710,10 +710,53 @@ module.exports = function (app, db, testUser) {
     }
   );
 
+
+  //STORY N. 14
+  //Getting all orders for a specific farmer given its id
+  //GET /api/farmerOrders
+  app.get("/api/farmerOrders/:id", async (req, res) => {
+    try {
+      //Create an array that will contain the result
+      const result = [];
+
+      //Get orders for the specified farmer given its id
+      const orders = await farmerDAO.getFarmerOrderIds(db, req.params.id);
+
+      //For each order get the quantity and name of the product
+      for (let i = 0; i < orders.length; i++) {
+        const products = await farmerDAO.getOrdersInfo(db, orders[i].id, req.params.id);
+
+        result.push({id: orders[i].id, status: orders[i].status, products: products});
+      }
+
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(404).end();
+    }
+  });
+
+  app.post("/api/confirmOrder/", [check("id").isInt()], async (req, res) => {
+    const errors = validationResult(req); //looking for errors thrown by the validation
+      if (!errors.isEmpty())
+        return res.status(422).json({ errors: errors.array() }); //unprocessable entity in case of errors
+
+      const id = req.body.id;
+      try {
+        let result = await farmerDAO.confirmOrder(db, id);
+        return res.status(200).json(result);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+          error: "DB error during the update of order status",
+        });
+      }
+  });
+
+
   //STORY N.15
   //Getting all farmer orders, along with their info (i.e. all the items they contain)
-  // GET /api/farmerOrders/all
-  app.get("/api/farmerOrders/all", isLogged, isManager, async (req, res) => {
+  // GET /api/farmerOrders
+  app.get("/api/farmerOrders", isLogged, isManager, async (req, res) => {
     try {
       //0) Create an empty array as an answer
       const resultArray = [];
