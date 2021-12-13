@@ -318,7 +318,8 @@ function App() {
               user={user}
               setMessage={setMessage}
               notifyBalance={notifyBalance}
-              notifyQuantity={notifyQuantity} />
+              notifyQuantity={notifyQuantity} 
+              getCurrentTime={getCurrentTime}/>
             }
           />
           <Route

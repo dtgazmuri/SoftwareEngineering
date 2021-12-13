@@ -1,6 +1,6 @@
 import { Row, Col, Container, ListGroup, Button, Card, Form, Modal, Table, Badge } from "react-bootstrap";
 import { CartPlus, CartDash } from "react-bootstrap-icons";
-
+import dayjs from 'dayjs';
 import { Link } from "react-router-dom";
 import React from "react";
 import API from "../../API";
@@ -193,7 +193,7 @@ function Basket(props) {
           </ListGroup>
         )}
         <br></br>
-        <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow}></ConfirmDeliveryPanel>
+        <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow} getCurrentTime={props.getCurrentTime}></ConfirmDeliveryPanel>
 
         {
           cartError ?
@@ -220,6 +220,13 @@ function Basket(props) {
 
 //Create the confirm delivery panel
 export function ConfirmDeliveryPanel(props) {
+  let invalidTime = false;
+    const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
+    console.log(currentTime.day()+" "+currentTime.hour());
+    if ((currentTime.day() === 7 && currentTime.hour() > 23) || (currentTime.day() === 1 && currentTime.hour() < 9)) {
+        invalidTime = true;
+        //Orders can only be confirmed from Monday at 9 am to Sunday at 11 pm
+    }
   return (
     <Container fluid>
       <Card>
@@ -263,7 +270,11 @@ export function ConfirmDeliveryPanel(props) {
           <Row>
           <Col></Col>
             <Col>
+            {invalidTime ? 
+              <Button disabled variant="primary" onClick={() => props.handleShow()}>Place Order Request</Button>
+              :
               <Button variant="primary" onClick={() => props.handleShow()}>Place Order Request</Button>
+            }
             </Col>
             <Col></Col>
             <Col>
