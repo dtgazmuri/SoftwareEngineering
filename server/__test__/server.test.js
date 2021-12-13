@@ -324,6 +324,16 @@ describe("Test Dao classes", () => {
       const id = await employeeDAO.createNewCustomer(db, newCustomer);
       expect(typeof id).toBe("number");
     });
+    test("test createNewUser", async () => {
+      const newUser = {
+        userid: 500,
+        username: "askari",
+        hash: "1234456",
+        role: "customer",
+      };
+      const id = await employeeDAO.createNewUser(db, newUser);
+      expect(typeof id).toBe("number");
+    });
   });
 });
 
