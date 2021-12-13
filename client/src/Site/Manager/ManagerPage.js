@@ -183,7 +183,7 @@ function FarmerOrderItem(props) {
                     <>
                     <Button variant="link" className="p-0" onClick = {() => setShowDetails(false)}>Hide more info</Button><br></br>
                     {/**This ol can be split into another function component */}
-                    <ol>
+                    <ol data-testid="farmer-order-products">
                         {order.listitems.map(product => {
                             return <li key = {product.id}>
                                 <span><strong className = "pr-3">{product.name}</strong></span>
@@ -224,4 +224,4 @@ function FarmerOrderItem(props) {
     )
 }
 
-export {ManagerPage, ManagerPageFarmerOrders};
+export {ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem};
