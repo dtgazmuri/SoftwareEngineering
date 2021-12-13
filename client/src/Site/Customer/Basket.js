@@ -59,7 +59,7 @@ function Basket(props) {
 
     if (customer.wallet < total) {
       setCartError(true);
-      setCartErrorMessage("You don't have enough money");
+      setCartErrorMessage("You don't have enough money in your wallet");
       good = false;
     }
 
@@ -151,7 +151,7 @@ function Basket(props) {
 
   return (
     <>
-      {Object.keys(customer).length !== 0 ? (
+      {Object.keys(customer).length !== 0 && items.length !== 0 ? (
       <>
       <Container className="below-nav justify-content-center">
         {items && (
@@ -204,7 +204,14 @@ function Basket(props) {
       </Container>
       </>
       ) : (
-        <h1>Loading</h1>
+        <>
+          <br></br>
+          <h2>Your basket is empty</h2>
+          <br></br>
+          <Link to={`/customer`}>
+            <Button>Return</Button>
+          </Link>
+        </>
       )}
     </>
   );
