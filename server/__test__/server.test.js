@@ -36,7 +36,7 @@ describe("Test Dao classes", () => {
             userDao.checkIfUserNotExists(db, "setare@polito.it")
           ).rejects.toEqual({ code: 409, msg: "user already exits." });
         })
-        .catch(() => { });
+        .catch(() => {});
     });
   });
 
@@ -177,7 +177,6 @@ describe("Test Dao classes", () => {
           });
         });
     });
-
     test("test confirmOrder", async () => {
       functions
         .addOrderForTest()
@@ -186,10 +185,7 @@ describe("Test Dao classes", () => {
             expect(res.statusCode).toBe(200);
           });
         });
-    });
-  });*/
-
-
+    });*/
   describe("Test customerDao functions", () => {
     test("test getCustomerByUserId when id does not exist", async () => {
       functions.deleteTable("customer").then(() => {
@@ -344,7 +340,6 @@ describe("Test api's", () => {
     const res = await request(app).get(`/api/farmerOrders/tt`);
     expect(res.statusCode).toBe(500);
   });
-
   test("responds to /api/farmerOrders/:id", () => {
     functions
       .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
@@ -355,7 +350,6 @@ describe("Test api's", () => {
         expect(res.body.products).toEqual([{ name: "test", quantity: 1 }]);
       });
   });
-
   test("responds to /api/confirmOrder/", () => {
     functions
       .addOrderForTest()
