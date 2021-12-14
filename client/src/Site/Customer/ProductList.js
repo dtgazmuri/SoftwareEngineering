@@ -34,7 +34,8 @@ function ProductList(props) {
         <td>{prod.name}</td>
         <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
         <td>{prod.price} €</td>
-        <td>{prod.quantity} kg</td>
+        <td>{prod.quantity} g</td>
+        <td>{prod.availability}</td>
         <td>
           <BasketButton
             product={prod}
@@ -70,6 +71,7 @@ function ProductList(props) {
             <th>Farmer</th>
             <th>Price/Package</th>
             <th>Qta/Package</th>
+            <th>Availability</th>
             <th>Add to the Basket</th>
             <th>Remove from the Basket</th>
           </tr>
