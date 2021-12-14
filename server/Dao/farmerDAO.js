@@ -143,7 +143,7 @@ exports.ackDeliveryFarmerOrder = (db, orderid) => {
 //get farmer orders given the farmer id
 exports.getFarmerOrderIds = (db, farmerId) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT id, state FROM farmerorder WHERE farmerId = ?";
+    const sql = "SELECT DISTINCT orderid, state FROM farmerorderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
     db.all(sql, [farmerId], (err, rows) => {
       if (err) {
         reject(err);
@@ -151,7 +151,7 @@ exports.getFarmerOrderIds = (db, farmerId) => {
       }
       let list = [];
       for (let row of rows) {
-        list.push({ id: row.id, status: row.state });
+        list.push({ id: row.orderid, status: row.state });
       }
       resolve(list);
     });
@@ -189,6 +189,20 @@ exports.confirmOrder = (db, orderId) => {
         const order = { id: orderId, state: "confirmed" };
         resolve(order);
       }
+    });
+  });
+};
+
+//get username of customer given the id
+exports.getFarmerOrderIds = (db, uid) => {
+  return new Promise((resolve, reject) => {
+    const sql = 'SELECT username FROM users WHERE userid = ? AND ROLE = "customer"';
+    db.all(sql, [uid], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(rows[0].username);
     });
   });
 };

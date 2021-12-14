@@ -2,6 +2,8 @@ module.exports = function (app, db, testUser) {
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
+  const nodemailer = require('nodemailer');
+
   const bcrypt = require("bcrypt");
   /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
 
@@ -16,6 +18,37 @@ module.exports = function (app, db, testUser) {
   const customerDao = require("./Dao/customerDao");
 
   const userDao = require("./Dao/dbusers");
+
+  /*var router = express.Router();
+  app.use('/sayHello', router);
+  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello
+
+  function handleMail(req, res) {
+    // Not the movie transporter!
+    var transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'spg.p13.polito@gmail.com', // Email id
+        pass: 'spgp13gmail' // Password
+      }
+    });
+    var text = "Your order has been confirmed!";
+    var mailOptions = {
+      from: 'spg.p13.polito@gmail.com>', // sender address
+      to: req.body.user, // list of receivers
+      subject: 'Order confirmed', // Subject line
+      text: text //, // plaintext body
+
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        res.json({ yo: 'error' });
+      } else {
+        res.json({ yo: info.response });
+      };
+    });
+  }*/
 
   passport.use(
     new LocalStrategy(function (username, password, done) {
@@ -718,17 +751,22 @@ module.exports = function (app, db, testUser) {
     try {
       //Create an array that will contain the result
       const result = [];
-
+      
       //Get orders for the specified farmer given its id
       const orders = await farmerDAO.getFarmerOrderIds(db, req.params.id);
+      console.log("first step");
+      console.log(orders);
 
       //For each order get the quantity and name of the product
       for (let i = 0; i < orders.length; i++) {
         const products = await farmerDAO.getOrdersInfo(db, orders[i].id, req.params.id);
+        console.log("second step");
+        console.log(products);
 
-        result.push({id: orders[i].id, status: orders[i].status, products: products});
+        result.push({ id: orders[i].id, status: orders[i].status, products: products });
       }
-
+      console.log("third step");
+      console.log(result);
       res.status(200).json(result);
     } catch (err) {
       res.status(404).end();
@@ -737,19 +775,21 @@ module.exports = function (app, db, testUser) {
 
   app.post("/api/confirmOrder/", [check("id").isInt()], async (req, res) => {
     const errors = validationResult(req); //looking for errors thrown by the validation
-      if (!errors.isEmpty())
-        return res.status(422).json({ errors: errors.array() }); //unprocessable entity in case of errors
+    if (!errors.isEmpty())
+      return res.status(422).json({ errors: errors.array() }); //unprocessable entity in case of errors
 
-      const id = req.body.id;
-      try {
-        let result = await farmerDAO.confirmOrder(db, id);
-        return res.status(200).json(result);
-      } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-          error: "DB error during the update of order status",
-        });
-      }
+    const id = req.body.id;
+    try {
+      let result = await farmerDAO.confirmOrder(db, id);
+      let customer = await farmerDAO.getCustomerMail(cid);
+      //handleMail(customer);
+      return res.status(200).json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        error: "DB error during the update of order status",
+      });
+    }
   });
 
 
