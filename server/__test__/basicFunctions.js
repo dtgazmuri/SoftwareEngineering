@@ -14,7 +14,7 @@ exports.deleteTable = (tableName) => {
 
 exports.deleteTableWhereId = (tableName, id) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM " + tableName+" WHERE ID = ?";
+    const sql = "DELETE FROM " + tableName + " WHERE ID = ?";
     db.run(sql, [id], (err) => {
       if (err) {
         reject(err);
@@ -103,20 +103,21 @@ exports.addFarmerAndOrderForTest = (farmer, product) => {
         return;
       }
       fid = this.lastID;
-      const sql2 = "INSERT INTO product(NAME, FARMER, PRICE) VALUES(?, ?, ?)"
+      const sql2 = "INSERT INTO product(NAME, FARMER, PRICE) VALUES(?, ?, ?)";
       db.run(sql2, [product.NAME, fid, product.PRICE], function (err) {
         if (err) {
           reject(err);
           return;
         }
         pid = this.lastID;
-        const sql3 = "INSERT INTO farmerorderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?)"
+        const sql3 =
+          "INSERT INTO farmerorderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?)";
         db.run(sql3, [0, pid, 1, 1], function (err) {
           if (err) {
             reject(err);
             return;
           }
-          
+
           resolve();
         });
         resolve();
@@ -140,29 +141,55 @@ exports.addOrderForTest = () => {
   });
 };
 
-
 exports.addFarmerOrderForTest = (order, farmerid) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO farmerorder(farmerid, state, total, datetime) VALUES (?, ?, ?, ?)";
-    db.run(sql, [farmerid, order.state, order.total, order.datetime], function (err) {
-if (err) {
-        reject(err);
-        return;
+    const sql =
+      "INSERT INTO farmerorder(farmerid, state, total, datetime) VALUES (?, ?, ?, ?)";
+    db.run(
+      sql,
+      [farmerid, order.state, order.total, order.datetime],
+      function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
       }
-      resolve(this.lastID);
-    });
+    );
   });
-}
+};
 
 exports.addFarmerOrderItemForTest = (orderId, product) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO farmerorderitems(orderid, product, quantity, price) VALUES (?, ?, ?, ?)";
-    db.run(sql, [orderId, product.id, product.quantity, product.price], function (err) {
+    const sql =
+      "INSERT INTO farmerorderitems(orderid, product, quantity, price) VALUES (?, ?, ?, ?)";
+    db.run(
+      sql,
+      [orderId, product.id, product.quantity, product.price],
+      function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
+      }
+    );
+  });
+};
+
+exports.getClientOrderById = (id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM clientorder WHERE id = ?";
+    db.all(sql, [id], (err, rows) => {
       if (err) {
         reject(err);
         return;
       }
-      resolve(this.lastID);
+      const items = rows.map((e) => ({
+        id: e.ID,
+        customer: e.CUSTOMER,
+      }));
+      resolve(items);
     });
   });
-}
+};
