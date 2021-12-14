@@ -269,12 +269,25 @@ describe("Test Dao classes", () => {
     });
     //TODO: complete testing
     test("test listProductsAll when 1 product is present", async () => {
-      /*const farmerId = await functions.addFarmerForTest({NAME: "Lorenzo", SURNAME: "Molteni"}); //create farmer
+      const farmerId = await functions.addFarmerForTest({NAME: "Lorenzo", SURNAME: "Molteni"}); //create farmer
       const prodId = await functions.addProductForTest({NAME: "watermelon", PRICE: 13.71}, farmerId); //create prod sold by farmer
+      await functions.addProductToWarehouse(prodId);
     
       const res = await employeeDAO.listProductsAll(db);
       expect(res).not.toEqual([]);
-      */
+      expect(res).toEqual([{
+        id: prodId,
+        name: "watermelon",
+        farmerid: farmerId,
+        price: 13.71,
+        quantity: 0, //default value put inside basicFunctions.addProductToWarehouse
+        availability: 0}]) //default value put inside basicFunctions.addProductForTest
+      
+        //clean the db from the values just put
+        await functions.deleteWarehouseWhereProdId(prodId);
+        await functions.deleteTableWhereId("product", prodId);
+        await functions.deleteTableWhereId("farmer", farmerId);
+        
     });
 
 

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.81% </span>
+                <span class="strong">53.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>155/288</span>
+                <span class='fraction'>155/290</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.89% </span>
+                <span class="strong">32.78% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/59</span>
+                <span class='fraction'>20/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.05% </span>
+                <span class="strong">45.28% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>24/51</span>
+                <span class='fraction'>24/53</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.12% </span>
+                <span class="strong">53.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>151/279</span>
+                <span class='fraction'>151/281</span>
             </div>
         
             
@@ -922,12 +922,7 @@
 <a name='L863'></a><a href='#L863'>863</a>
 <a name='L864'></a><a href='#L864'>864</a>
 <a name='L865'></a><a href='#L865'>865</a>
-<a name='L866'></a><a href='#L866'>866</a>
-<a name='L867'></a><a href='#L867'>867</a>
-<a name='L868'></a><a href='#L868'>868</a>
-<a name='L869'></a><a href='#L869'>869</a>
-<a name='L870'></a><a href='#L870'>870</a>
-<a name='L871'></a><a href='#L871'>871</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L866'></a><a href='#L866'>866</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -954,27 +949,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1683,19 +1678,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1801,7 +1791,7 @@
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 &nbsp;
-  const nodemailer = require('nodemailer');
+  const nodemailer = require("nodemailer");
 &nbsp;
   const bcrypt = require("bcrypt");
   /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
@@ -1820,34 +1810,34 @@
 &nbsp;
   /*var router = express.Router();
   app.use('/sayHello', router);
-  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello
+  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
 &nbsp;
-  function handleMail(req, res) {
+  function <span class="fstat-no" title="function not covered" >handleMail(</span>req, res) {
     // Not the movie transporter!
-    var transporter = nodemailer.createTransport({
+    var transporter = <span class="cstat-no" title="statement not covered" >nodemailer.createTransport({</span>
       service: 'Gmail',
       auth: {
         user: 'spg.p13.polito@gmail.com', // Email id
         pass: 'spgp13gmail' // Password
       }
     });
-    var text = "Your order has been confirmed!";
-    var mailOptions = {
+    var text = <span class="cstat-no" title="statement not covered" >"Your order has been confirmed!";</span>
+    var mailOptions = <span class="cstat-no" title="statement not covered" >{</span>
       from: 'spg.p13.polito@gmail.com&gt;', // sender address
       to: req.body.user, // list of receivers
       subject: 'Order confirmed', // Subject line
       text: text //, // plaintext body
 &nbsp;
     };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        res.json({ yo: 'error' });
+<span class="cstat-no" title="statement not covered" >    transporter.sendMail(mailOptions, <span class="fstat-no" title="function not covered" >fu</span>nction (error, info) {</span>
+<span class="cstat-no" title="statement not covered" >      if (error) {</span>
+<span class="cstat-no" title="statement not covered" >        console.log(error);</span>
+<span class="cstat-no" title="statement not covered" >        res.json({ yo: 'error' });</span>
       } else {
-        res.json({ yo: info.response });
+<span class="cstat-no" title="statement not covered" >        res.json({ yo: info.response });</span>
       };
     });
-  }*/
+  }
 &nbsp;
   passport.use(
     new LocalStrategy(<span class="fstat-no" title="function not covered" >fu</span>nction (username, password, done) {
@@ -2553,19 +2543,14 @@
       
       //Get orders for the specified farmer given its id
       const orders = <span class="cstat-no" title="statement not covered" >await farmerDAO.getFarmerOrderIds(db, req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >      console.log("first step");</span>
-<span class="cstat-no" title="statement not covered" >      console.log(orders);</span>
 &nbsp;
       //For each order get the quantity and name of the product
 <span class="cstat-no" title="statement not covered" >      for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; orders.length; i++) {</span>
         const products = <span class="cstat-no" title="statement not covered" >await farmerDAO.getOrdersInfo(db, orders[i].id, req.params.id);</span>
-<span class="cstat-no" title="statement not covered" >        console.log("second step");</span>
-<span class="cstat-no" title="statement not covered" >        console.log(products);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        result.push({ id: orders[i].id, status: orders[i].status, products: products });</span>
       }
-<span class="cstat-no" title="statement not covered" >      console.log("third step");</span>
-<span class="cstat-no" title="statement not covered" >      console.log(result);</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >      res.status(200).json(result);</span>
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      res.status(404).end();</span>
@@ -2580,7 +2565,7 @@
     const id = <span class="cstat-no" title="statement not covered" >req.body.id;</span>
 <span class="cstat-no" title="statement not covered" >    try {</span>
       let result = <span class="cstat-no" title="statement not covered" >await farmerDAO.confirmOrder(db, id);</span>
-      let customer = <span class="cstat-no" title="statement not covered" >await farmerDAO.getCustomerMail(cid);</span>
+      let customer = <span class="cstat-no" title="statement not covered" >await farmerDAO.getCustomerMail(db, id);</span>
       //handleMail(customer);
 <span class="cstat-no" title="statement not covered" >      return res.status(200).json(result);</span>
     } catch (err) {
@@ -2674,7 +2659,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 14 2021 11:40:11 GMT+0100 (Ora standard dell’Europa centrale)
+                at Tue Dec 14 2021 13:04:03 GMT+0100 (Ora standard dell’Europa centrale)
             </div>
         </div>
         <script src="../prettify.js"></script>
