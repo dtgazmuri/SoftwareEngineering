@@ -10,9 +10,11 @@ const customerDao = require("../Dao/customerDao");
 const employeeDAO = require("../Dao/employeeDBAccess");
 const { response } = require("express");
 
+//***************************************** TESTING DAO CLASSES************************************************************************** */
 describe("Test Dao classes", () => {
   describe("Test userDao functions", () => {
     test("test checkIfUserNotExists while it deosn't", async () => {
+      await functions.deleteTable("users");
       functions.deleteTable("users").then(() => {
         return expect(
           userDao.checkIfUserNotExists(db, "test@polito.it")
@@ -34,11 +36,13 @@ describe("Test Dao classes", () => {
             userDao.checkIfUserNotExists(db, "setare@polito.it")
           ).rejects.toEqual({ code: 409, msg: "user already exits." });
         })
-        .catch(() => { });
+        .catch(() => {});
     });
   });
 
   describe("test farmerDao functions", () => {
+    let testFarmerId;
+    let testFarmerOrderId;
     test("test getFarmerProducts while farmer does not exist", async () => {
       functions.deleteTable("product").then(() => {
         return farmerDao.getFarmerProducts(db, 1).then((data) => {
@@ -85,7 +89,96 @@ describe("Test Dao classes", () => {
       });
     });
 
-    /*test("test getOrdersOfFarmer", async () => {
+    //TEST story #15, farmerDao.getFarmerOrders
+    test("test getFarmerOrders when no order is present", async () => {
+      //initializing farmerorder table and checking if empty
+      await functions.deleteTable("farmerorder");
+      const res = await farmerDao.getFarmerOrders(db);
+      expect(res).toHaveLength(0);
+    });
+
+    test("test getFarmerOrders when one order is present", async () => {
+      const order = {
+        state: "pending",
+        total: 5,
+        datetime: "2021-12-01 12:00",
+      };
+      testFarmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      });
+      testFarmerOrderId = await functions.addFarmerOrderForTest(
+        order,
+        testFarmerId
+      );
+      const res = await farmerDao.getFarmerOrders(db);
+      expect(res).toEqual([
+        {
+          id: testFarmerOrderId,
+          farmerid: testFarmerId,
+          state: "pending",
+          total: 5,
+          datetime: "2021-12-01 12:00",
+          name: "Lorenzo",
+          surname: "Molteni",
+        },
+      ]);
+    });
+
+    //TEST story #15, farmerDao.getFarmerOrderItems
+    test("test getFarmerOrderItems with a wrong id", async () => {
+      const res = await farmerDao.getFarmerOrderItems(db, "www");
+      expect(res).toHaveLength(0); //empty array
+    });
+    test("test getFarmerOrderItems with a correct id but no products", async () => {
+      const res = await farmerDao.getFarmerOrderItems(db, testFarmerOrderId);
+      expect(res).toHaveLength(0); //empty array
+    });
+    test("test getFarmerOrderItems with a correct id and one product", async () => {
+      const fakeProd = {
+        NAME: "watermelon",
+        PRICE: 0.99,
+      };
+      let prodId = await functions.addProductForTest(fakeProd, testFarmerId);
+      const fakeProd2 = {
+        id: prodId,
+        quantity: 2,
+        price: fakeProd.PRICE * 2,
+      };
+      const farmerOrderItemId = await functions.addFarmerOrderItemForTest(
+        testFarmerOrderId,
+        fakeProd2
+      );
+      const res = await farmerDao.getFarmerOrderItems(db, testFarmerOrderId);
+      expect(res).toEqual([
+        {
+          id: prodId,
+          name: "watermelon",
+          price: fakeProd2.price,
+          quantity: fakeProd2.quantity,
+        },
+      ]);
+      //deleting the new farmer order item inserted to prevent table growing up
+      await functions.deleteTableWhereId("farmerorderitems", farmerOrderItemId);
+    });
+
+    //TEST story #15, farmerDao.ackDeliveryFarmerOrder
+    test("test ackDeliveryFarmerOrder with a wrong id", async () => {
+      const res = farmerDao
+        .ackDeliveryFarmerOrder(db, "www")
+        .then()
+        .catch((err) => {
+          //in this case, since the id is wrong, ackDeliveryFarmerOrder rejects, so the return value must be catched with a catch clause
+          expect(err.code).toEqual("404");
+          expect(err.msg).toEqual("FARMER ORDER NOT FOUND;");
+        });
+    });
+    test("test ackDeliveryFarmerOrder with a correct id", async () => {
+      const res = await farmerDao.ackDeliveryFarmerOrder(db, testFarmerOrderId);
+      expect(res).toEqual({ id: testFarmerOrderId, state: "delivered" });
+    });
+  });
+  /*test("test getOrdersOfFarmer", async () => {
       functions
         .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
         .then((farmerId) => {
@@ -94,7 +187,6 @@ describe("Test Dao classes", () => {
           });
         });
     });
-
     test("test confirmOrder", async () => {
       functions
         .addOrderForTest()
@@ -103,10 +195,7 @@ describe("Test Dao classes", () => {
             expect(res.statusCode).toBe(200);
           });
         });
-    });
-  });*/
-
-
+    });*/
   describe("Test customerDao functions", () => {
     test("test getCustomerByUserId when id does not exist", async () => {
       functions.deleteTable("customer").then(() => {
@@ -139,18 +228,12 @@ describe("Test Dao classes", () => {
   });
   /**Lorenzo Molteni trying to test  getOrderAll and getCustomers functions in employeeDBAccess.js*/
   describe("Test employeeDAO functions", () => {
+    let customerId;
     //TESTING getCustomers
     test("test getCustomers when no customer is present", async () => {
-      functions.deleteTable("customer").then(() => {
-        employeeDAO
-          .getCustomers(db)
-          .then((data) => {
-            expect(data).toEqual([]);
-          })
-          .catch((err) => {
-            return err;
-          });
-      });
+      await functions.deleteTable("customer");
+      const res = await employeeDAO.getCustomers(db);
+      expect(res).toEqual([]);
     });
     test("test getCustomers when some customer is present", async () => {
       const fakeCustomer = {
@@ -158,48 +241,31 @@ describe("Test Dao classes", () => {
         SURNAME: "molteni",
         WALLET: 1000,
       };
-
-      functions
-        .addCustomerForTest(fakeCustomer)
-        .then((id) => {
-          functions
-            .addUserForTest(
-              { username: "lorenzo@polito.it" },
-              id,
-              "789123",
-              "customer"
-            )
-            .then(() => {
-              return employeeDAO.getCustomers(db).then((data) => {
-                expect(data.length).toEqual(1);
-                expect(data).toEqual([
-                  {
-                    id: id,
-                    name: "lorenzo",
-                    surname: "molteni",
-                    wallet: 1000,
-                    username: "lorenzo@polito.it",
-                  },
-                ]);
-              });
-            })
-            .catch((err) => { });
-        })
-        .catch((err) => { });
+      customerId = await functions.addCustomerForTest(fakeCustomer);
+      await functions.addUserForTest(
+        { username: "lorenzo@polito.it" },
+        customerId,
+        "789123",
+        "customer"
+      );
+      const res = await employeeDAO.getCustomers(db);
+      expect(res).toHaveLength(1);
+      expect(res).toEqual([
+        {
+          id: customerId,
+          name: "lorenzo",
+          surname: "molteni",
+          wallet: 1000,
+          username: "lorenzo@polito.it",
+        },
+      ]);
     });
 
     //TESTING getOrderAll
     test("test getOrderAll when no order is present", async () => {
-      functions.deleteTable("clientorder").then(() => {
-        employeeDAO
-          .getOrderAll(db)
-          .then((data) => {
-            expect(data.length).toEqual(0);
-          })
-          .catch((err) => {
-            return err;
-          });
-      });
+      await functions.deleteTable("clientorder");
+      const res = await employeeDAO.getOrderAll(db);
+      expect(res).toHaveLength(0);
     });
 
     test("test getOrderAll when some orders are present", async () => {
@@ -210,30 +276,68 @@ describe("Test Dao classes", () => {
         total: 17.31,
         date: "2021-12-01 12:00",
       };
-      employeeDAO
-        .createClientOrder(db, fakeOrder1)
-        .then((id) => {
-          employeeDAO
-            .getOrderAll(db)
-            .then((data) => {
-              expect(data).toEqual([
-                {
-                  id: id,
-                  customerid: 1,
-                  state: "pending",
-                  delivery: false,
-                  total: 17.31,
-                },
-              ]);
-            })
-            .catch((err) => {
-              return err;
-            });
-        })
-        .catch((err) => { });
+      const orderId = await employeeDAO.createClientOrder(db, fakeOrder1);
+      const res = await employeeDAO.getOrderAll(db);
+      expect(res).toHaveLength(1);
+    });
+    test("test updateCustomerWallet‍ with correct data", async () => {
+      const fakeCustomer = {
+        NAME: "setare",
+        SURNAME: "askari",
+        WALLET: 1000,
+      };
+      customerId = await functions.addCustomerForTest(fakeCustomer);
+      const id = await employeeDAO.updateCustomerWallet(db, customerId, 2000);
+      expect(id).toEqual(customerId);
+    });
+    test("test handOutOrder", async () => {
+      const fakeOrder = {
+        customerid: 1,
+        state: "pending",
+        delivery: false,
+        total: 17.31,
+        date: "2021-12-01 12:00",
+      };
+      const orderId = await employeeDAO.createClientOrder(db, fakeOrder);
+      const id = await employeeDAO.handOutOrder(db, orderId);
+      expect(id).toEqual(orderId);
+    });
+    test("test createClientOrder", async () => {
+      const fakeOrder = {
+        customerid: 1000,
+        state: "pending",
+        delivery: false,
+        total: 17.31,
+        date: "2021-12-01 12:00",
+      };
+      const orderId = await employeeDAO.createClientOrder(db, fakeOrder);
+      const orders = await functions.getClientOrderById(orderId);
+      expect(orders[0].customer).toEqual(1000);
+    });
+    test("test creatOrderItem", async () => {
+      const newItem = { orderid: 100, productid: 10, quantity: 50, price: 102 };
+      const itemId = await employeeDAO.createOrderItem(db, newItem);
+      expect(typeof itemId).toBe("number");
+    });
+    test("test createNewCustomer", async () => {
+      const newCustomer = { name: "setare", surname: "askari", wallet: 50 };
+      const id = await employeeDAO.createNewCustomer(db, newCustomer);
+      expect(typeof id).toBe("number");
+    });
+    test("test createNewUser", async () => {
+      const newUser = {
+        userid: 500,
+        username: "askari",
+        hash: "1234456",
+        role: "customer",
+      };
+      const id = await employeeDAO.createNewUser(db, newUser);
+      expect(typeof id).toBe("number");
     });
   });
 });
+
+//********************************************** TESTING API ************************************************************************** */
 
 describe("Test api's", () => {
   /* test("responds to /api/orders/all with no order present", () => {
@@ -302,7 +406,6 @@ describe("Test api's", () => {
     const res = await request(app).get(`/api/farmerOrders/tt`);
     expect(res.statusCode).toBe(500);
   });
-
   test("responds to /api/farmerOrders/:id", () => {
     functions
       .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
@@ -313,7 +416,6 @@ describe("Test api's", () => {
         expect(res.body.products).toEqual([{ name: "test", quantity: 1 }]);
       });
   });
-
   test("responds to /api/confirmOrder/", () => {
     functions
       .addOrderForTest()
@@ -329,7 +431,7 @@ describe("Test api's", () => {
     const res = await request(app).get("/api/orders/insufficientWallet");
     expect(res.statusCode).toEqual(401);
   });
-*/
+  */
   test("response to api/orders/insufficientWallet if logged", async () => {
     const response = await request(app).get("/api/orders/insufficientWallet");
     expect(response.body).toEqual({});
@@ -507,7 +609,7 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.present).toEqual(true);
   });
-*/
+  */
   test("response to /api/username/present/:id when id does not exist", async () => {
     const id = 100;
     const res = await request(app).get(`/api/username/present/${id}`);
@@ -546,4 +648,18 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(200);
   });
   */
+  
+  //TEST story#15
+  //TEST /api/farmerOrders
+  //TODO: modify expect and add more tests
+  
+  test("response to /api/farmerOrders when table it's empty", async () => {
+    await functions.deleteTable("farmerorder");
+    const res = await request(app).get('/api/farmerOrders');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  });
+  test("response to /api/farmerOrders when table contains something", async () => {
+    const res = await request(app).get('/api/farmerOrders');
+  });
 });
