@@ -182,6 +182,7 @@ module.exports = function (app, db, testUser) {
       const productsList = await employeeDAO.listProductsAll(db);
       res.status(200).json(productsList);
     } catch (err) {
+      console.log(err);
       res.status(404).end();
     }
   });

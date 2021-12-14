@@ -28,7 +28,7 @@ exports.listProductsAll = (db) => {
   return new Promise((resolve, reject) => {
     //Create the sql query
     const sql =
-      "SELECT * FROM product, warehouse WHERE product.ID = warehouse.PRODUCT";
+      "SELECT ID, NAME, FARMER, PRICE, AVAILABILITY AS QUANTITY, QUANTITY AS AVAILABILITY FROM product P, warehouse W WHERE ID = PRODUCT";
 
     db.all(sql, [], (err, rows) => {
       if (err) {
