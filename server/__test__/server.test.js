@@ -582,4 +582,15 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(200);
   });
   */
+  
+  //TEST story#15
+  //TEST /api/farmerOrders
+  test("response to /api/farmerOrders when table it's empty", async () => {
+    await functions.deleteTable("farmerorder");
+    const res = await request(app).get('api/farmerOrders');
+    expect(res).toBe({});
+  });
+  test("response to /api/farmerOrders when table contains something", async () => {
+    const res = await request(app).get('api/farmerOrders');
+  });
 });

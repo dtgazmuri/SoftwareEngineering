@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.85% </span>
+                <span class="strong">44.64% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>120/280</span>
+                <span class='fraction'>125/280</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.03% </span>
+                <span class="strong">23.72% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/59</span>
+                <span class='fraction'>14/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.37% </span>
+                <span class="strong">37.25% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/51</span>
+                <span class='fraction'>19/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.54% </span>
+                <span class="strong">45.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>118/271</span>
+                <span class='fraction'>123/271</span>
             </div>
         
             
@@ -951,19 +951,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -972,6 +962,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -983,8 +983,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1300,8 +1300,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1547,7 +1547,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1812,9 +1812,9 @@
   };
 &nbsp;
   // custom middleware: check if a given request is coming from an authenticated user
-  const isLoggedIn = <span class="fstat-no" title="function not covered" >(r</span>eq, res, next) =&gt; {
-<span class="cstat-no" title="statement not covered" >    if (testUser) {</span>
-<span class="cstat-no" title="statement not covered" >      return next();</span>
+  const isLoggedIn = (req, res, next) =&gt; {
+    if (testUser) {
+      return next();
     }
 <span class="cstat-no" title="statement not covered" >    if (req.isAuthenticated()) <span class="cstat-no" title="statement not covered" >return next();</span></span>
 &nbsp;
@@ -2129,9 +2129,9 @@
   );
 &nbsp;
   // STORY NUMBER 5
-  app.get("/api/customers/all", isLogged, isEmployee, <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    try {</span>
-      const productsList = <span class="cstat-no" title="statement not covered" >await employeeDAO.getCustomers(db);</span>
+  app.get("/api/customers/all", isLogged, isEmployee, async (req, res) =&gt; {
+    try {
+      const productsList = await employeeDAO.getCustomers(db);
 <span class="cstat-no" title="statement not covered" >      res.status(200).json(productsList);</span>
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      res.status(404).end();</span>
@@ -2375,9 +2375,9 @@
       });
   });
 &nbsp;
-  app.get("/api/customers/:id", isLoggedIn, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
+  app.get("/api/customers/:id", isLoggedIn, (req, res) =&gt; {
     // shoud we check the role of the requester?  (req.user.role)  v
-<span class="cstat-no" title="statement not covered" >    customerDao</span>
+    customerDao
       .getCustomerByUserId(db, req.params.id)
       .then(<span class="fstat-no" title="function not covered" >(c</span>ustomer) =&gt; {
 <span class="cstat-no" title="statement not covered" >        res.status(200).json(customer);</span>
@@ -2554,7 +2554,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Dec 13 2021 18:56:55 GMT+0100 (Ora standard dell’Europa centrale)
+                at Mon Dec 13 2021 19:36:18 GMT+0100 (Ora standard dell’Europa centrale)
             </div>
         </div>
         <script src="../prettify.js"></script>
