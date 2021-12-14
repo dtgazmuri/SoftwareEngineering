@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.42% </span>
+                <span class="strong">45.63% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/95</span>
+                <span class='fraction'>47/103</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.66% </span>
+                <span class="strong">38.46% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/24</span>
+                <span class='fraction'>10/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.37% </span>
+                <span class="strong">54.28% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/32</span>
+                <span class='fraction'>19/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.25% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>43/91</span>
+                <span class='fraction'>44/99</span>
             </div>
         
             
@@ -250,7 +250,21 @@
 <a name='L191'></a><a href='#L191'>191</a>
 <a name='L192'></a><a href='#L192'>192</a>
 <a name='L193'></a><a href='#L193'>193</a>
-<a name='L194'></a><a href='#L194'>194</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -441,6 +455,20 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* This file contain the SQL query for the DB for the farmer requests */
@@ -588,7 +616,7 @@ exports.ackDeliveryFarmerOrder = (db, orderid) =&gt; {
 //get farmer orders given the farmer id
 exports.getFarmerOrderIds = <span class="fstat-no" title="function not covered" >(d</span>b, farmerId) =&gt; {
 <span class="cstat-no" title="statement not covered" >  return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve, reject) =&gt; {</span>
-    const sql = <span class="cstat-no" title="statement not covered" >"SELECT id, state FROM farmerorder WHERE farmerId = ?";</span>
+    const sql = <span class="cstat-no" title="statement not covered" >"SELECT DISTINCT orderid, state FROM farmerorderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";</span>
 <span class="cstat-no" title="statement not covered" >    db.all(sql, [farmerId], <span class="fstat-no" title="function not covered" >(e</span>rr, rows) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      if (err) {</span>
 <span class="cstat-no" title="statement not covered" >        reject(err);</span>
@@ -596,7 +624,7 @@ exports.getFarmerOrderIds = <span class="fstat-no" title="function not covered" 
       }
       let list = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >      for (let row of rows) {</span>
-<span class="cstat-no" title="statement not covered" >        list.push({ id: row.id, status: row.state });</span>
+<span class="cstat-no" title="statement not covered" >        list.push({ id: row.orderid, status: row.state });</span>
       }
 <span class="cstat-no" title="statement not covered" >      resolve(list);</span>
     });
@@ -636,6 +664,20 @@ exports.confirmOrder = <span class="fstat-no" title="function not covered" >(d</
       }
     });
   });
+};
+&nbsp;
+//get username of customer given the id
+exports.getFarmerOrderIds = <span class="fstat-no" title="function not covered" >(d</span>b, uid) =&gt; {
+<span class="cstat-no" title="statement not covered" >  return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve, reject) =&gt; {</span>
+    const sql = <span class="cstat-no" title="statement not covered" >'SELECT username FROM users WHERE userid = ? AND ROLE = "customer"';</span>
+<span class="cstat-no" title="statement not covered" >    db.all(sql, [uid], <span class="fstat-no" title="function not covered" >(e</span>rr, rows) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if (err) {</span>
+<span class="cstat-no" title="statement not covered" >        reject(err);</span>
+<span class="cstat-no" title="statement not covered" >        return;</span>
+      }
+<span class="cstat-no" title="statement not covered" >      resolve(rows[0].username);</span>
+    });
+  });
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -643,7 +685,7 @@ exports.confirmOrder = <span class="fstat-no" title="function not covered" >(d</
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Dec 14 2021 10:49:32 GMT+0100 (Ora standard dell’Europa centrale)
+                at Tue Dec 14 2021 10:53:09 GMT+0100 (Ora standard dell’Europa centrale)
             </div>
         </div>
         <script src="../../prettify.js"></script>
