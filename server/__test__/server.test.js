@@ -651,12 +651,15 @@ describe("Test api's", () => {
   
   //TEST story#15
   //TEST /api/farmerOrders
+  //TODO: modify expect and add more tests
+  
   test("response to /api/farmerOrders when table it's empty", async () => {
     await functions.deleteTable("farmerorder");
-    const res = await request(app).get('api/farmerOrders');
-    expect(res).toBe({});
+    const res = await request(app).get('/api/farmerOrders');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
   });
   test("response to /api/farmerOrders when table contains something", async () => {
-    const res = await request(app).get('api/farmerOrders');
+    const res = await request(app).get('/api/farmerOrders');
   });
 });
