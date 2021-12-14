@@ -2,7 +2,7 @@ module.exports = function (app, db, testUser) {
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
-  const nodemailer = require('nodemailer');
+  const nodemailer = require("nodemailer");
 
   const bcrypt = require("bcrypt");
   /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
@@ -21,7 +21,7 @@ module.exports = function (app, db, testUser) {
 
   /*var router = express.Router();
   app.use('/sayHello', router);
-  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello
+  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
 
   function handleMail(req, res) {
     // Not the movie transporter!
@@ -48,7 +48,7 @@ module.exports = function (app, db, testUser) {
         res.json({ yo: info.response });
       };
     });
-  }*/
+  }
 
   passport.use(
     new LocalStrategy(function (username, password, done) {
@@ -754,19 +754,14 @@ module.exports = function (app, db, testUser) {
       
       //Get orders for the specified farmer given its id
       const orders = await farmerDAO.getFarmerOrderIds(db, req.params.id);
-      console.log("first step");
-      console.log(orders);
 
       //For each order get the quantity and name of the product
       for (let i = 0; i < orders.length; i++) {
         const products = await farmerDAO.getOrdersInfo(db, orders[i].id, req.params.id);
-        console.log("second step");
-        console.log(products);
 
         result.push({ id: orders[i].id, status: orders[i].status, products: products });
       }
-      console.log("third step");
-      console.log(result);
+
       res.status(200).json(result);
     } catch (err) {
       res.status(404).end();
@@ -781,7 +776,7 @@ module.exports = function (app, db, testUser) {
     const id = req.body.id;
     try {
       let result = await farmerDAO.confirmOrder(db, id);
-      let customer = await farmerDAO.getCustomerMail(cid);
+      let customer = await farmerDAO.getCustomerMail(db, id);
       //handleMail(customer);
       return res.status(200).json(result);
     } catch (err) {

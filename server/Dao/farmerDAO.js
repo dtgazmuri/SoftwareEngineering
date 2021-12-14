@@ -151,7 +151,7 @@ exports.getFarmerOrderIds = (db, farmerId) => {
       }
       let list = [];
       for (let row of rows) {
-        list.push({ id: row.orderid, status: row.state });
+        list.push({ id: row.ORDERID, status: row.STATE });
       }
       resolve(list);
     });
@@ -179,7 +179,7 @@ exports.getOrdersInfo = (db, orderId, farmerId) => {
 //update order status to confirmed given its id
 exports.confirmOrder = (db, orderId) => {
   return new Promise((resolve, reject) => {
-    const sql = "UPDATE farmerorder SET state = 'confirmed' WHERE id = ?";
+    const sql = "UPDATE clientorder SET state = 'confirmed' WHERE id = ?";
     db.run(sql, [orderId], (err) => {
       if (err) {
         reject(err);
@@ -194,10 +194,10 @@ exports.confirmOrder = (db, orderId) => {
 };
 
 //get username of customer given the id
-exports.getFarmerOrderIds = (db, uid) => {
+exports.getCustomerMail = (db, oid) => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT username FROM users WHERE userid = ? AND ROLE = "customer"';
-    db.all(sql, [uid], (err, rows) => {
+    const sql = "SELECT username FROM users U, clientorder CO WHERE U.ROLE LIKE 'customer' AND U.USERID = CO.CUSTOMER AND CO.ID = ?";
+    db.all(sql, [oid], (err, rows) => {
       if (err) {
         reject(err);
         return;
