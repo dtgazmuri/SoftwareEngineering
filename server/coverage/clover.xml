@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1639475589978" clover="3.2.0">
-  <project timestamp="1639475589978" name="All files">
-    <metrics statements="709" coveredstatements="388" conditionals="179" coveredconditionals="66" methods="203" coveredmethods="128" elements="1091" coveredelements="582" complexity="0" loc="709" ncloc="709" packages="3" files="8" classes="8"/>
+<coverage generated="1639478412087" clover="3.2.0">
+  <project timestamp="1639478412088" name="All files">
+    <metrics statements="709" coveredstatements="387" conditionals="179" coveredconditionals="64" methods="203" coveredmethods="128" elements="1091" coveredelements="579" complexity="0" loc="709" ncloc="709" packages="3" files="8" classes="8"/>
     <package name="server">
       <metrics statements="283" coveredstatements="155" conditionals="61" coveredconditionals="21" methods="52" coveredmethods="25"/>
       <file name="app.js" path="C:\Users\loren\OneDrive\Desktop\PoliTo\SoftwareEngineering2\Lab\SolidarityPurchasingGroup\SoftwareEngineering\server\app.js">
@@ -295,9 +295,9 @@
       </file>
     </package>
     <package name="server.Dao">
-      <metrics statements="314" coveredstatements="169" conditionals="90" coveredconditionals="35" methods="112" coveredmethods="72"/>
+      <metrics statements="314" coveredstatements="168" conditionals="90" coveredconditionals="33" methods="112" coveredmethods="72"/>
       <file name="customerDao.js" path="C:\Users\loren\OneDrive\Desktop\PoliTo\SoftwareEngineering2\Lab\SolidarityPurchasingGroup\SoftwareEngineering\server\Dao\customerDao.js">
-        <metrics statements="19" coveredstatements="9" conditionals="8" coveredconditionals="5" methods="6" coveredmethods="3"/>
+        <metrics statements="19" coveredstatements="8" conditionals="8" coveredconditionals="3" methods="6" coveredmethods="3"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
         <line num="6" count="3" type="stmt"/>
@@ -305,9 +305,9 @@
         <line num="8" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="9" count="0" type="stmt"/>
         <line num="10" count="0" type="stmt"/>
-        <line num="12" count="3" type="cond" truecount="4" falsecount="0"/>
-        <line num="14" count="2" type="stmt"/>
-        <line num="17" count="1" type="stmt"/>
+        <line num="12" count="3" type="cond" truecount="2" falsecount="2"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
         <line num="25" count="0" type="stmt"/>
         <line num="27" count="0" type="stmt"/>
@@ -356,14 +356,14 @@
         <line num="14" count="5" type="stmt"/>
         <line num="21" count="5" type="stmt"/>
         <line num="27" count="1" type="stmt"/>
-        <line num="28" count="2" type="stmt"/>
-        <line num="31" count="2" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
-        <line num="34" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="28" count="3" type="stmt"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="34" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="35" count="0" type="stmt"/>
         <line num="36" count="0" type="stmt"/>
-        <line num="38" count="2" type="stmt"/>
-        <line num="46" count="2" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
         <line num="52" count="1" type="stmt"/>
         <line num="53" count="1" type="stmt"/>
         <line num="55" count="1" type="stmt"/>
@@ -632,13 +632,13 @@
         <metrics statements="112" coveredstatements="64" conditionals="28" coveredconditionals="10" methods="39" coveredmethods="31"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
-        <line num="4" count="13" type="stmt"/>
-        <line num="5" count="13" type="stmt"/>
-        <line num="6" count="13" type="stmt"/>
-        <line num="7" count="13" type="cond" truecount="1" falsecount="1"/>
+        <line num="4" count="14" type="stmt"/>
+        <line num="5" count="14" type="stmt"/>
+        <line num="6" count="14" type="stmt"/>
+        <line num="7" count="14" type="cond" truecount="1" falsecount="1"/>
         <line num="8" count="0" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
-        <line num="10" count="13" type="stmt"/>
+        <line num="10" count="14" type="stmt"/>
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="7" type="stmt"/>
         <line num="17" count="7" type="stmt"/>

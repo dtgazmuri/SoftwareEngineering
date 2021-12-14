@@ -261,6 +261,24 @@ describe("Test Dao classes", () => {
       ]);
     });
 
+    //TESTING listProductsAll
+    test("test listProductsAll when no product is present", async () => {
+      await functions.deleteTable("product");
+      const res = await employeeDAO.listProductsAll(db);
+      expect(res).toEqual([]);
+    });
+    //TODO: complete testing
+    test("test listProductsAll when 1 product is present", async () => {
+      /*const farmerId = await functions.addFarmerForTest({NAME: "Lorenzo", SURNAME: "Molteni"}); //create farmer
+      const prodId = await functions.addProductForTest({NAME: "watermelon", PRICE: 13.71}, farmerId); //create prod sold by farmer
+    
+      const res = await employeeDAO.listProductsAll(db);
+      expect(res).not.toEqual([]);
+      */
+    });
+
+
+
     //TESTING getOrderAll
     test("test getOrderAll when no order is present", async () => {
       await functions.deleteTable("clientorder");
