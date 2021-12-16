@@ -30,41 +30,61 @@ sections:
 
 - Unit testing done
 
+- E2E testing done
 
-> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing as part od DoD.
+
+> In this sprint number 3, we have revised our DoD with respect to sprint number 2, in order to consider also E2E testing as part of DoD.
 
 
 ### Detailed statistics
 <!--- Here I put calcules in comments
 
-STORY 0: TASKS DONE = sprint planning(9h vs 9h), implement clock (2h vs 2h 15m), TD Estimation and Management (6h vs 5h15m), Resolve Github Issues (2h vs 2h), Responsive Interface (3h vs 3h), Put togheter documentation (1h vs 2h), Scrum meeting (6h vs 6h), Restospective (6h vs 6h) 
-STORY 0: TASKS NOT DONE =SonarQube(3h vs 3h), Docker (6h vs 9h 30m), Backend testing (6h vs 16h30m), Frontend testing (10h vs 12h30m), Rearrange application behaviour according to system clock (8h vs 5h)
+STORY 0: TASKS DONE = E2E testing (11h30m vs 12h30m), SCRUM meeting (6h vs6h), Link Sonar with test (4h vs 3h), Farmer Github Issues (2h30m vs 1h), Backend testing for sprint 1 (12h vs 9h), sprint planning (6h vs 9h), Frontend testing sprints #1 & #2 (11h vs 10h), Sprint retrospective (4h15m vs 6h), Github issues #14, #15, #16 (2h30m vs 3h)
+STORY 0: TASKS NOT DONE = _NONE_
 
-STORY 10: TASKS DONE: SPG-10:API (3h vs 3h), SPG-10:Backend (4h vs 4h)
-STORY 10: TASKS NOT DONE: SPG-10:Frontend (3h vs 1h30m)
+*******************STORY 10 IS NOT DONE**************************
+STORY 10: TASKS DONE: _NONE_
+STORY 10: TASKS NOT DONE: SPG-10:Frontend - Testing (30m vs 3h)
 
-STORY 11: TASKS DONE: _None_
-STORY 11: TASKS NOT DONE: SPG-11:Frontend (3h vs 6h), SPG-11:API (3h vs 2h15m), SPG-11:Backend (3h vs 2h15m)
+*******************STORY 11 IS DONE**************************
+STORY 11: TASKS DONE: SPG-11:Frontend - testing (2h30m vs 3h), SPG-11: Backend - testing (15m vs 30m)
+STORY 11: TASKS NOT DONE: _NONE_
 
-STORY 12: TASKS DONE: _None_
-STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG-12:Backend (3h vs 0h)
+*******************STORY 12 IS DONE**************************
+STORY 12: TASKS DONE: Backend test for story 12 (3h vs 4h)
+STORY 12: TASKS NOT DONE: _NONE_
+
+*******************STORY 13 IS NOT DONE**************************
+STORY 13: TASKS DONE: SPG-13: Frontend (3h vs 3h), SPG-13: API (2h30m vs 3h), SPG-13: Backend (2h30m vs 3h)
+STORY 13: TASKS NOT DONE: SPG-13: Frontend - testing (no work estimated / done), SPG-13: API - testing (no work estimated / done), SPG-13: Backend - testing (no work estimated / done)
+
+*******************STORY 14 IS NOT DONE**************************
+STORY 14: TASKS DONE:  SPG-14: Frontend (3h vs 3h), SPG-14: API (2h30m vs 3h), SPG-14: Backend (5h45m vs 3h)
+STORY 14: TASKS NOT DONE: SPG-14: Frontend - testing (no work estimated / done)
+
+*******************STORY 15 IS DONE**************************
+STORY 15: TASKS DONE: SPG-15: Frontend (7h30m vs 5h), SPG-15: API (2h vs 3h), SPG-15: Backend (4h45m vs 4h) 
+STORY 15: TASKS NOT DONE: _NONE_
 --->
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
-| _#0_  |   13    | -      |      68h   |     82h      |
-| 10    |     3   |     5  |      10h   |      8h 30m  |
-|    11 |     3   |     5  |      9h    |    10h 30m   |
-|    12 |     3   |     3  |      9h    |      1h      |
+| _#0_  |   9     | -      |   59h30m   |     59h45m   | 
+|    10 |     1   |     5  |      3h    |         30m  | <!--NOT DONE-->
+|    11 |     2   |     5  |      3h30m |    2h 45m    | <!--DONE-->
+|    12 |     1   |     3  |      4h    |      3h      | <!--DONE-->
+|    13 |     3   |     3  |      9h    |      8h      | <!--NOT DONE-->
+|    14 |     3   |     2  |      9h    |      11h15m  | <!--NOT DONE-->
+|    15 |     3   |     3  |      12h   |    14h15m    | <!--DONE-->
 
 
 > 'place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
 - Hours per task (average, standard deviation)
-  - average estimated: 96h / 22 =   **4.36**
-  - average actual: 102h / 22 =   **4.63**
-  - standard deviation: **2.3461**
+  - average estimated: 100h / 22 =   **4.54**
+  - average actual: 99h30m / 22 =   **4.42**
+  - standard deviation: **2.9615**
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-  - 96h/102h = **0,941**
+  - 96h/102h = **1,005**
 
   
 ## QUALITY MEASURES 
@@ -102,7 +122,7 @@ STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG
     - Security: A
     - Maintainability: A
 
-NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
+NOTE: our policy is to remedy at all Critics and Major issues, and ignore minor.
 
 ## ASSESSMENT
 
