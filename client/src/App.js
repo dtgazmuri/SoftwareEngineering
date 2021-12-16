@@ -25,7 +25,7 @@ import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
 import { Clock, ModalDate } from './Clock';
-import { ManagerPage, ManagerPageFarmerOrders } from './Site/Manager/ManagerPage';
+import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
 
 //API
 import API from "./API.js"
@@ -285,6 +285,12 @@ function App() {
           <Route exact path="/manager/farmerorders"
             element={
               isLogged ? <ManagerPageFarmerOrders user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
+          <Route exact path="/manager/reports"
+            element={
+              isLogged ? <ManagerReports user={user} getCurrentTime={getCurrentTime} />
                 : <Navigate replace to="/" />
             }
           />

@@ -26,7 +26,7 @@ function MyPage(props) {
             <Link to="/shopemployee/products">
               <Container test-id="show-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {shopemployeebig}
-                <h3>Show products</h3>
+                <h3>Show Products</h3>
               </Container>
             </Link>
           </Col>
@@ -55,7 +55,7 @@ function MyPage(props) {
             <Link to ="/shopemployee/cancelationpending">
               <Container test-id="pending-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
-                <h4>Orders pending cancelation</h4>
+                <h4>Orders Pending Cancelation</h4>
               </Container>
               </Link>
           </Col>
