@@ -18,7 +18,7 @@ sections:
 
 - Nr of hours planned vs spent (as a team): 96 vs 99
 
-  (For one story only the frontend test was left and the two others missed the backend test and partially the fronted test)
+  (For the two missing story we can't have time to finish the frontend/backend testing so they are not done)
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
