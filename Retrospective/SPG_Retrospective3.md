@@ -108,30 +108,30 @@ NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
 
 - What caused your errors in estimation (if any)?
 
-  We made errors in estimation mainly because we spent more time than expected on learning the technologies needed for testing.
+  Our estimations have been improving as we continue working with React and the testing tools, becasue we understand better the complexity of the tasks we undertake. Nevertheless, we had estimation errors on the development of stories 14 and 15. This is becasuse this stories introduced something new that was not present at all in our application before this sprint (involving the farmers and the manager), making it hard to estimate properly the amount of time they would require.
 
 - What lessons did you learn (both positive and negative) in this sprint?
 
   Negative lessons:
 
-  We are spending a lot of time in the sprint planning rather than in the actual work and, even if it results on a more organized plan, we have a limited time to work and in proportion a lot of it consists on planning.
+  We were not able to show all the work we did this sprint because some stories had not been completely tested and therefore were not done (because of what the definition states). Due to this, we need to spend more time trying to test everything and thus avoid incurring in more technical debt.
 
   Positive lessons:
 
-  We learned the importance of testing since it proved to be very useful and insightful for our purposes. Moreover, we divided the work load in a better way compared to the previous sprint.
+  We had a good sprint planning session, being able to organize the sprint efficiently (without using a lot of time). Due to this, we now know we are able to do it and need to continue working to always have meetings like this.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 
-    We managed very well to include most of the testing phase in the sprint.
+    Our first meeting this sprint, where we organized the entire sprint and divided the work load, was a lot more efficient. It took less time and the organization was clear for everybody.
 
 - Which ones you were not able to achieve? Why?
 
-    We were not able to include all of the E2E testing and we were not efficient in our meetings.
+    We were not able to test every single story we developed in this sprint, so there is some technical debt that needs to be addressed now in the current sprint.
 
-- Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
+- Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.) 
 
-  We want to deliver a complete work, both on developing and testing. We also want to be more organized and efficient during all the meeting in order to have more time for the project.  
+  We would like to continue having efficient meetings, hopefully avoiding going back to having long ones. We would also like to eradicate or at least continue reducing the amount of technical debt.
 
 - One thing you are proud of as a Team:
 
-  We are increasing very quickly our global knowledge about programming a web application, especially in the testing part. 
+  Our programming knowledge continues to improve and we have been able to reduce (not completely eliminate yet) the technical debt incurred in previous sprints. We were also more efficient organizing ourselves.
