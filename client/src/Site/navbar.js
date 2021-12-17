@@ -58,7 +58,7 @@ function MyNavbar(props) {
 export function LogoutButton(props) {
   return (
       <Link to="/">
-        <Button variant="outline-light" onClick={props.logout}>Logout</Button>
+        <Button variant="outline-light" test-id="logout" onClick={props.logout}>Logout</Button>
       </Link>
   )
 }

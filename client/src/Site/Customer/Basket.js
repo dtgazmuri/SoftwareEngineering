@@ -578,12 +578,25 @@ function BasketButton(props) {
     <Button
       size="sm"
       variant="success"
+      test-id="add"
       onClick={() => addOrDeleteBasketItem(props.product, props.mode)}
     >
       {/* eslint-disable-next-line eqeqeq*/}
-      {props.mode == "add" ? <CartPlus /> : <CartDash />}
+      {props.mode == "add" ? <CartPlus    id="add"/> : <CartDash    id="remove"/>}
     </Button>
   );
 }
 
-export { Basket, BasketButton };
+function returnQuantity(id) {
+  const basketItems = JSON.parse(
+    sessionStorage.getItem("shopping-basket") || "[]"
+  );
+  for (let i = 0; i < basketItems.length; i++) {
+    if (basketItems[i].id === id) {
+      return basketItems[i].quantity
+    }
+  }
+  return ""
+}
+
+export { Basket, BasketButton, returnQuantity };
