@@ -250,24 +250,36 @@ function ManagerReports(props) {
     const [loading, setLoading] = useState(true);
     const [areThereReports, setAreThereReports] = useState(false);
 
-    /*
     useEffect(() => {
         setLoading(true);
-        API.getFarmerOrders()
-            .then(all_orders => {
-                setMonthlyReports(all_orders);
+        API.getManagerReports()
+            .then(all_reports => {
+                let monthlyReportsArray = [];
+                let weeklyReportsArray = [];
+                for (let i = 0; i < all_reports.length; i++) {
+                    if (all_reports[i].type === 0) {
+                        weeklyReportsArray.push(all_reports[i])
+                    }
+                    else if (all_reports[i].type === 1) {
+                        monthlyReportsArray.push(all_reports[i])
+                    }
+                }
+                setMonthlyReports(monthlyReportsArray);
+                setWeeklyReports(weeklyReportsArray);
                 setLoading(false);
-                console.log(monthlyReports);
             })
             .catch(e => {
                 setLoading(false);
                 setMonthlyReports([]);
+                setWeeklyReports([]);
             }
             );
-      }, []) */
+      }, [])
 
+    /* THIS IS WHAT THE ARRAYS LOOK LIKE
     let weekArray = [
         {
+            type: 0,
             weekStartDate: "2021-11-01",
             weekEndDate: "2021-11-07",
             lostFood: {
@@ -277,6 +289,7 @@ function ManagerReports(props) {
             }
         },
         {
+            type: 0,
             weekStartDate: "2021-11-08",
             weekEndDate: "2021-11-14",
             lostFood: {
@@ -295,6 +308,7 @@ function ManagerReports(props) {
             }
         },
         {
+            type: 0,
             weekStartDate: "2021-11-12",
             weekEndDate: "2021-11-28",
             lostFood: {
@@ -307,6 +321,7 @@ function ManagerReports(props) {
 
     let monthArray = [
         {
+            type: 1,
             month: "9",
             year: "2021",
             lostFood: {
@@ -316,6 +331,7 @@ function ManagerReports(props) {
             }
         },
         {
+            type: 1,
             month: "10",
             year: "2021",
             lostFood: {
@@ -325,6 +341,7 @@ function ManagerReports(props) {
             }
         },
         {
+            type: 1,
             month: "11",
             year: "2021",
             lostFood: {
@@ -334,15 +351,7 @@ function ManagerReports(props) {
             }
         }
     ]
-    
-    useEffect(() => {
-        setWeeklyReports(weekArray);
-        setMonthlyReports(monthArray);
-        setLoading(false);
-    }, [])
-    //setWeeklyReports(weekArray);
-    //setLoading(false);
-
+    */
     useEffect(() => {
         if (weeklyReports.length > 0 || monthlyReports.length > 0) {
             setAreThereReports(true);
@@ -418,6 +427,31 @@ function ReportWeekItem(props) {
     let total = 0;
     let entry;
 
+    let monthArray = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ]
+
+    let initialDateYear = report.weekStartDate.substring(0,4);
+    let finalDateYear = report.weekEndDate.substring(0,4);
+    let initialDateMonth = monthArray[report.weekStartDate.substring(5,7).toString() - 1];
+    let finalDateMonth = monthArray[report.weekEndDate.substring(5,7).toString() - 1];
+    let initialDateDay = report.weekStartDate.substring(8,);
+    let finalDateDay = report.weekEndDate.substring(8,);
+
+    let startDateWords = initialDateMonth + " " + initialDateDay + ", " + initialDateYear;
+    let finalDateWords = finalDateMonth + " " + finalDateDay + ", " + finalDateYear;
+
     for (const[key, value] of Object.entries(report.lostFood)) {
         entry = {
             "Food": key,
@@ -431,7 +465,7 @@ function ReportWeekItem(props) {
     return (
         <>
             <ListGroup.Item action variant="light" onClick = {() => ShowWeeklyReport(report)}>
-                <h6>{report.weekStartDate} to {report.weekEndDate}</h6>
+                <h6>{startDateWords} - {finalDateWords}</h6>
             </ListGroup.Item>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>

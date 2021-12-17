@@ -30,6 +30,17 @@ async function ackFarmerOrder(orderid) {
     }
 }
 
+//API for getting farmer orders
+async function getManagerReports() {
+    let response = await fetch('/api/managerReports');
+    let responseBody = await response.json();
+    if(response.ok) {
+        return responseBody;
+    }
+    else {
+        throw responseBody;  // an object with the error coming from the server
+    }
+}
 
-const API = { getFarmerOrders, ackFarmerOrder };
+const API = { getFarmerOrders, ackFarmerOrder, getManagerReports };
 export default API;

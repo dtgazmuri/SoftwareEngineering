@@ -16,6 +16,7 @@ module.exports = function (app, db, testUser) {
   const session = require("express-session");
   const myUserDao = require("./Dao/userDao");
   const customerDao = require("./Dao/customerDao");
+  const managerDao = require("./Dao/managerDAO");
 
   const userDao = require("./Dao/dbusers");
 
@@ -863,4 +864,71 @@ module.exports = function (app, db, testUser) {
       }
     }
   );
+
+  // Getting all the information required for the manager reports
+  // GET /api/managerReports
+  app.get("/api/managerReports", isLogged, isManager, async (req, res) => {
+    try {
+      // Create an empty array as an answer
+      const reportArray = [];
+
+      // Get the reports and all the food that has been lost (i.e. not picked up)
+      const reports = await managerDao.getReports(db);
+      const lostFood = await managerDao.getLostFood(db);
+
+      // For each report, an entry is added to reportArray
+      // To each report, the correct lost food must be added (dates must match)
+      for (let i = 0; i < reports.length; i++) {
+
+        let currentReport = reports[i];
+        let initialDate = currentReport.initialDate;
+        let finalDate = currentReport.finalDate;
+        let reportForArray;
+        let foodDictionary = {};
+
+        for (let j = 0; j < lostFood.length; j++) {
+          let currentProduct = lostFood[j];
+          foodDate = new Date(lostFood[j].date);
+          var d1 = new Date(initialDate);
+          var d2 = new Date(finalDate);
+
+          if (foodDate <= d2 && foodDate >= d1) {
+            // If it is already there, just add it
+            let currentNumber = 0;
+            if (currentProduct.product in foodDictionary) {
+              currentNumber = foodDictionary[currentProduct.product]
+            }
+            foodDictionary[currentProduct.product] = currentProduct.quantity + currentNumber;
+          }
+        }
+
+        // If report is of type week
+        if (currentReport.type == 0) {
+          reportForArray = {
+            type: 0,
+            weekStartDate: currentReport.initialDate,
+            weekEndDate: currentReport.finalDate,
+            lostFood: foodDictionary
+          }
+        }
+        // Else, report is for the entire month
+        else if (currentReport.type == 1) {
+          let year = currentReport.initialDate.substring(0,4);
+          let month = currentReport.initialDate.substring(5,7);
+          reportForArray = {
+            type: 1,
+            month: month,
+            year: year,
+            lostFood: foodDictionary
+          }
+        }
+
+        //Add it to the report array
+        reportArray.push(reportForArray);
+      }
+      res.status(200).json(reportArray);
+    } catch (err) {
+      res.status(500).end();
+    }
+  });
 };
