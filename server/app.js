@@ -2,7 +2,7 @@ module.exports = function (app, db, testUser) {
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
-  const nodemailer = require('nodemailer');
+  const nodemailer = require("nodemailer");
 
   const bcrypt = require("bcrypt");
   /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
@@ -166,6 +166,7 @@ module.exports = function (app, db, testUser) {
     res.end();
   });
 
+  
   //Active session restore
   app.get("/api/sessions/current", (req, res) => {
     if (req.isAuthenticated()) {
@@ -182,6 +183,17 @@ module.exports = function (app, db, testUser) {
       const productsList = await employeeDAO.listProductsAll(db);
       res.status(200).json(productsList);
     } catch (err) {
+      res.status(404).end();
+    }
+  });
+
+  app.get("/api/:username", async (req,res) => {
+    try{
+      const id = await userDao.getId(db, req.params.username)
+      res.status(200).json(id);
+
+    }
+    catch (err) {
       res.status(404).end();
     }
   });
@@ -282,8 +294,6 @@ module.exports = function (app, db, testUser) {
       if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
       }
-
-      //Devo aspettare che la promise sia risolta! Metto await
       try {
         //1) We need to add the order to the clientorder tabel first
         const orderINST = {
@@ -368,7 +378,6 @@ module.exports = function (app, db, testUser) {
         return res.status(422).json({ errors: errors.array() }); //Converte in array gli errori
       }
 
-      //Devo aspettare che la promise sia risolta! Metto await
       try {
         //1) We need to add the order to the clientorder tabel first
         const orderINST = {

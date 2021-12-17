@@ -21,6 +21,19 @@ exports.getUserById = (db, id) => {
     });
   });
 };
+exports.getId = (db, id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT userid FROM users WHERE username = ?";
+    db.get(sql, [id], (err, row) => {
+      if (err) reject(err);
+        else if (row === undefined) resolve({ error: "User not found." });
+      else {
+        const user = row.USERID
+        resolve(user);
+      }
+    });
+  });
+};
 
 exports.getUser = (db, username, password) => {
   return new Promise((resolve, reject) => {

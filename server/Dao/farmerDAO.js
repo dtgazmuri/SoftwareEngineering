@@ -143,7 +143,8 @@ exports.ackDeliveryFarmerOrder = (db, orderid) => {
 //get farmer orders given the farmer id
 exports.getFarmerOrderIds = (db, farmerId) => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT DISTINCT orderid, state FROM farmerorderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
+    console.log("we")
+    const sql = "SELECT DISTINCT ORDERID, STATE FROM farmerorderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
     db.all(sql, [farmerId], (err, rows) => {
       if (err) {
         reject(err);

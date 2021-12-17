@@ -11,8 +11,7 @@ context("Log as manager", () => {
         cy.getByTestId("password").type("manager").should("have.value", "manager")
         cy.getByTestId("login-button").click()
         cy.location('pathname', {timeout: 10000 }).should('eq', '/manager');
-
-
+        
         
     })
 })
