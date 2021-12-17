@@ -64,12 +64,6 @@ function Basket(props) {
       total += o.price * o.quantity;
     }
 
-    if (customer.wallet < total) {
-      setCartError(true);
-      setCartErrorMessage("You don't have enough money in your wallet");
-      good = false;
-    }
-
     if (items.length <= 0 && good) {
       setCartError(true);
       setCartErrorMessage("Your cart is empty");
@@ -172,7 +166,7 @@ function Basket(props) {
         <>
           <Container className="below-nav justify-content-center">
             {items && (
-              <ListGroup>
+              <ListGroup id="prod-table">
                 <ListGroup.Item
                   as={Row}
                   className="d-flex justify-content-between align-items-start"
@@ -263,7 +257,7 @@ function Basket(props) {
       ) : (
         <>
           <br></br>
-          <h2>Your basket is empty</h2>
+          <h2 id="empty">Your basket is empty</h2>
           <br></br>
           <Link to={`/customer`}>
             <Button>Return</Button>
@@ -288,7 +282,7 @@ export function ConfirmDeliveryPanel(props) {
   }
   return (
     <Container fluid>
-      <Card>
+      <Card id="orderconfirmation">
         <Card.Body>
           <Card.Title>Order Confirmation</Card.Title>
           <div class="h-divider" />
@@ -296,6 +290,7 @@ export function ConfirmDeliveryPanel(props) {
             <Form.Group controlId="form-date">
               <Form.Label>Date</Form.Label>
               <Form.Control
+                id="date"
                 title="insert-date"
                 type="date"
                 className="mb-3"
@@ -311,6 +306,7 @@ export function ConfirmDeliveryPanel(props) {
                 title="insert-time"
                 type="time"
                 name="time"
+                id="time"
                 value={props.time}
                 onChange={(ev) => props.setTime(ev.target.value)}
               />
@@ -322,6 +318,7 @@ export function ConfirmDeliveryPanel(props) {
               <Form.Check
                 title="insert-delivery"
                 type="checkbox"
+                id="delivery"
                 label="Delivery at home?"
                 onChange={() => props.handleDelivery()}
                 inline
@@ -331,6 +328,8 @@ export function ConfirmDeliveryPanel(props) {
             {props.delivery ? (
               <Form.Group className="mb-3" controlId="delivery">
                 <Form.Control
+                id="address"
+                
                   type="address"
                   placeholder="Enter Address"
                   value={props.address}
@@ -346,19 +345,16 @@ export function ConfirmDeliveryPanel(props) {
           <Row>
             <Col></Col>
             <Col>
-              {invalidTime ? (
+              
                 <Button
-                  disabled
+                  id="sendorder"
+                  disabled={invalidTime ? true:false}
                   variant="primary"
                   onClick={() => props.handleShow()}
                 >
                   Place Order Request
                 </Button>
-              ) : (
-                <Button variant="primary" onClick={() => props.handleShow()}>
-                  Place Order Request
-                </Button>
-              )}
+             
             </Col>
             <Col></Col>
             <Col>
@@ -413,7 +409,7 @@ export function RecapCart(props) {
   });
 
   return (
-    <Modal show={props.show}>
+    <Modal id="receipt" show={props.show}>
       <Modal.Header closeButton={props.handleClose}>
         <Modal.Title>Order Confirmation</Modal.Title>
       </Modal.Header>
@@ -428,7 +424,7 @@ export function RecapCart(props) {
             </tr>
           </thead>
 
-          <tbody>{cartlist}</tbody>
+          <tbody id="items-list">{cartlist}</tbody>
 
           <tfoot>
             <tr>
@@ -446,13 +442,13 @@ export function RecapCart(props) {
           </tfoot>
         </Table>
         <h5>Delivery Details</h5>
-        <Table>
+        <Table id="delivery">
           <tbody>
             <tr>
               <td>
                 <b>Delivery Address:</b>
               </td>
-              <td colSpan="2">
+              <td id="address" colSpan="2">
                 {props.delivery ? props.address : "Pick-up at the shop"}
               </td>
             </tr>
@@ -461,13 +457,13 @@ export function RecapCart(props) {
               <td>
                 <b>Delivery Date:</b>
               </td>
-              <td colSpan="2">{`${props.date} at ${props.time}`}</td>
+              <td id="date" colSpan="2">{`${props.date} at ${props.time}`}</td>
               {props.setOrderDate(props.date)}
               {props.setOrderTime(props.time)}
             </tr>
           </tbody>
         </Table>
-        <Button onClick={props.handleSubmit}>Save</Button>
+        <Button id="sendorder" onClick={props.handleSubmit}>Save</Button>
         &nbsp; &nbsp; &nbsp;
         <Button variant="secondary" onClick={props.handleClose}>
           Cancel
@@ -483,20 +479,25 @@ export function BasketItem(props) {
       {props.product && (
         <ListGroup.Item
           as={Row}
+          id={`product-item-${props.product.id}`}
           className="d-flex justify-content-between align-items-start"
         >
           <Col>
             <div className="fw-bold">{props.product.name}</div>
           </Col>
-          <Col>
+          <Col id="buttonadd">
             <BasketButton
               product={props.product}
               mode={"add"}
               setChangeBasket={props.setChangeBasket}
               notifyBalance={props.notifyBalance}
               notifyQuantity={props.notifyQuantity}
-            ></BasketButton>{" "}
-            {props.product.quantity}{" "}
+            ></BasketButton>
+            </Col>
+            <Col id="quantity">
+            {props.product.quantity}
+            </Col>
+            <Col id="buttonremove">
             <BasketButton
               product={props.product}
               mode={"delete"}

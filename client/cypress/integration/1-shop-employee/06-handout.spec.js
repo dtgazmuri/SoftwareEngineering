@@ -3,13 +3,13 @@
 const dayjs = require("dayjs");
 
 context("Handout Order", () => {
-    beforeEach("Login", () => {
+    it("Login", () => {
         cy.visit("localhost:3000");
         cy.clearLocalStorage();
         cy.getById("login-col").click()
         cy.url().should('eq', "http://localhost:3000/loginpage")
-        cy.getByTestId("username").type("stestrippoli@gmail.com").should("have.value", "stestrippoli@gmail.com")
-        cy.getByTestId("password").type("stestrippoli").should("have.value", "stestrippoli")
+        cy.getByTestId("username").type("shopemployee@gmail.com").should("have.value", "shopemployee@gmail.com")
+        cy.getByTestId("password").type("shopemployee").should("have.value", "shopemployee")
         cy.getByTestId("login-button").click()
         cy.url().should('eq', "http://localhost:3000/shopemployee")
         cy.intercept("GET", {
@@ -18,8 +18,9 @@ context("Handout Order", () => {
             timeout: 3000
         })
     })
-    it("handout order", () => {
-        cy.getByTestId("handout-button").click()
+    let id;
+    it("create a new order", () => {
+        cy.getByTestId("show-button").click()
         cy.url().should('eq', "http://localhost:3000/shopemployee/products")
         cy.getById("time-elapsed").should("not.exist")
         cy.getById("filter").type("CustomerTest")
@@ -39,7 +40,7 @@ context("Handout Order", () => {
                 cy.getById("add").click()
                 cy.getById("booked").should("have.text", 1)
                 cy.getById("add").click()
-                cy.getById("booked").should("have.text", 2)  
+                cy.getById("booked").should("have.text", 2)
             })
             cy.get("tbody").getByTestId('product-item-0').within(() => {
                 cy.getById("add").click()
@@ -49,7 +50,7 @@ context("Handout Order", () => {
                 cy.getById("add").click()
                 cy.getById("booked").should("have.text", 1)
             })
-            
+
         })
         cy.getById("confirm").within(() => {
             const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD")
@@ -60,17 +61,26 @@ context("Handout Order", () => {
             cy.getById("confirm-button").click()
         })
         cy.getById("receipt").should("be.visible").within(() => {
-           cy.getById("items").within( () => {
-            cy.getById("quantity").should("have.text", 4)
-            cy.getById("quantity").should("have.text", 4)
-           })
-           cy.getById("delivery").within( () => {
-            cy.getById("address").should("have.text", "Via Fermi 2")
-            cy.getById("date").should("have.text", "2021-12-08 at 12:00")
-           })
-           cy.getById("sendorder").click()
-
+            cy.getById("items").within(() => {
+                cy.getById("quantity").should("have.text", 4)
+                cy.getById("quantity").should("have.text", 4)
+            })
+            cy.getById("delivery").within(() => {
+                cy.getById("address").should("have.text", "Via Fermi 2")
+                cy.getById("date").should("have.text", "2021-12-08 at 12:00")
+            })
+            cy.getById("sendorder").click()
+            cy.intercept("/api/order/customer").then(({ body }) => { id = body })
+            console.log(id)
+            
+        
         })
+
+    })
+    it("handout order", () => {
+        cy.getByTestId("handout-button").click()
+        cy.url().should('eq', "http://localhost:3000/shopemployee/handout")
+        
 
     })
 

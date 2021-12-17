@@ -124,6 +124,7 @@ function App() {
     toast.success("Success!", {
       position: "bottom-right",
       autoClose: 5000,
+      id:"success-card",
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
