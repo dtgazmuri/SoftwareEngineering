@@ -24,6 +24,18 @@ exports.deleteTableWhereId = (tableName, id) => {
   });
 };
 
+exports.deleteWarehouseWhereProdId = (prodId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM warehouse WHERE PRODUCT = ?";
+    db.run(sql, [prodId], (err) => {
+      if (err) {
+        reject(err);
+        return;
+      } else resolve();
+    });
+  });
+}
+
 exports.addCustomerForTest = (customer) => {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO customer(NAME, SURNAME, WALLET) VALUES (?, ? , ?)";
@@ -56,8 +68,8 @@ exports.addFarmerForTest = (farmer) => {
 
 exports.addProductForTest = (product, farmerId) => {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO product(NAME, FARMER, PRICE) VALUES (?, ?, ?)";
-    db.run(sql, [product.NAME, farmerId, product.PRICE], function (err) {
+    const sql = "INSERT INTO product(NAME, FARMER, PRICE, AVAILABILITY) VALUES (?, ?, ?, ?)";
+    db.run(sql, [product.NAME, farmerId, product.PRICE, 0], function (err) {
       if (err) {
         reject(err);
         return;

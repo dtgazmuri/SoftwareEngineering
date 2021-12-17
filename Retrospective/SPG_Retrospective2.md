@@ -31,7 +31,7 @@ sections:
 - Unit testing done
 
 
-> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing as part od DoD.
+> In this sprint number 2, we have revised our DoD with respect to sprint number 1, in order to consider also unit testing as part of DoD.
 
 
 ### Detailed statistics
@@ -102,7 +102,7 @@ STORY 12: TASKS NOT DONE: SPG-12:Frontend (3h vs 1h), SPG-12:API (3h vs 0h), SPG
     - Security: A
     - Maintainability: A
 
-NOTE: out policy is to remedy at all Critics and Major issues, and ignore minor.
+NOTE: our policy is to remedy at all Critics and Major issues, and ignore minor.
 
 ## ASSESSMENT
 

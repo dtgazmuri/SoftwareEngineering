@@ -261,6 +261,43 @@ describe("Test Dao classes", () => {
       ]);
     });
 
+    //TESTING listProductsAll
+    test("test listProductsAll when no product is present", async () => {
+      await functions.deleteTable("product");
+      const res = await employeeDAO.listProductsAll(db);
+      expect(res).toEqual([]);
+    });
+    //TODO: complete testing
+    test("test listProductsAll when 1 product is present", async () => {
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const prodId = await functions.addProductForTest(
+        { NAME: "watermelon", PRICE: 13.71 },
+        farmerId
+      ); //create prod sold by farmer
+      await functions.addProductToWarehouse(prodId);
+
+      const res = await employeeDAO.listProductsAll(db);
+      expect(res).not.toEqual([]);
+      expect(res).toEqual([
+        {
+          id: prodId,
+          name: "watermelon",
+          farmerid: farmerId,
+          price: 13.71,
+          quantity: 0, //default value put inside basicFunctions.addProductToWarehouse
+          availability: 0,
+        },
+      ]); //default value put inside basicFunctions.addProductForTest
+
+      //clean the db from the values just put
+      await functions.deleteWarehouseWhereProdId(prodId);
+      await functions.deleteTableWhereId("product", prodId);
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
     //TESTING getOrderAll
     test("test getOrderAll when no order is present", async () => {
       await functions.deleteTable("clientorder");
@@ -648,18 +685,120 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(200);
   });
   */
-  
+
   //TEST story#15
   //TEST /api/farmerOrders
-  //TODO: modify expect and add more tests
-  
   test("response to /api/farmerOrders when table it's empty", async () => {
     await functions.deleteTable("farmerorder");
-    const res = await request(app).get('/api/farmerOrders');
+    const res = await request(app).get("/api/farmerOrders");
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([]);
   });
   test("response to /api/farmerOrders when table contains something", async () => {
-    const res = await request(app).get('/api/farmerOrders');
+    //create a farmer, a product sold by that farmer, a farmer order and connect the farmer order to the product (farmerorderitems)
+    const order = {
+      state: "pending",
+      total: 5,
+      datetime: "2021-12-01 12:00",
+    };
+    const farmerId = await functions.addFarmerForTest({
+      NAME: "Lorenzo",
+      SURNAME: "Molteni",
+    }); //create farmer
+    const prodId = await functions.addProductForTest(
+      { NAME: "watermelon", PRICE: 13.71 },
+      farmerId
+    ); //create prod sold by farmer
+    const farmerOrderId = await functions.addFarmerOrderForTest(
+      order,
+      farmerId
+    );
+    const fakeProd = {
+      id: prodId,
+      quantity: 2,
+      price: 13.71 * 2,
+    };
+    const farmerOrderItemId = await functions.addFarmerOrderItemForTest(
+      farmerOrderId,
+      fakeProd
+    );
+    const expectedResponse = {
+      id: farmerOrderId,
+      farmerid: farmerId,
+      farmerName: "Lorenzo",
+      farmerSurname: "Molteni",
+      state: order.state,
+      total: order.total,
+      time: order.datetime,
+      listitems: [
+        {
+          id: prodId,
+          quantity: fakeProd.quantity,
+          name: "watermelon",
+          price: fakeProd.price,
+        },
+      ],
+    };
+    const res = await request(app).get("/api/farmerOrders");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveLength(1);
+    expect(res.body).toEqual([expectedResponse]);
+
+    //clean db from the data just put
+    await functions.deleteTableWhereId("farmerorderitems", farmerOrderItemId);
+    await functions.deleteTableWhereId("farmerorder", farmerOrderId);
+    await functions.deleteTableWhereId("product", prodId);
+    await functions.deleteTableWhereId("farmer", farmerId);
+  });
+  //TEST /api/farmerOrders/:id/ack
+  test("response to /api/farmerOrders/:id/ack with a string instead of id ", async () => {
+    await functions.deleteTable("farmerorder");
+    const res = await request(app).post("/api/farmerOrders/www/ack");
+    expect(res.statusCode).toBe(422);
+    expect(res.body).not.toBe({});
+  });
+  test("response to /api/farmerOrders/:id/ack with wrong request body", async () => {
+    const res = await request(app)
+      .post("/api/farmerOrders/1/ack")
+      .send({ id: 1, newState: "test" });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).not.toBe({});
+    const res2 = await request(app)
+      .post("/api/farmerOrders/1/ack")
+      .send({ id: 12, newState: "delivered" }); //id in path and in body differs
+    expect(res.statusCode).toBe(422);
+    expect(res.body).not.toBe({});
+  });
+  test("response to /api/farmerOrders/:id/ack with unexisting id", async () => {
+    const res = await request(app)
+      .post("/api/farmerOrders/1/ack")
+      .send({ id: 1, newState: "delivered" });
+    expect(res.statusCode).toBe(404);
+  });
+  test("response to /api/farmerOrders/:id/ack with correct id", async () => {
+    //create a farmer, a product sold by that farmer, a farmer order and connect the farmer order to the product (farmerorderitems)
+    const order = {
+      state: "pending",
+      total: 5,
+      datetime: "2021-12-01 12:00",
+    };
+    const farmerId = await functions.addFarmerForTest({
+      NAME: "Lorenzo",
+      SURNAME: "Molteni",
+    }); //create farmer
+    const farmerOrderId = await functions.addFarmerOrderForTest(
+      order,
+      farmerId
+    );
+
+    const res = await request(app)
+      .post(`/api/farmerOrders/${farmerOrderId}/ack`)
+      .send({ id: farmerOrderId, newState: "delivered" });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ id: farmerOrderId, state: "delivered" });
+
+    //clean db from the data just put
+    await functions.deleteTableWhereId("farmerorder", farmerOrderId);
+    await functions.deleteTableWhereId("farmer", farmerId);
   });
 });
