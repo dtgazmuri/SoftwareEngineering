@@ -16,7 +16,7 @@ sections:
 
 - Total points committed vs done: 21 vs 11
 
-- Nr of hours planned vs spent (as a team): 100 vs 99 30
+- Nr of hours planned vs spent (as a team): 100 vs 99h 30m
 
   (For the three missing story we didn't have time to finish the frontend/backend testing so they are not done)
 
@@ -84,7 +84,7 @@ STORY 15: TASKS NOT DONE: _NONE_
   - average actual: 99h30m / 22 =   **4.42**
   - standard deviation: **2.9615**
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-  - 96h/102h = **1,005**
+  - 100h/99h30m = **1,005**
 
   
 ## QUALITY MEASURES 
