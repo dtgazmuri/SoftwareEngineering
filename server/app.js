@@ -90,7 +90,7 @@ module.exports = function (app, db, testUser) {
     })
   );
 
-  // inizializzazione
+  // initialization
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -114,6 +114,17 @@ module.exports = function (app, db, testUser) {
     }
     return res.status(401).json({ error: "Unauthorized action" });
   };
+
+  const isFarmer = (req, res, next) => {
+    if (testUser) {
+      return next();
+    }
+    if (req.user.role == "farmer") {
+      return next();
+    }
+    return res.status(401).json({ error: "Unauthorized action" });
+  };
+
 
   const isManager = (req, res, next) => {
     if (testUser) {
@@ -199,6 +210,16 @@ module.exports = function (app, db, testUser) {
     }
   });
 
+   app.get("/api/customers/get", async (req, res) => {
+    try {
+      const obj = await employeeDAO.getCustomers(db);
+      res.status(200).json(obj);
+      console.log("here")
+    } catch (err) {
+
+      res.status(404).json();
+    }
+  });
   // GET /api/farmer/:id
   app.get("/api/farmer/:id", async (req, res) => {
     try {
@@ -425,6 +446,8 @@ module.exports = function (app, db, testUser) {
     }
   );
 
+
+
   //SERVER SIDE FOR THE STORIES NUMBER 4-5-9
   //STORY NUMBER 4
 
@@ -556,14 +579,7 @@ module.exports = function (app, db, testUser) {
     }
   );
 
-  app.get("/api/customerlist", isLogged, isEmployee, async (req, res) => {
-    try {
-      const obj = await employeeDAO.getCustomers(db);
-      res.status(200).json(obj);
-    } catch (err) {
-      res.status(404).end();
-    }
-  });
+ 
 
   // POST /api/customer
   app.post(

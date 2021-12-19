@@ -50,27 +50,27 @@ function EmployeeSidebar (props) {
 
 */
 function CustomerList() {
-    const [walletUpdated, setWalletUpdated] = useState({status: false, id: -1, value: 0});
+    const [walletUpdated, setWalletUpdated] = useState({ status: false, id: -1, value: 0 });
     const [alertWalletUpdated, setAlertWalletUpdated] = useState({});
     const [customers, setCustomerList] = useState([]);
     const [customerName, setCustomerName] = useState(""); //state used for searching a specific client
     const [customersToBeShown, setCustomersToBeShown] = useState([]);
-    
+
     // show error message in toast
     const handleErrors = (err) => {
         console.log(err);
     }
-    
-    useEffect(() =>  {
-            API.getCustomers()
-                .then(all_customers => {
-                    console.log(all_customers);
-                    setCustomerList(all_customers);
-                    setCustomersToBeShown(all_customers);
-                })
-                .catch(e => handleErrors(e));
-    
-      }, [])
+
+    useEffect(() => {
+        API.getCustomers()
+            .then(all_customers => {
+                console.log(all_customers);
+                setCustomerList(all_customers);
+                setCustomersToBeShown(all_customers);
+            })
+            .catch(e => handleErrors(e));
+
+    }, [])
 
     useEffect(() => {
         if (walletUpdated.status === true) {
@@ -79,28 +79,27 @@ function CustomerList() {
                     console.log(res);
                     //read all the customer list and set the new wallet balance (the one passed in walletUpdated.value)
                     const tmp = customers.map((customer) => {
-                        if(customer.id === walletUpdated.id)
-                        {
-                            customer.wallet =walletUpdated.value;
+                        if (customer.id === walletUpdated.id) {
+                            customer.wallet = walletUpdated.value;
                         }
                         return customer
                     });
                     setCustomerList(tmp);
                     setCustomersToBeShown(tmp);
-                    setAlertWalletUpdated({id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.`});
+                    setAlertWalletUpdated({ id: walletUpdated.id, variant: "success", msg: `Wallet of client ${walletUpdated.id} updated successfully.` });
                 })
-                .catch(e =>  {
+                .catch(e => {
                     handleErrors(e);
-                    setAlertWalletUpdated({id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.`});
+                    setAlertWalletUpdated({ id: walletUpdated.id, variant: "danger", msg: `Unable to update wallet of client ${walletUpdated.id}.` });
                 });
-                setWalletUpdated({status: false, id: -1, value: 0});
+            setWalletUpdated({ status: false, id: -1, value: 0 });
         }
     }, [walletUpdated, customers])
 
     const handleFilterCustomer = (newName) => {
         setCustomerName(newName);
-        let newCustomerlist = customers.filter( customer =>
-            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()) )
+        let newCustomerlist = customers.filter(customer =>
+            (customer.name.toUpperCase().startsWith(newName.toUpperCase()) || customer.surname.toUpperCase().startsWith(newName.toUpperCase()))
         );
         setCustomersToBeShown(newCustomerlist);
     }
@@ -108,13 +107,13 @@ function CustomerList() {
     return (
         <>
             {/** The form is for filtering the list of customers to be shown*/}
-            <Form className = "mb-3">
+            <Form className="mb-3">
                 <Row>
-                    <Col sm = {6}>
+                    <Col sm={6}>
                         <Form.Label>You can filter by customer name.</Form.Label>
                     </Col>
-                    <Col sm = {6}>
-                        <Form.Control test-id="filter" type="text" placeholder="Search customer by name" value = {customerName} onChange={(event) => handleFilterCustomer(event.target.value)}/>       
+                    <Col sm={6}>
+                        <Form.Control test-id="filter" type="text" placeholder="Search customer by name" value={customerName} onChange={(event) => handleFilterCustomer(event.target.value)} />
                     </Col>
                 </Row>
             </Form>
@@ -122,16 +121,16 @@ function CustomerList() {
                 {customersToBeShown.length ?
                     customersToBeShown.map(customer => {
                         return (
-                            <ListGroup.Item id = {customer.username} key = {customer.id}  >
+                            <ListGroup.Item id={customer.username} key={customer.id}  >
                                 <Row>
-                                    <Col md = {6} lg = {6} sm = {6}>
+                                    <Col md={6} lg={6} sm={6}>
                                         <h5 test-id={`name`}>{customer.name + " " + customer.surname}</h5>
                                         <h5 test-id={`mail`}>Mail: {customer.username}</h5>
                                         <h5 test-id={`wallet-amount`}>Amount in Wallet: {customer.wallet} €</h5>
                                     </Col>
                                     <Col>
-                                        <CustomerForm id = {customer.id} customers = {customers} alertWalletUpdated = {alertWalletUpdated}
-                                        setCustomerList = {setCustomerList} setWalletUpdated = {setWalletUpdated} />
+                                        <CustomerForm id={customer.id} customers={customers} alertWalletUpdated={alertWalletUpdated}
+                                            setCustomerList={setCustomerList} setWalletUpdated={setWalletUpdated} />
                                     </Col>
                                 </Row>
                             </ListGroup.Item>
@@ -139,7 +138,7 @@ function CustomerList() {
                     }
 
                     )
-                    : <Alert variant = "danger"> No customers found </Alert>
+                    : <Alert variant="danger"> No customers found </Alert>
                 }
             </ListGroup>
         </>
@@ -156,27 +155,27 @@ function CustomerForm(props) {
         props.customers.forEach((customer) => {
             if (customer.id === id) {
                 var valore = customer.wallet + value;
-                props.setWalletUpdated({status: true, id: id, value: valore});
+                props.setWalletUpdated({ status: true, id: id, value: valore });
             }
         })
     }
 
     //useEffect for closing alert after 3 seconds
     useEffect(() => {
-        if(showAlert){
-            window.setTimeout(()=>{
+        if (showAlert) {
+            window.setTimeout(() => {
                 setShowAlert(false);
-              },3000)
+            }, 3000)
         }
-      }, [showAlert]);
+    }, [showAlert]);
 
     return (
         <Form>
             {(props.alertWalletUpdated.id === props.id && showAlert) &&
-                <Alert variant = {props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
+                <Alert variant={props.alertWalletUpdated.variant}>{props.alertWalletUpdated.msg}</Alert>
             }
-            <Form.Group controlId={props.id} className = "mb-3">
-                <Form.Control test-id= "newamount" size = "lg" type="text" placeholder="Insert amount to add to wallet" value = {amount} onChange={(event) => setAmount(event.target.value)}/>       
+            <Form.Group controlId={props.id} className="mb-3">
+                <Form.Control test-id="newamount" size="lg" type="text" placeholder="Insert amount to add to wallet" value={amount} onChange={(event) => setAmount(event.target.value)} />
             </Form.Group>
             <Button test-id="save-button" onClick={() => walletTopUp(props.id, amount)}>Submit</Button>
         </Form>
@@ -189,7 +188,7 @@ function OrderList(props) {
     const [orders, setOrderList] = useState([]);
 
 
-     // show error message in toast
+    // show error message in toast
     const handleErrors = (err) => {
         console.log(err);
     }
@@ -199,97 +198,98 @@ function OrderList(props) {
     //handout is possible from Wednesday at 9:00 until Friday 21:00
     let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime());
-    if(currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
+    if (currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
         invalidTime = false;
-    else 
+    else
         invalidTime = true;
 
 
     useEffect(() => {
-          API.getOrders()
+        API.getOrders()
             .then(all_orders => {
                 console.log(all_orders);
                 setOrderList(all_orders);
             })
             .catch(e => handleErrors(e));
-      }, [])
+    }, [])
 
-   
+
     function handOutOrder(id) {
-            var tmp = [];
+        var tmp = [];
 
-            orders.forEach((order) => {
-                if(order.id === id){
-                    order.state = "delivered";
-                    tmp.push(order);
-                }
-                else {
-                    tmp.push(order);
-                }
-            });
-            setOrderList(tmp);
-            setUpdateOrder(id);
+        orders.forEach((order) => {
+            if (order.id === id) {
+                order.state = "delivered";
+                tmp.push(order);
+            }
+            else {
+                tmp.push(order);
+            }
+        });
+        setOrderList(tmp);
+        setUpdateOrder(id);
     }
 
     useEffect(() => {
         if (updateOrder !== -1) {
             API.handOutOrder(updateOrder)
                 .then(res => {
-                    setUpdated({id: updateOrder, variant: "success", msg: `Order number ${updateOrder} was updated successfully.`});
+                    setUpdated({ id: updateOrder, variant: "success", msg: `Order number ${updateOrder} was updated successfully.` });
                 })
-                .catch(e => 
-                    setUpdated({id: updateOrder, variant: "danger", msg: `Unable to update order number ${updateOrder}.`})
+                .catch(e =>
+                    setUpdated({ id: updateOrder, variant: "danger", msg: `Unable to update order number ${updateOrder}.` })
                 );
-                setUpdateOrder(-1);
-           }
+            setUpdateOrder(-1);
+        }
     }, [updateOrder])
 
     //useEffect for closing alert after 3 seconds
     useEffect(() => {
-        if(updated!== {}){
-            window.setTimeout(()=>{
+        if (updated !== {}) {
+            window.setTimeout(() => {
                 setUpdated({});
-              },3000)
+            }, 3000)
         }
-      }, [updated]);
+    }, [updated]);
 
     return (
         <Col>
-            <ListGroup id="orders" variant = "primary"> 
+            <ListGroup id="orders" variant="primary">
                 {orders.length ?
                     orders.map(order => {
                         return (
-                            <ListGroup.Item id = {order.id} key = {order.id}>
+                            <ListGroup.Item id={order.id} key={order.id}>
                                 <h5>Order number: {order.id}</h5>
-                                <Row>
-                                <Col>
-                                    <Row>Customer id: {order.customerid} </Row>
-                                    <Row>Order state: {order.state} </Row>
-                                    <Row>Order total: {order.total.toFixed(2)}</Row>
-                                </Col>
-                                <Col>
-                                    {invalidTime &&
-                                        <Alert variant = "warning" >
-                                            Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
-                                        </Alert>
-                                    }
-                                    {   (order.state === "pending" && !invalidTime) &&
-                                        <Button onClick = {() => handOutOrder(order.id)}>Hand out order</Button>
-                                    }
-                                    {
-                                        (updated !== {} && updated.id === order.id) &&
-                                            <Alert variant = {updated.variant} >{updated.msg}</Alert>
-                                    }
-                                </Col>
+                                <Row id={order.customerid}>
+                                    <Col>
+
+                                        <Row>Customer id: {order.customerid} </Row>
+                                        <Row>Order state: {order.state} </Row>
+                                        <Row>Order total: {order.total.toFixed(2)}</Row>
+                                    </Col>
+                                    <Col>
+                                        {invalidTime &&
+                                            <Alert variant="warning" >
+                                                Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
+                                            </Alert>
+                                        }
+                                        {(order.state === "pending" && !invalidTime) &&
+                                            <Button onClick={() => handOutOrder(order.id)}>Hand out order</Button>
+                                        }
+                                        {
+                                            (updated !== {} && updated.id === order.id) &&
+                                            <Alert variant={updated.variant} >{updated.msg}</Alert>
+                                        }
+                                    </Col>
                                 </Row>
-                            </ListGroup.Item>    
-                        ); 
+                            </ListGroup.Item>
+                        );
                     })
                     : <Alert variant='danger'>No orders found.</Alert>
 
-                }     
-            </ListGroup> 
+                }
+            </ListGroup>
         </Col>
     )
 }
-export {CustomerList, OrderList, CustomerForm};
+export { CustomerList, OrderList, CustomerForm };

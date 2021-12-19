@@ -303,12 +303,13 @@ async function fetchCustomerById(id) {
 }
 
 async function fetchAllCustomers() {
-   const url = `${BASEURL}/customerlist`
+   const url = `${BASEURL}/customers/get`
    const response = await fetch(url);
 
    if (response.ok) {
     try {
        const responseBody = await response.json();
+       console.log(responseBody)
        const customerlist = []
        for (const customer of responseBody){
           const c = new Customer(customer.id, customer.name, customer.surname, customer.wallet)
