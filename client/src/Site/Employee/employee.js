@@ -270,7 +270,7 @@ function OrderList(props) {
                                     <Col>
                                         {invalidTime &&
                                             <Alert variant="warning" >
-                                                Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
+                                                Sorry, handouts are only possible between Wednesday at 9:00 and Friday at 21:00.
                                             </Alert>
                                         }
                                         {(order.state === "pending" && !invalidTime) &&

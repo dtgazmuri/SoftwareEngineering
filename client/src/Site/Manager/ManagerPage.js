@@ -365,7 +365,7 @@ function ManagerReports(props) {
                     <h2>Manager Reports</h2>
                 </ListGroup.Item>
                 <ListGroup.Item variant="light" key = "information">
-                    <h6>Reports are generated after each week and after each month</h6>
+                    <h6>Reports are completely generated after each week and after each month. Only partial version are available before that.</h6>
                 </ListGroup.Item>
             </ListGroup>
 

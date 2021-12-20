@@ -239,6 +239,7 @@ module.exports = function (app, db, testUser) {
 
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
+      console.log(orders);
 
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
