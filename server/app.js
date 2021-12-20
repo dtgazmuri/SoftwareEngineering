@@ -200,17 +200,6 @@ module.exports = function (app, db, testUser) {
     }
   });
 
-  app.get("/api/:username", async (req,res) => {
-    try{
-      const id = await userDao.getId(db, req.params.username)
-      res.status(200).json(id);
-
-    }
-    catch (err) {
-      res.status(404).end();
-    }
-  });
-
    app.get("/api/customers/get", async (req, res) => {
     try {
       const obj = await employeeDAO.getCustomers(db);
@@ -954,6 +943,17 @@ module.exports = function (app, db, testUser) {
       res.status(200).json(reportArray);
     } catch (err) {
       res.status(500).end();
+    }
+  });
+
+  app.get("/api/:username", async (req,res) => {
+    try{
+      const id = await userDao.getId(db, req.params.username)
+      res.status(200).json(id);
+
+    }
+    catch (err) {
+      res.status(404).end();
     }
   });
 };

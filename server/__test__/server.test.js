@@ -658,15 +658,7 @@ describe("Test api's", () => {
     const res = await request(app).get("/api/customers/all");
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([]);
-  });
-
-  /*
-  test("resonse to /api/customerlist", async () => {
-    await functions.deleteTable("customer");
-    const res = await request(app).get("/api/customerlist");
-    expect(res.statusCode).toBe(200);
-  });
-  */
+  });  
 
   test("resonse to /api/customers/:id when customer does not exist", async () => {
     const id = 10;
@@ -683,7 +675,7 @@ describe("Test api's", () => {
     expect(res.body).toEqual([{ID: id, NAME: newCustomer.name, SURNAME: newCustomer.surname, WALLET: 0}]);
   });
   
-  /*
+  
   //TEST story#15
   //TEST /api/farmerOrders
   test("response to /api/farmerOrders when table it's empty", async () => {
@@ -748,7 +740,7 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("product", prodId);
     await functions.deleteTableWhereId("farmer", farmerId);
   });
-  */
+  
   //TEST /api/farmerOrders/:id/ack
   test("response to /api/farmerOrders/:id/ack with a string instead of id ", async () => {
     await functions.deleteTable("farmerorder");
