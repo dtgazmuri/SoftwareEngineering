@@ -19,6 +19,7 @@ import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
+import { ReportLostFood } from './Site/Employee/reportlostfood';
 import Farmer from './Site/Farmer/farmer';
 import ConfirmOrdersPage from './Site/Farmer/farmer';
 import { SignupForm } from "./Site/signup";
@@ -259,6 +260,11 @@ function App() {
           <Route
             path="/shopemployee/cancelationpending/"
             element={isLogged ? <CancelationOrderList /> : <Navigate replace to="/home" />}
+          />
+
+          <Route
+            path="/shopemployee/reportlostfood/"
+            element={isLogged ? <ReportLostFood getCurrentTime={getCurrentTime} /> : <Navigate replace to="/home" />}
           />
 
           {/**Route for the main page of the shop employee */}
