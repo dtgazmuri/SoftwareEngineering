@@ -24,9 +24,11 @@ module.exports = function (app, db, testUser, bot) {
   app.use('/sayHello', router);
   router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
 
+  let users = [];
   if (!testUser) {
     bot.command("start", (ctx) => {
       //console.log(ctx.from);
+      users.push(ctx.chat.id);
       bot.telegram.sendMessage(
         ctx.chat.id,
         "Hello there! Welcome to SPG telegram bot.",
@@ -706,6 +708,25 @@ module.exports = function (app, db, testUser, bot) {
       })
       .catch((error) => {
         res.status(error.code).json(error.msg);
+      });
+  });
+
+  app.post("/api/notifyTime", (req, res) => {
+    console.log(req.body.time);
+    new Promise((resolve, reject) => {
+      users.forEach((id) => {
+        bot.telegram.sendMessage(
+          id,
+          "**The updated list of available products is available**"
+        );
+      });
+      resolve();
+    })
+      .then(() => {
+        res.status(200).json();
+      })
+      .catch((err) => {
+        res.status(500).end();
       });
   });
 
