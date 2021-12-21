@@ -249,7 +249,7 @@ module.exports = function (app, db, testUser, bot) {
 
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
-      console.log(orders);
+
 
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
@@ -258,17 +258,18 @@ module.exports = function (app, db, testUser, bot) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
-
+        let username = await employeeDAO.getCustomerById(db, orders[i].customerid)
+        
         //Create the order object
         const order = {
           id: orderid,
           customerid: orders[i].customerid,
+          username: username,
           state: orders[i].state,
           delivery: orders[i].delivery,
           total: orders[i].total,
           products: items,
         };
-
         //Add it to the res array
         resultArray.push(order);
       }

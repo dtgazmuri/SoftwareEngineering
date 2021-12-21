@@ -207,7 +207,6 @@ function OrderList(props) {
     useEffect(() => {
         API.getOrders()
             .then(all_orders => {
-                console.log(all_orders);
                 setOrderList(all_orders);
             })
             .catch(e => handleErrors(e));
@@ -262,7 +261,8 @@ function OrderList(props) {
                                 <h5>Order number: {order.id}</h5>
                                 <Row id={order.customerid}>
                                     <Col>
-
+                                        <Row>Customer mail: {order.username} </Row>
+                                        
                                         <Row>Customer id: {order.customerid} </Row>
                                         <Row>Order state: {order.state} </Row>
                                         <Row>Order total: {order.total.toFixed(2)}</Row>
