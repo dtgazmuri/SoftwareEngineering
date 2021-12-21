@@ -141,7 +141,6 @@ exports.getOrderAll = (db) => {
         delivery: e.DELIVERY,
         total: e.TOTAL,
       }));
-      console.log(orders);
       //Return the new generated array of objects
       resolve(orders);
     });

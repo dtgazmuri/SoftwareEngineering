@@ -19,13 +19,14 @@ import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
+import { ReportLostFood } from './Site/Employee/reportlostfood';
 import Farmer from './Site/Farmer/farmer';
 import ConfirmOrdersPage from './Site/Farmer/farmer';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
 import { Clock, ModalDate } from './Clock';
-import { ManagerPage, ManagerPageFarmerOrders } from './Site/Manager/ManagerPage';
+import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
 
 //API
 import API from "./API.js"
@@ -261,6 +262,11 @@ function App() {
             element={isLogged ? <CancelationOrderList /> : <Navigate replace to="/home" />}
           />
 
+          <Route
+            path="/shopemployee/reportlostfood/"
+            element={isLogged ? <ReportLostFood getCurrentTime={getCurrentTime} /> : <Navigate replace to="/home" />}
+          />
+
           {/**Route for the main page of the shop employee */}
           <Route exact path="/shopemployee/"
             element={
@@ -286,6 +292,12 @@ function App() {
           <Route exact path="/manager/farmerorders"
             element={
               isLogged ? <ManagerPageFarmerOrders user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
+          <Route exact path="/manager/reports"
+            element={
+              isLogged ? <ManagerReports user={user} getCurrentTime={getCurrentTime} />
                 : <Navigate replace to="/" />
             }
           />

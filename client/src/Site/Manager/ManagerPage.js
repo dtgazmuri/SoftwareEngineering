@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Container, Row, Col, ListGroup, Alert, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, ListGroup, Alert, Button, Form, Modal, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
-import { deliverybig, alarm } from '../icons';
+import { deliverybig, alarm, managerreport } from '../icons';
 
 //API
 import API from '../../ManagerAPI'
@@ -16,7 +16,12 @@ function ManagerPage(props){
         <>
         <Container fluid className="below-nav vh-100 align-items-center">
             <Row id = "managerFunctions">
-                <SeeFarmerOrdersButton /> 
+                
+                    <SeeFarmerOrdersButton /> 
+
+                    <SeeReportsButton />
+                
+
             </Row>
         </Container>
         </>
@@ -26,16 +31,32 @@ function ManagerPage(props){
 function SeeFarmerOrdersButton () {
     //this is a button shown in the mainpage of the manager that redirects to /manager/farmerOrders
     return(
-        <Col lg = {4} sm = {6} id = "ackFarmerOrder">
+        <Col id = "ackFarmerOrder">
             <Link to="/manager/farmerorders">
                 <Container id="del-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
                 {deliverybig}
-                <h3>See farmer orders</h3>
+                <h3>See Farmer Orders</h3>
                 </Container>
             </Link>
         </Col>
     )
 }
+
+function SeeReportsButton () {
+    //this is a button shown in the mainpage of the manager that redirects to /manager/farmerOrders
+    return(
+        <Col id = "ackFarmerOrder">
+            <Link to="/manager/reports">
+                <Container id="del-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
+                {managerreport}
+                <br></br><br></br>
+                <h3>See Reports</h3>
+                </Container>
+            </Link>
+        </Col>
+    )
+}
+
 function ManagerPageFarmerOrders (props) {
     const [orders, setOrders] = useState([]);
     const [ordersToShow, setOrdersToShow] = useState([]);
@@ -223,4 +244,374 @@ function FarmerOrderItem(props) {
     )
 }
 
-export {ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem};
+function ManagerReports(props) {
+    const [monthlyReports, setMonthlyReports] = useState([]);
+    const [weeklyReports, setWeeklyReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [areThereReports, setAreThereReports] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        API.getManagerReports()
+            .then(all_reports => {
+                let monthlyReportsArray = [];
+                let weeklyReportsArray = [];
+                for (let i = 0; i < all_reports.length; i++) {
+                    if (all_reports[i].type === 0) {
+                        weeklyReportsArray.push(all_reports[i])
+                    }
+                    else if (all_reports[i].type === 1) {
+                        monthlyReportsArray.push(all_reports[i])
+                    }
+                }
+                setMonthlyReports(monthlyReportsArray);
+                setWeeklyReports(weeklyReportsArray);
+                setLoading(false);
+            })
+            .catch(e => {
+                setLoading(false);
+                setMonthlyReports([]);
+                setWeeklyReports([]);
+            }
+            );
+      }, [])
+
+    /* THIS IS WHAT THE ARRAYS LOOK LIKE
+    let weekArray = [
+        {
+            type: 0,
+            weekStartDate: "2021-11-01",
+            weekEndDate: "2021-11-07",
+            lostFood: {
+               "Apples": 10,
+               "Corn": 10,
+               "Oranges": 30
+            }
+        },
+        {
+            type: 0,
+            weekStartDate: "2021-11-08",
+            weekEndDate: "2021-11-14",
+            lostFood: {
+               "Apples": 5,
+               "Corn": 20,
+               "Oranges": 12
+            }
+        },
+        {
+            weekStartDate: "2021-11-15",
+            weekEndDate: "2021-11-21",
+            lostFood: {
+               "Apples": 0,
+               "Corn": 7,
+               "Oranges": 12
+            }
+        },
+        {
+            type: 0,
+            weekStartDate: "2021-11-12",
+            weekEndDate: "2021-11-28",
+            lostFood: {
+               "Apples": 11,
+               "Corn": 17,
+               "Oranges": 21
+            }
+        }
+    ]
+
+    let monthArray = [
+        {
+            type: 1,
+            month: "9",
+            year: "2021",
+            lostFood: {
+               "Apples": 30,
+               "Corn": 28,
+               "Oranges": 15
+            }
+        },
+        {
+            type: 1,
+            month: "10",
+            year: "2021",
+            lostFood: {
+               "Apples": 40,
+               "Corn": 38,
+               "Oranges": 30
+            }
+        },
+        {
+            type: 1,
+            month: "11",
+            year: "2021",
+            lostFood: {
+               "Apples": 26,
+               "Corn": 54,
+               "Oranges": 75
+            }
+        }
+    ]
+    */
+    useEffect(() => {
+        if (weeklyReports.length > 0 || monthlyReports.length > 0) {
+            setAreThereReports(true);
+        }
+    })
+
+    return (
+        <>
+            <ListGroup id="list" variant = "primary" >
+                <ListGroup.Item variant="primary" key = "title">
+                    <h2>Manager Reports</h2>
+                </ListGroup.Item>
+                <ListGroup.Item variant="light" key = "information">
+                    <h6>Reports are completely generated after each week and after each month. Only partial version are available before that.</h6>
+                </ListGroup.Item>
+            </ListGroup>
+
+            <br></br>
+
+            {loading && <Alert variant='warning'> {alarm} Please wait while the reports load {alarm}</Alert>}
+
+            {(!loading && areThereReports) ?
+                <Row>
+                    <Col>
+                        <ListGroup id="list" variant = "primary" className = "mb-5">
+                            <ListGroup.Item variant="secondary" key = "title monthly">
+                                <h4>Monthly Reports</h4>
+                            </ListGroup.Item>
+
+                            {monthlyReports.map(report => {
+                                return (
+                                    <ReportMonthItem report = {report} />
+                                );
+                            })}
+
+                        </ListGroup>
+                    </Col>
+
+                    <Col>
+                        <ListGroup id="list" variant = "primary" className = "mb-5">
+                            <ListGroup.Item variant="secondary" key = "title weekly">
+                                <h4>Weekly Reports</h4>
+                            </ListGroup.Item>
+
+                            {weeklyReports.map(report => {
+                                return (
+                                    <ReportWeekItem report = {report} />
+                                );
+                            })}
+
+                        </ListGroup>
+                    </Col>
+                </Row>
+            : <Alert variant='danger'>No reports found.</Alert>
+            }
+        </>
+    )
+}
+
+function ReportWeekItem(props) {
+    const[show, setShow] = useState(false);
+
+    const ShowWeeklyReport = () => {
+        setShow(true);
+    }
+
+    const handleClose = () => {
+        setShow(false);
+    }
+
+    let report = props.report;
+    let foodArray = [];
+    let total = 0;
+    let entry;
+
+    let monthArray = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ]
+
+    let initialDateYear = report.weekStartDate.substring(0,4);
+    let finalDateYear = report.weekEndDate.substring(0,4);
+    let initialDateMonth = monthArray[report.weekStartDate.substring(5,7).toString() - 1];
+    let finalDateMonth = monthArray[report.weekEndDate.substring(5,7).toString() - 1];
+    let initialDateDay = report.weekStartDate.substring(8,);
+    let finalDateDay = report.weekEndDate.substring(8,);
+
+    let startDateWords = initialDateMonth + " " + initialDateDay + ", " + initialDateYear;
+    let finalDateWords = finalDateMonth + " " + finalDateDay + ", " + finalDateYear;
+
+    for (const[key, value] of Object.entries(report.lostFood)) {
+        entry = {
+            "Food": key,
+            "Quantity": value
+        }
+        total += value;
+        foodArray.push(entry);
+
+    }
+
+    return (
+        <>
+            <ListGroup.Item action variant="light" onClick = {() => ShowWeeklyReport(report)}>
+                <h6>{startDateWords} - {finalDateWords}</h6>
+            </ListGroup.Item>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title><b>Week Report</b></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h5>Week: from {report.weekStartDate} to {report.weekEndDate}</h5>
+                    <h5>The following products were lost during this period:</h5>
+
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {foodArray.map(food => {
+                            return (
+                                <tr>
+                                    <td> {food["Food"]} </td>
+                                    <td> {food["Quantity"]} </td>
+                                </tr>      
+                            );
+                        })}
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <h5><b>Total:</b></h5>
+                                </td>
+                                <td>
+                                    <h5><b>{total}</b></h5>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </Table>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+        
+    )
+}
+
+
+function ReportMonthItem(props) {
+    const[show, setShow] = useState(false);
+
+    const ShowMonthlyReport = () => {
+        setShow(true);
+    }
+
+    const handleClose = () => {
+        setShow(false);
+    }
+
+    let report = props.report;
+    let foodArray = [];
+    let total = 0;
+    let entry;
+
+    for (const[key, value] of Object.entries(report.lostFood)) {
+        entry = {
+            "Food": key,
+            "Quantity": value
+        }
+        total += value;
+        foodArray.push(entry);
+
+    }
+
+    let monthArray = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ]
+
+    return (
+        <>
+            <ListGroup.Item action variant="light" onClick = {() => ShowMonthlyReport(report)} >
+                <h6>{monthArray[report.month - 1]} {report.year}</h6>
+            </ListGroup.Item>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title><b>{monthArray[report.month - 1]} {report.year} Report</b></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <h5>The following food was lost during this month:</h5>
+
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {foodArray.map(food => {
+                            return (
+                                <tr>
+                                    <td> {food["Food"]} </td>
+                                    <td> {food["Quantity"]} </td>
+                                </tr>      
+                            );
+                        })}
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <h5><b>Total:</b></h5>
+                                </td>
+                                <td>
+                                    <h5><b>{total}</b></h5>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </Table>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
+}
+
+
+
+
+export {ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem, ManagerReports};

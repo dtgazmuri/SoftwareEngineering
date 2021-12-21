@@ -71,5 +71,6 @@ async function getOrdersWithInsufficientWalletBalance() {
     }
 }
 
+
 const API = { getOrders, getCustomers, updateCustomerWallet, handOutOrder, getOrdersWithInsufficientWalletBalance };
 export default API;

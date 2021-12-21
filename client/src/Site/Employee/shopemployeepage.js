@@ -1,6 +1,6 @@
 import { Container, Col, Row } from 'react-bootstrap';
 import { SignupForm } from "./newclientform.js"
-import { signin, wallet, deliverybig, shopemployeebig } from '../icons';
+import { signin, wallet, deliverybig, shopemployeebig, lostfood } from '../icons';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -26,12 +26,12 @@ function MyPage(props) {
             <Link to="/shopemployee/products">
               <Container test-id="show-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {shopemployeebig}
-                <h3>Show products</h3>
+                <h3>Show Products</h3>
               </Container>
             </Link>
           </Col>
           </Row>
-
+          <br></br>
           <Row id="second">
           <Col id="topup-col">
             <Link to = "/shopemployee/topupwallet/" >
@@ -50,16 +50,24 @@ function MyPage(props) {
               </Link>
           </Col>
           </Row>
+          <br></br>
           <Row id="third">
           <Col id="cancelation-pending-col">
             <Link to ="/shopemployee/cancelationpending">
               <Container test-id="pending-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
                 {deliverybig}
-                <h4>Orders pending cancelation</h4>
+                <h4>Orders Pending Cancelation</h4>
               </Container>
               </Link>
           </Col>
-          <Col></Col>
+          <Col id="cancelation-pending-col">
+            <Link to ="/shopemployee/reportlostfood">
+              <Container test-id="pending-button" fluid className="LoginButton border border-dark rounded nolink" align="center">
+                {lostfood}
+                <h4>Report Lost Food</h4>
+              </Container>
+              </Link>
+          </Col>
           </Row>
           
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />

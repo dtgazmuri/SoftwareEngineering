@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="C:\Users\loren\OneDrive\Desktop\PoliTo\SoftwareEngineering2\Lab\SolidarityPurchasingGroup\SoftwareEngineering\server\__test__\server.test.js">
-    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deosn&apos;t" duration="16"/>
-    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deos" duration="0"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts while farmer does not exist" duration="1"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts" duration="1"/>
-    <testCase name="Test Dao classes test farmerDao functions test ADDProductExpectedAmount" duration="39"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrders when no order is present" duration="17"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrders when one order is present" duration="12"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrderItems with a wrong id" duration="1"/>
+    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deosn&apos;t" duration="22"/>
+    <testCase name="Test Dao classes Test userDao functions test checkIfUserNotExists while it deos" duration="1"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts while farmer does not exist" duration="0"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerProducts" duration="0"/>
+    <testCase name="Test Dao classes test farmerDao functions test ADDProductExpectedAmount" duration="29"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrders when no order is present" duration="11"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrders when one order is present" duration="8"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrderItems with a wrong id" duration="5"/>
     <testCase name="Test Dao classes test farmerDao functions test getFarmerOrderItems with a correct id but no products" duration="1"/>
-    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrderItems with a correct id and one product" duration="23"/>
+    <testCase name="Test Dao classes test farmerDao functions test getFarmerOrderItems with a correct id and one product" duration="13"/>
     <testCase name="Test Dao classes test farmerDao functions test ackDeliveryFarmerOrder with a wrong id" duration="1"/>
     <testCase name="Test Dao classes test farmerDao functions test ackDeliveryFarmerOrder with a correct id" duration="7"/>
     <testCase name="Test Dao classes Test customerDao functions test getCustomerByUserId when id does not exist" duration="1"/>
-    <testCase name="Test Dao classes Test customerDao functions test getCustomerByUserId when id exists" duration="1"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when no customer is present" duration="19"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when some customer is present" duration="11"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test listProductsAll when no product is present" duration="6"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test listProductsAll when 1 product is present" duration="28"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when no order is present" duration="7"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when some orders are present" duration="88"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test updateCustomerWallet‍ with correct data" duration="15"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test handOutOrder" duration="17"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test createClientOrder" duration="11"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test creatOrderItem" duration="7"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test createNewCustomer" duration="8"/>
-    <testCase name="Test Dao classes Test employeeDAO functions test createNewUser" duration="6"/>
+    <testCase name="Test Dao classes Test customerDao functions test getCustomerByUserId when id exists" duration="0"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when no customer is present" duration="13"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getCustomers when some customer is present" duration="10"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test listProductsAll when no product is present" duration="5"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test listProductsAll when 1 product is present" duration="24"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when no order is present" duration="5"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test getOrderAll when some orders are present" duration="57"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test updateCustomerWallet‍ with correct data" duration="9"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test handOutOrder" duration="12"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test createClientOrder" duration="8"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test creatOrderItem" duration="6"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test createNewCustomer" duration="5"/>
+    <testCase name="Test Dao classes Test employeeDAO functions test createNewUser" duration="4"/>
     <testCase name="Test api&apos;s responds to /api/orders/all with order present" duration="0"/>
-    <testCase name="Test api&apos;s responds to /api/products/all" duration="51"/>
-    <testCase name="Test api&apos;s responds to /api/products/all" duration="0"/>
-    <testCase name="Test api&apos;s responds to api/farmer/:id with invalid id" duration="27"/>
+    <testCase name="Test api&apos;s responds to /api/products/all" duration="32"/>
+    <testCase name="Test api&apos;s responds to /api/products/all" duration="1"/>
+    <testCase name="Test api&apos;s responds to api/farmer/:id with invalid id" duration="11"/>
     <testCase name="Test api&apos;s responds to api/farmer/:id" duration="0"/>
-    <testCase name="Test api&apos;s response to api/orders/insufficientWallet if logged" duration="69"/>
-    <testCase name="Test api&apos;s response to /api/order/employee" duration="126"/>
-    <testCase name="Test api&apos;s response to /api/order/employee with incorrect customerid" duration="13"/>
-    <testCase name="Test api&apos;s response to /api/order/employee with incorrect state" duration="13"/>
-    <testCase name="Test api&apos;s response to /api/order/employee with incorrect delivery" duration="20"/>
-    <testCase name="Test api&apos;s response to /api/order/employee with incorrect total" duration="19"/>
-    <testCase name="Test api&apos;s response to /api/order/employee with incorrect listitems" duration="20"/>
-    <testCase name="Test api&apos;s response to /api/orders/:id/handOut" duration="18"/>
-    <testCase name="Test api&apos;s response to /api/orders/:id/handOut with incorrect id" duration="14"/>
-    <testCase name="Test api&apos;s response to /api/warehouse" duration="82"/>
-    <testCase name="Test api&apos;s response to /api/warehouse with incorrect product" duration="14"/>
-    <testCase name="Test api&apos;s response to /api/warehouse with incorrect quantity" duration="15"/>
-    <testCase name="Test api&apos;s response to /api/users/registration" duration="68"/>
-    <testCase name="Test api&apos;s response to /api/users/registration with invalid username" duration="18"/>
-    <testCase name="Test api&apos;s response to /api/users/registration =&gt; without password" duration="20"/>
-    <testCase name="Test api&apos;s response to /api/users/registration =&gt; without role" duration="17"/>
-    <testCase name="Test api&apos;s response to /api/users/registration without name" duration="17"/>
-    <testCase name="Test api&apos;s response to /api/users/registration without surname" duration="12"/>
-    <testCase name="Test api&apos;s response to /api/username/present/:id when id does not exist" duration="17"/>
-    <testCase name="Test api&apos;s resonse to /api/customers/all" duration="0"/>
-    <testCase name="Test api&apos;s resonse to /api/customerlist" duration="0"/>
-    <testCase name="Test api&apos;s resonse to /api/customers/:id when customer does not exist" duration="1"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders when table it&apos;s empty" duration="139"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders when table contains something" duration="89"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with a string instead of id " duration="13"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with wrong request body" duration="15"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with unexisting id" duration="6"/>
-    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with correct id" duration="46"/>
+    <testCase name="Test api&apos;s response to api/orders/insufficientWallet if logged" duration="28"/>
+    <testCase name="Test api&apos;s response to /api/order/employee" duration="62"/>
+    <testCase name="Test api&apos;s response to /api/order/employee with incorrect customerid" duration="8"/>
+    <testCase name="Test api&apos;s response to /api/order/employee with incorrect state" duration="9"/>
+    <testCase name="Test api&apos;s response to /api/order/employee with incorrect delivery" duration="6"/>
+    <testCase name="Test api&apos;s response to /api/order/employee with incorrect total" duration="4"/>
+    <testCase name="Test api&apos;s response to /api/order/employee with incorrect listitems" duration="8"/>
+    <testCase name="Test api&apos;s response to /api/orders/:id/handOut" duration="5"/>
+    <testCase name="Test api&apos;s response to /api/orders/:id/handOut with incorrect id" duration="5"/>
+    <testCase name="Test api&apos;s response to /api/warehouse" duration="13"/>
+    <testCase name="Test api&apos;s response to /api/warehouse with incorrect product" duration="6"/>
+    <testCase name="Test api&apos;s response to /api/warehouse with incorrect quantity" duration="6"/>
+    <testCase name="Test api&apos;s response to /api/users/registration" duration="22"/>
+    <testCase name="Test api&apos;s response to /api/users/registration with invalid username" duration="8"/>
+    <testCase name="Test api&apos;s response to /api/users/registration =&gt; without password" duration="4"/>
+    <testCase name="Test api&apos;s response to /api/users/registration =&gt; without role" duration="8"/>
+    <testCase name="Test api&apos;s response to /api/users/registration without name" duration="6"/>
+    <testCase name="Test api&apos;s response to /api/users/registration without surname" duration="9"/>
+    <testCase name="Test api&apos;s response to /api/username/present/:id when id does not exist" duration="9"/>
+    <testCase name="Test api&apos;s resonse to /api/customers/all" duration="11"/>
+    <testCase name="Test api&apos;s resonse to /api/customers/:id when customer does not exist" duration="13"/>
+    <testCase name="Test api&apos;s resonse to /api/customers/:id when customer exists" duration="18"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders when table it&apos;s empty" duration="14"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders when table contains something" duration="53"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with a string instead of id " duration="14"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with wrong request body" duration="13"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with unexisting id" duration="7"/>
+    <testCase name="Test api&apos;s response to /api/farmerOrders/:id/ack with correct id" duration="32"/>
   </file>
 </testExecutions>

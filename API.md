@@ -334,7 +334,7 @@ or
 * Response Body: _None_
 
 ## Customers
-
+<!--
 ### Get the List of Customers
 
 * HTTP method: `GET`  URL: `/api/customerlist`
@@ -368,7 +368,7 @@ or
     {}
 ]
 ```
-
+-->
 ### Add a New Customer to the Database
 
 * HTTP method: `POST`  URL: `/api/customer`
