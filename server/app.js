@@ -29,6 +29,7 @@ module.exports = function (app, db, testUser, bot) {
     bot.command("start", (ctx) => {
       //console.log(ctx.from);
       users.push(ctx.chat.id);
+      // console.log(users.length);
       bot.telegram.sendMessage(
         ctx.chat.id,
         "Hello there! Welcome to SPG telegram bot.",
@@ -712,12 +713,13 @@ module.exports = function (app, db, testUser, bot) {
   });
 
   app.post("/api/notifyTime", (req, res) => {
-    console.log(req.body.time);
     new Promise((resolve, reject) => {
+      console.log(users.length);
       users.forEach((id) => {
+        console.log(id);
         bot.telegram.sendMessage(
           id,
-          "**The updated list of available products is available**"
+          "** The updated list of available products is available **"
         );
       });
       resolve();

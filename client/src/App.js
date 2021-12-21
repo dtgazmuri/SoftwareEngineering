@@ -1,36 +1,54 @@
 //CSS FILES - Bootstrap - Custom - React
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
+import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
+import dayjs from "dayjs";
 
 //REACT COMPONENTS
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Alert, Container, Button, Table, Row, Col, Card } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
+import {
+  Alert,
+  Container,
+  Button,
+  Table,
+  Row,
+  Col,
+  Card,
+} from "react-bootstrap";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { Calendar } from 'react-bootstrap-icons';
+import { Calendar } from "react-bootstrap-icons";
 
 //Our components
-import MyBody from './Site/homepage'
-import MyNavbar from './Site/navbar';
-import LoginPage from './Site/loginpage'
-import EmployeePage from './Site/Employee/shopemployeepage';
-import ProductList from './Site/Employee/ProductListEmployee';
-import { CustomerList, OrderList } from './Site/Employee/employee';
-import { CancelationOrderList } from './Site/Employee/cancelationorders';
-import { ReportLostFood } from './Site/Employee/reportlostfood';
-import Farmer from './Site/Farmer/farmer';
-import ConfirmOrdersPage from './Site/Farmer/farmer';
+import MyBody from "./Site/homepage";
+import MyNavbar from "./Site/navbar";
+import LoginPage from "./Site/loginpage";
+import EmployeePage from "./Site/Employee/shopemployeepage";
+import ProductList from "./Site/Employee/ProductListEmployee";
+import { CustomerList, OrderList } from "./Site/Employee/employee";
+import { CancelationOrderList } from "./Site/Employee/cancelationorders";
+import { ReportLostFood } from "./Site/Employee/reportlostfood";
+import Farmer from "./Site/Farmer/farmer";
+import ConfirmOrdersPage from "./Site/Farmer/farmer";
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
-import { Clock, ModalDate } from './Clock';
-import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
+import { Clock, ModalDate } from "./Clock";
+import {
+  ManagerPage,
+  ManagerPageFarmerOrders,
+  ManagerReports,
+} from "./Site/Manager/ManagerPage";
 
 //API
-import API from "./API.js"
-
+import API from "./API.js";
 
 function App() {
   const [user, setUser] = useState();
@@ -40,7 +58,8 @@ function App() {
   const [time, setTime] = useState();
   const [faketime, setFakeTime] = useState();
   const [showModal, setShowModal] = useState(false);
-  const [dirty, setDirty] = useState(false) //to see if the time is real-time or not 
+  const [dirty, setDirty] = useState(false); //to see if the time is real-time or not
+  const [notifOfTime, setNotifOfTime] = useState(false);
 
   //you need to add time={dirty ? time : faketime}
 
@@ -58,9 +77,8 @@ function App() {
             msg: `Welcome back, ${u.username}`,
           });
           setTimeout(() => {
-            setMessage({ type: "", msg: "" })
-          }
-            , 3000)
+            setMessage({ type: "", msg: "" });
+          }, 3000);
         });
       } catch (err) {
         setLogged(false);
@@ -70,6 +88,36 @@ function App() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const checkTime = async () => {
+      const time = dayjs(getCurrentTime());
+      if (
+        time &&
+        time.day() === 6 &&
+        time.hour() === 9 &&
+        time.minute() === 0 &&
+        notifOfTime === false
+      ) {
+        console.log("should notify now");
+        try {
+          setNotifOfTime(true);
+          await API.notifyOfTime();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if (
+        time &&
+        time.day() === 6 &&
+        time.hour() === 9 &&
+        time.minute() === 1
+      ) {
+        setNotifOfTime(false);
+      }
+    };
+    checkTime();
+  }, [time, faketime, dirty]);
+
   const doLogin = async (credentials) => {
     try {
       const currentUser = await API.login(credentials);
@@ -78,15 +126,13 @@ function App() {
       setLogged(true);
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
       setTimeout(() => {
-        setMessage({ type: "", msg: "" })
-      }
-        , 3000)
+        setMessage({ type: "", msg: "" });
+      }, 3000);
     } catch (err) {
       setMessage({ type: "danger", msg: `Login failed. ${err}` });
       setTimeout(() => {
-        setMessage({ type: "", msg: "" })
-      }
-        , 3000)
+        setMessage({ type: "", msg: "" });
+      }, 3000);
       throw err;
     }
   };
@@ -116,16 +162,15 @@ function App() {
     setUser("");
     setMessage({ type: "success", msg: "Logout accomplished" });
     setTimeout(() => {
-      setMessage({ type: "", msg: "" })
-    }, 3000
-    )
+      setMessage({ type: "", msg: "" });
+    }, 3000);
   };
 
   const notifySuccess = () =>
     toast.success("Success!", {
       position: "bottom-right",
       autoClose: 5000,
-      id:"success-card",
+      id: "success-card",
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -164,19 +209,17 @@ function App() {
     });
 
   const handleOpenModal = () => {
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
   const handleCloseModal = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
 
   /**USE THIS FUNCTION TO GET THE CURRENT TIME OF THE APPLICATION */
   const getCurrentTime = () => {
-    if (!dirty)
-      return time;
-    else
-      return faketime;
-  }
+    if (!dirty) return time;
+    else return faketime;
+  };
 
   return (
     <Router>
@@ -184,21 +227,36 @@ function App() {
 
       <Container fluid className="below-nav vh-100 backg" />
 
-      <Container fluid className="below-nav" >
+      <Container fluid className="below-nav">
+        <Container
+          fluid
+          className="d-flex justify-content-center align-items-center"
+          style={{ paddingBottom: 8 }}
+        >
+          <b>
+            <Clock
+              time={time}
+              faketime={faketime}
+              setTime={setTime}
+              setFakeTime={setFakeTime}
+              setDirty={setDirty}
+              dirty={dirty}
+            />
+          </b>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Button onClick={handleOpenModal}>
+            <Calendar /> Set Date and Time{" "}
+          </Button>
+        </Container>
 
-      <Container fluid className="d-flex justify-content-center align-items-center" style={{ paddingBottom: 8}}>
-        <b><Clock time={time} faketime={faketime} setTime={setTime} setFakeTime={setFakeTime} setDirty={setDirty} dirty={dirty} /></b>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <Button onClick={handleOpenModal}><Calendar /> Set Date and Time </Button>
-      </Container>
-
-
-        <ModalDate show={showModal}
+        <ModalDate
+          show={showModal}
           handleClose={handleCloseModal}
           setFakeTime={setFakeTime}
           setDirty={setDirty}
           dirty={dirty}
-          setTime={setTime} />
+          setTime={setTime}
+        />
         {message.msg !== "" ? (
           <Alert className="" variant={message.type}>
             {message.msg}
@@ -208,46 +266,76 @@ function App() {
         )}
 
         <Routes>
-          <Route exact path="/" element={isLogged ? <Navigate replace to={url} /> : <Navigate replace to="/home" />
-          }
-          />
-
-          {/* Generic Error Page */}
-          <Route path="/error"
-            element={<ErrorPage />} />
-
-          {/* BODY PER HOMEPAGE */}
-          <Route path="/home" element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
-          />
-
-          <Route path="/loginpage/" element={isLogged ?
-            <Navigate replace to={url} />
-            :
-            <LoginPage login={doLogin} setMessage={setMessage} />
-          }
-          />
-
-
-          {/**SHOP EMPLOYEE ROUTES */}
-          <Route path="/shopemployee/selection/"
-            element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
-              :
-              <Navigate replace to="/home" />
-
+          <Route
+            exact
+            path="/"
+            element={
+              isLogged ? (
+                <Navigate replace to={url} />
+              ) : (
+                <Navigate replace to="/home" />
+              )
             }
           />
 
-          <Route path="/shopemployee/products/"
-            element={isLogged ? <ProductList setMessage={setMessage} time={!dirty ? time : faketime} />
-              :
-              <Navigate replace to="/home" />
+          {/* Generic Error Page */}
+          <Route path="/error" element={<ErrorPage />} />
 
+          {/* BODY PER HOMEPAGE */}
+          <Route
+            path="/home"
+            element={!isLogged ? <MyBody /> : <Navigate replace to={url} />}
+          />
+
+          <Route
+            path="/loginpage/"
+            element={
+              isLogged ? (
+                <Navigate replace to={url} />
+              ) : (
+                <LoginPage login={doLogin} setMessage={setMessage} />
+              )
+            }
+          />
+
+          {/**SHOP EMPLOYEE ROUTES */}
+          <Route
+            path="/shopemployee/selection/"
+            element={
+              isLogged ? (
+                <ProductList
+                  setMessage={setMessage}
+                  time={!dirty ? time : faketime}
+                />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
+          />
+
+          <Route
+            path="/shopemployee/products/"
+            element={
+              isLogged ? (
+                <ProductList
+                  setMessage={setMessage}
+                  time={!dirty ? time : faketime}
+                />
+              ) : (
+                <Navigate replace to="/home" />
+              )
             }
           />
 
           <Route
             path="/shopemployee/handout/"
-            element={isLogged ? <OrderList getCurrentTime={getCurrentTime} /> : <Navigate replace to="/home" />}
+            element={
+              isLogged ? (
+                <OrderList getCurrentTime={getCurrentTime} />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
           />
 
           <Route
@@ -259,61 +347,101 @@ function App() {
 
           <Route
             path="/shopemployee/cancelationpending/"
-            element={isLogged ? <CancelationOrderList /> : <Navigate replace to="/home" />}
+            element={
+              isLogged ? (
+                <CancelationOrderList />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
           />
 
           <Route
             path="/shopemployee/reportlostfood/"
-            element={isLogged ? <ReportLostFood getCurrentTime={getCurrentTime} /> : <Navigate replace to="/home" />}
+            element={
+              isLogged ? (
+                <ReportLostFood getCurrentTime={getCurrentTime} />
+              ) : (
+                <Navigate replace to="/home" />
+              )
+            }
           />
 
           {/**Route for the main page of the shop employee */}
-          <Route exact path="/shopemployee/"
+          <Route
+            exact
+            path="/shopemployee/"
             element={
-              isLogged ? <EmployeePage
-                addClient={addClient} />
-                : <Navigate replace to="/" />
+              isLogged ? (
+                <EmployeePage addClient={addClient} />
+              ) : (
+                <Navigate replace to="/" />
+              )
             }
           />
 
           {/**FARMER ROUTES */}
           {/**Route for the main page of the farmer */}
-          <Route exact path="/farmer/" element={<Farmer getCurrentTime={getCurrentTime} />} />
-
+          <Route
+            exact
+            path="/farmer/"
+            element={<Farmer getCurrentTime={getCurrentTime} />}
+          />
 
           {/**MANAGER ROUTER */}
           {/**Route for the main page of the manager */}
-          <Route exact path="/manager"
+          <Route
+            exact
+            path="/manager"
             element={
-              isLogged ? <ManagerPage user={user} getCurrentTime={getCurrentTime} />
-                : <Navigate replace to="/" />
+              isLogged ? (
+                <ManagerPage user={user} getCurrentTime={getCurrentTime} />
+              ) : (
+                <Navigate replace to="/" />
+              )
             }
           />
-          <Route exact path="/manager/farmerorders"
+          <Route
+            exact
+            path="/manager/farmerorders"
             element={
-              isLogged ? <ManagerPageFarmerOrders user={user} getCurrentTime={getCurrentTime} />
-                : <Navigate replace to="/" />
+              isLogged ? (
+                <ManagerPageFarmerOrders
+                  user={user}
+                  getCurrentTime={getCurrentTime}
+                />
+              ) : (
+                <Navigate replace to="/" />
+              )
             }
           />
-          <Route exact path="/manager/reports"
+          <Route
+            exact
+            path="/manager/reports"
             element={
-              isLogged ? <ManagerReports user={user} getCurrentTime={getCurrentTime} />
-                : <Navigate replace to="/" />
+              isLogged ? (
+                <ManagerReports user={user} getCurrentTime={getCurrentTime} />
+              ) : (
+                <Navigate replace to="/" />
+              )
             }
           />
 
-
-          <Route path="/sign-up" element={
-            <SignupForm
-              notifySuccess={notifySuccess}
-              notifyError={notifyError}
-            />
-          }
+          <Route
+            path="/sign-up"
+            element={
+              <SignupForm
+                notifySuccess={notifySuccess}
+                notifyError={notifyError}
+              />
+            }
           />
           {/* BODY PER HOMEPAGE */}
           <Route exact path="/home" element={<MyBody />} />
           {/* Customer homepage route */}
-          <Route exact path="/customer"
+          <Route
+            exact
+            path="/customer"
             element={
               isLogged ? (
                 <CustomerHome
@@ -326,23 +454,33 @@ function App() {
               )
             }
           />
-          <Route exact path="/customer/:id/basket"
-            element={<Basket
-              user={user}
-              setMessage={setMessage}
-              notifyBalance={notifyBalance}
-              notifyQuantity={notifyQuantity} 
-              getCurrentTime={getCurrentTime}/>
-            }
-          />
           <Route
+            exact
+            path="/customer/:id/basket"
             element={
-              <Navigate replace to="/error" />
+              <Basket
+                user={user}
+                setMessage={setMessage}
+                notifyBalance={notifyBalance}
+                notifyQuantity={notifyQuantity}
+                getCurrentTime={getCurrentTime}
+              />
             }
           />
+          <Route element={<Navigate replace to="/error" />} />
         </Routes>
       </Container>
-      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Router>
   );
 }
