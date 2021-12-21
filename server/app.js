@@ -220,7 +220,7 @@ module.exports = function (app, db, testUser, bot) {
     }
   });
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id", async (req, res) => {
+  app.get("/api/farmer/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Get the farmer ID
       const farmerID = Number(req.params.id);
@@ -509,7 +509,7 @@ module.exports = function (app, db, testUser, bot) {
   //STORY NUMBER 9
   //getting the list of products sold by a specific farmer
   // GET /api/farmer/:filter/products
-  app.get("/api/farmer/:filter/products", (req, res) => {
+  app.get("/api/farmer/:filter/products", isLogged, isFarmer, (req, res) => {
     // products of farmer can be also get through their name/surname
     const farmerId = parseInt(req.params.filter);
     if (Number.isNaN(farmerId)) {
@@ -787,7 +787,7 @@ module.exports = function (app, db, testUser, bot) {
   //STORY N. 14
   //Getting all orders for a specific farmer given its id
   //GET /api/farmerOrders
-  app.get("/api/farmerOrders/:id", async (req, res) => {
+  app.get("/api/farmerOrders/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Create an array that will contain the result
       const result = [];

@@ -3,40 +3,55 @@ import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import API from '../../FarmerAPI'
-import { littleX } from '../icons';
+import { littleX, confirmorder, setamount, } from '../icons';
+
+//just printing on console every error
+const handleErrors = (err) => {
+    console.log(err);
+}
 
 
-function Farmer(props) {
-    const farmerName = "Farmer1";
+
+export function FarmerPage(props) {
+    return (
+        <>
+            <Container fluid className="below-nav vh-100 align-items-center">
+                <Row id="farmerButtons">
+
+                    <Col id="ShowProds">
+                        <Link to="/farmer/yourproducts">
+                            <Container id="prod-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
+                                {setamount}
+                                <h3>Set product amount</h3>
+                            </Container>
+                        </Link>
+                    </Col>
+
+                    <Col id="ConfirmOrders">
+                        <Link to="/farmer/orders">
+                            <Container id="order-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
+                                {confirmorder}
+                                <br></br><br></br>
+                                <h3>Confirm Orders</h3>
+                            </Container>
+                        </Link>
+                    </Col>
+
+
+                </Row>
+            </Container>
+        </>
+    )
+}
+
+
+
+export function FarmerProducts(props) {
     const [trueIfNeverSearchedProducts, setTrueIfNeverSearchedProducts] = useState(true);
-    const [trueIfNeverSearchedOrders, setTrueIfNeverSearchedOrders] = useState(true);
-    const [farmerToSearch, setFarmerToSearch] = useState("");
-    const [searchProducts, setSearchProducts] = useState(false);
-    const [searchOrders, setSearchOrders] = useState(false);
+    const [searchProducts, setSearchProducts] = useState(true);
     const [expectedQuantityForProduct, setExpectedQuantityForProduct] = useState({ id: -1, quantity: 0 });
     const [products, setProducts] = useState([]);
     const [updatedQuantity, setUpdatedQuantity] = useState({});
-    const [view, setView] = useState("products");
-    const [orders, setOrders] = useState({});
-
-    //just printing on console every error
-    const handleErrors = (err) => {
-        console.log(err);
-    }
-
-    //use effect for searching products of farmer when he wants to
-    useEffect(() => {
-        if (searchProducts === true) {
-            setTrueIfNeverSearchedProducts(false);
-
-            API.getProductsOfFarmer(farmerToSearch)
-                .then(farmer_products => {
-                    setProducts(farmer_products);
-                })
-                .catch(e => handleErrors(e));
-        }
-        setSearchProducts(false);
-    }, [searchProducts, farmerToSearch]);
 
     //use effect for setting expected amount for a selected product
     useEffect(() => {
@@ -50,102 +65,57 @@ function Farmer(props) {
         }
     }, [expectedQuantityForProduct]);
 
-    //use effect for getting the orders for a farmer
+
     useEffect(() => {
-        const getOrders = async (id) => {
+        const getProducts = () => {
+            if (searchProducts === true) {
+                setTrueIfNeverSearchedProducts(false);
+                console.log(props.user.userid)
+                API.getProductsOfFarmer(props.user.userid)
+                    .then(farmer_products => {
+                        setProducts(farmer_products);
+                        console.log(products)
+                    })
+                    .catch(e => handleErrors(e));
+            }
+            setSearchProducts(false);
+        }
+        setSearchProducts(true)
+        getProducts();
+    }, []);
+
+    useEffect(() => {
+        const getProducts = async () => {
             try {
-                const orders = await API.getOrdersOfFarmer(id);
-                const filterOrd = orders.filter(function(o) { return o.status==="pending";});
-                setOrders(filterOrd);
+                const current_products = await API.fetchAllProducts();
+                console.log(current_products);
+                setProducts(current_products);
             } catch (err) {
+                //setLogged(false)
                 console.log(err.error);
             }
         };
-        getOrders(farmerToSearch);
+        getProducts();
+    }, []);
 
-    }, [farmerToSearch]);
 
-    function setSearch() {
-        setSearchProducts(true);
-        setSearchOrders(true);
-    }
-
-    return (
-        <Container className="below-nav justify-content-center">
-            <Row>
-                <Col xs={10}>
-                    <h1>Main page for the farmer {farmerName}</h1>
-                </Col>
-                <Col xs={2}>
-                    {farmerToSearch === "" ?
-                        <>
-                            {view === "products" ?
-                                <Button disabled onClick={() => setView("orders")}>Confirm orders</Button>
-                                :
-                                <Button disabled onClick={() => setView("products")}>View products</Button>}
-                        </>
-                        :
-                        <>
-                            {view === "products" ?
-                                <Button onClick={() => setView("orders")}>Confirm orders</Button>
-                                :
-                                <Button onClick={() => setView("products")}>View products</Button>}
-                        </>
-
-                    }
-
-                </Col>
-            </Row>
-            < Row className="my-3" align="center">
-                <Col className="d-sm-block col-12 mb-3" sm={4} id="farmer-sidebar">
-                    <ListGroup variant="flush">
-                        <ListGroup.Item key="label-insert-farmer" className="border-bottom-0">
-                            <h4>Search among you products</h4>
-                            <p>You can find your products by putting your id, name or surname</p>
-                        </ListGroup.Item>
-                        <ListGroup.Item key="form-searching-farmer-products">
-                            <Form className="mb-3">
-                                <Form.Group controlId="farmer-searching" className="mb-3">
-                                    <Form.Control size="lg" value={farmerToSearch} placeholder="Insert id, name or surname"
-                                        onChange={(event) => setFarmerToSearch(event.target.value)} />
-                                </Form.Group>
-                                <Button onClick={() => setSearchProducts(true)}>Search products</Button>
-                            </Form>
-                        </ListGroup.Item>
-                    </ListGroup>
-                </Col>
-                {view === "products" ?
-                    <>
-                        {searchProducts === true && <Alert variant='warning'>🕗Please wait while loading products...🕗</Alert>}
-                        {(trueIfNeverSearchedProducts === false && products.length === 0) &&
-                            <Alert variant='danger'>Sorry, no products found for the specified farmer.</Alert>
-                        }
-                        {products.length !== 0 &&
-                            <ProductList products={products} setExpectedQuantityForProduct={setExpectedQuantityForProduct} updatedQuantity={updatedQuantity}
-                                getCurrentTime={props.getCurrentTime} />
-                        }
-                    </>
-                    :
-                    <>
-                        {searchProducts === true && <Alert variant='warning'>🕗Please wait while loading orders...🕗</Alert>}
-                        {(orders.length === 0) &&
-                            <Alert variant='danger'>Sorry, no orders found for the specified farmer.</Alert>
-                        }
-                        {orders.length !== 0 &&
-                            <ConfirmOrdersSection orders={orders} getCurrentTime={props.getCurrentTime} />
-                        }
-                    </>
-                }
-
-            </Row>
-        </Container >
-    )
+    return (<>
+        {searchProducts === true && <Alert variant='warning'>🕗Please wait while loading products...🕗</Alert>}
+        {(trueIfNeverSearchedProducts === false && products.length === 0) &&
+            <Alert variant='danger'>Sorry, no products found for the specified farmer.</Alert>
+        }
+        {products.length !== 0 &&
+            <ProductList products={products} setExpectedQuantityForProduct={setExpectedQuantityForProduct} updatedQuantity={updatedQuantity}
+                getCurrentTime={props.getCurrentTime} />
+        }
+    </>)
 }
+
 
 export function ProductList(props) {
 
     return (
-        <Col>
+        <Container>
             <ListGroup variant="primary">
                 {props.products.length &&
                     <>
@@ -175,7 +145,7 @@ export function ProductList(props) {
                     </>
                 }
             </ListGroup>
-        </Col>
+        </Container>
     )
 }
 
@@ -241,7 +211,27 @@ export function ProductForm(props) {
     );
 }
 
-function ConfirmOrdersSection(props) {
+
+
+export function ConfirmOrdersSection(props) {
+
+    const [orders, setOrders] = useState({});
+
+
+
+    useEffect(() => {
+        const getOrders = async (id) => {
+            try {
+                const orders = await API.getOrdersOfFarmer(id);
+                const filterOrd = orders.filter(function (o) { return o.status === "pending"; });
+                setOrders(filterOrd);
+            } catch (err) {
+                console.log(err.error);
+            }
+        };
+        getOrders(props.user.userid);
+
+    }, []);
     let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
     if ((currentTime.day() === 7 && currentTime.hour() > 23) || (currentTime.day() === 1 && currentTime.hour() < 9)) {
@@ -257,8 +247,8 @@ function ConfirmOrdersSection(props) {
                         <ListGroup.Item id="farmer-products-title" key="farmer-products-title" variant="primary">
                             <h5 className="text-left">Here is your list of orders to be confirmed</h5>
                         </ListGroup.Item>
-                        {props.orders.length ?
-                            props.orders.map(order => {
+                        {orders.length ?
+                            orders.map(order => {
                                 if (order.status === "pending") {
                                     return (
                                         <>
@@ -304,5 +294,3 @@ function ConfirmOrdersSection(props) {
         </>
     );
 }
-
-export default Farmer;

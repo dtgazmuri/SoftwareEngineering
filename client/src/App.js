@@ -10,8 +10,8 @@ import { Alert, Container, Button} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { Calendar } from 'react-bootstrap-icons';
-
 //Our components
+import Farmer2 from './Site/Farmer/farmerold';
 import MyBody from './Site/homepage'
 import MyNavbar from './Site/navbar';
 import LoginPage from './Site/loginpage'
@@ -20,14 +20,13 @@ import ProductList from './Site/Employee/ProductListEmployee';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
 import { ReportLostFood } from './Site/Employee/reportlostfood';
-import Farmer from './Site/Farmer/farmer';
-import ConfirmOrdersPage from './Site/Farmer/farmer';
+import  {FarmerPage, ConfirmOrdersSection, ShowProds, FarmerProducts } from './Site/Farmer/FarmerPage';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
 import { Clock, ModalDate } from './Clock';
 import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
-
+import  {notifyBalance,notifyQuantity, notifyError, notifySuccess} from './toastes'
 //API
 import API from "./API.js"
 
@@ -120,48 +119,6 @@ function App() {
     }, 3000
     )
   };
-
-  const notifySuccess = () =>
-    toast.success("Success!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      id:"success-card",
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyError = () =>
-    toast.error("Error: something went wrong", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyBalance = () =>
-    toast.warn("Balance insufficient!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyQuantity = () =>
-    toast.warn("Maximum quantity reached!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
 
   const handleOpenModal = () => {
     setShowModal(true)
@@ -278,7 +235,27 @@ function App() {
 
           {/**FARMER ROUTES */}
           {/**Route for the main page of the farmer */}
-          <Route exact path="/farmer/" element={<Farmer getCurrentTime={getCurrentTime} />} />
+          <Route exact path="/farmer" element={
+              isLogged ? <FarmerPage getCurrentTime={getCurrentTime} user ={user}/>
+            : <Navigate replace to="/" />
+          }
+          />
+          {/*the old page is here*/}
+          <Route exact path="/farmer2" element={<Farmer2 getCurrentTime={getCurrentTime} user ={user}/>} />
+         
+          <Route exact path="/farmer/yourproducts"
+            element={
+              isLogged ? <FarmerProducts user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
+         
+           <Route exact path="/farmer/orders"
+            element={
+              isLogged ? <ConfirmOrdersSection user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
 
 
           {/**MANAGER ROUTER */}
