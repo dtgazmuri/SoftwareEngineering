@@ -197,6 +197,7 @@ describe("Test Dao classes", () => {
         });
     });*/
   describe("Test customerDao functions", () => {
+    //testing getCustomerByUserId
     test("test getCustomerByUserId when id does not exist", async () => {
       functions.deleteTable("customer").then(() => {
         return expect(customerDao.getCustomerByUserId(db, 1)).rejects.toEqual({
@@ -225,6 +226,22 @@ describe("Test Dao classes", () => {
           //console.log(err);
         });
     });
+
+    //testing createClientOrder
+    test("test customerDao.createClientOrder", async () => {
+      const fakeOrder = {
+        customerid: 1,
+        state: "pending",
+        delivery: false,
+        total: 17.31,
+        date: "2021-12-01 12:00",
+      };
+      const orderId = await customerDao.createClientOrder(db, fakeOrder);
+      expect(orderId).toBeGreaterThan(0);
+      //elimino la entry di test appena messa nel db
+      await functions.deleteTableWhereId("clientorder", orderId);
+    });
+
   });
   /**Lorenzo Molteni trying to test  getOrderAll and getCustomers functions in employeeDBAccess.js*/
   describe("Test employeeDAO functions", () => {
@@ -547,6 +564,88 @@ describe("Test api's", () => {
       });
     expect(res.statusCode).toBe(422);
   });
+
+  //API tests for story #13
+  test("response to /api/order/customer", async () => {
+    const res = await request(app)
+      .post("/api/order/customer")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: 9.99,
+        address: "via paolo borsellino 40",
+        listitems: [{ id: 1, quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("orderid");
+  });
+  test("response to /api/order/customer with incorrect customerid", async () => {
+    const res = await request(app).post("/api/order/customer").send({
+      customerid: "string",
+      state: "pending",
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).toHaveProperty("errors");
+  });
+  test("response to /api/order/customer with incorrect state", async () => {
+    const res = await request(app).post("/api/order/customer").send({
+      customerid: 1,
+      state: 12,
+      delivery: "true",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).toHaveProperty("errors");
+  });
+  
+  test("response to /api/order/customer with incorrect delivery", async () => {
+    const res = await request(app).post("/api/order/customer").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "",
+      total: 9.99,
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).toHaveProperty("errors");
+  });
+  
+  test("response to /api/order/customer with incorrect total", async () => {
+    const res = await request(app).post("/api/order/customer").send({
+      customerid: 1,
+      state: "pending",
+      delivery: "true",
+      total: "total",
+      address: "via paolo borsellino 40",
+      listitems: [],
+    });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).toHaveProperty("errors");
+  });
+  test("response to /api/order/customer with incorrect listitems", async () => {
+    const res = await request(app)
+      .post("/api/order/customer")
+      .send({
+        customerid: 1,
+        state: "pending",
+        delivery: "true",
+        total: "9.99",
+        address: "via paolo borsellino 40",
+        listitems: [{ id: "id", quantity: 12, price: 2 }],
+      });
+    expect(res.statusCode).toBe(422);
+    expect(res.body).toHaveProperty("errors");
+  });
+  //end of API tests for story #13
+
   test("response to /api/orders/:id/handOut", async () => {
     const id = 1;
     const res = await request(app).post(`/api/orders/${id}/handOut`);
