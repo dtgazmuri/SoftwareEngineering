@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 //REACT COMPONENTS
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Alert, Container, Button, Table, Row, Col, Card } from 'react-bootstrap';
+import { Alert, Container, Button} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { Calendar } from 'react-bootstrap-icons';
