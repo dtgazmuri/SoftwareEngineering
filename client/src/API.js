@@ -260,9 +260,9 @@ async function isUsernameAlreadyPresent(username) {
     return { error: `${err}` };
   }
 }
-async function notifyOfTime(time) {
+async function notifyOfTime() {
   axios
-    .post(BASEURL + "/notifyTime", time)
+    .post(BASEURL + "/notifyTime")
     .then((response) => {
       return response.data;
     })
@@ -445,6 +445,7 @@ const API = {
   addNewUser,
   fetchCustomerById,
   postOrderByCustomer,
+  notifyOfTime,
 };
 
 export default API;
