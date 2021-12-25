@@ -50,8 +50,9 @@ function MyBody() {
     return (
             <Container id="title" className="align-items-center">
                 <Row sm={5} className="title justify-content-center" >
-                    Solidarity Purchase Group
+                    Solidarity Purchasing Group
                 </Row>
+                
             <Row key="main" sm={10} id="main-row" className="h-100 v-70 justify-content-center">
                 <Col id="login-col" className="v-100 d-sm-block">
                     <Link to="/loginpage">

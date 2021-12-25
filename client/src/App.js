@@ -6,47 +6,28 @@ import "react-toastify/dist/ReactToastify.css";
 import dayjs from "dayjs";
 
 //REACT COMPONENTS
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  Navigate,
-} from "react-router-dom";
-import {
-  Alert,
-  Container,
-  Button,
-  Table,
-  Row,
-  Col,
-  Card,
-} from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Alert, Container, Button, Spinner, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
-import { Calendar } from "react-bootstrap-icons";
-
+import { ArrowReturnRight, Calendar } from 'react-bootstrap-icons';
 //Our components
-import MyBody from "./Site/homepage";
-import MyNavbar from "./Site/navbar";
-import LoginPage from "./Site/loginpage";
-import EmployeePage from "./Site/Employee/shopemployeepage";
-import ProductList from "./Site/Employee/ProductListEmployee";
-import { CustomerList, OrderList } from "./Site/Employee/employee";
-import { CancelationOrderList } from "./Site/Employee/cancelationorders";
-import { ReportLostFood } from "./Site/Employee/reportlostfood";
-import Farmer from "./Site/Farmer/farmer";
-import ConfirmOrdersPage from "./Site/Farmer/farmer";
+import Farmer2 from './Site/Farmer/farmerold';
+import MyBody from './Site/homepage'
+import MyNavbar from './Site/navbar';
+import LoginPage from './Site/loginpage'
+import EmployeePage from './Site/Employee/shopemployeepage';
+import ProductList from './Site/Employee/ProductListEmployee';
+import { CustomerList, OrderList } from './Site/Employee/employee';
+import { CancelationOrderList } from './Site/Employee/cancelationorders';
+import { ReportLostFood } from './Site/Employee/reportlostfood';
+import { FarmerPage, ConfirmOrdersSection, FarmerProducts } from './Site/Farmer/FarmerPage';
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
-import { Clock, ModalDate } from "./Clock";
-import {
-  ManagerPage,
-  ManagerPageFarmerOrders,
-  ManagerReports,
-} from "./Site/Manager/ManagerPage";
-
+import { Clock, ModalDate } from './Clock';
+import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
+import { notifyBalance, notifyQuantity, notifyError, notifySuccess } from './toastes'
 //API
 import API from "./API.js";
 
@@ -60,7 +41,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [dirty, setDirty] = useState(false); //to see if the time is real-time or not
   const [notifOfTime, setNotifOfTime] = useState(false);
-
+  const [isLoading, setLoading] = useState(false)
   //you need to add time={dirty ? time : faketime}
 
   //AUTH LOGIN LOGOUT
@@ -85,7 +66,9 @@ function App() {
         console.log(err);
       }
     };
+    setLoading(true)
     checkAuth();
+    setLoading(false)
   }, []);
 
   useEffect(() => {
@@ -120,10 +103,12 @@ function App() {
 
   const doLogin = async (credentials) => {
     try {
+      setLoading(true)
       const currentUser = await API.login(credentials);
       setUser(currentUser);
       setURL(`/${currentUser.role}`);
       setLogged(true);
+      setLoading(false)
       setMessage({ type: "success", msg: `Welcome, ${currentUser.username} ` });
       setTimeout(() => {
         setMessage({ type: "", msg: "" });
@@ -155,9 +140,11 @@ function App() {
   };
 
   const doLogout = async () => {
+    setLoading(true)
     await API.logout();
     //Inizializzo gli stati
     setLogged(false);
+    setLoading(false)
     setURL("");
     setUser("");
     setMessage({ type: "success", msg: "Logout accomplished" });
@@ -165,48 +152,6 @@ function App() {
       setMessage({ type: "", msg: "" });
     }, 3000);
   };
-
-  const notifySuccess = () =>
-    toast.success("Success!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      id: "success-card",
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyError = () =>
-    toast.error("Error: something went wrong", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyBalance = () =>
-    toast.warn("Balance insufficient!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  const notifyQuantity = () =>
-    toast.warn("Maximum quantity reached!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -228,26 +173,29 @@ function App() {
       <Container fluid className="below-nav vh-100 backg" />
 
       <Container fluid className="below-nav">
-        <Container
-          fluid
-          className="d-flex justify-content-center align-items-center"
-          style={{ paddingBottom: 8 }}
-        >
-          <b>
-            <Clock
-              time={time}
-              faketime={faketime}
-              setTime={setTime}
-              setFakeTime={setFakeTime}
-              setDirty={setDirty}
-              dirty={dirty}
-            />
-          </b>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Button onClick={handleOpenModal}>
-            <Calendar /> Set Date and Time{" "}
-          </Button>
-        </Container>
+        {isLoading ?
+          <LoadingPage /> :
+          <Container
+            fluid
+            className="d-flex justify-content-center align-items-center"
+            style={{ paddingBottom: 8 }}
+          >
+            <b>
+              <Clock
+                time={time}
+                faketime={faketime}
+                setTime={setTime}
+                setFakeTime={setFakeTime}
+                setDirty={setDirty}
+                dirty={dirty}
+              />
+            </b>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <Button onClick={handleOpenModal}>
+              <Calendar /> Set Date and Time{" "}
+            </Button>
+          </Container>
+        }
 
         <ModalDate
           show={showModal}
@@ -280,7 +228,7 @@ function App() {
 
           {/* Generic Error Page */}
           <Route path="/error" element={<ErrorPage />} />
-
+            
           {/* BODY PER HOMEPAGE */}
           <Route
             path="/home"
@@ -382,11 +330,28 @@ function App() {
 
           {/**FARMER ROUTES */}
           {/**Route for the main page of the farmer */}
-          <Route
-            exact
-            path="/farmer/"
-            element={<Farmer getCurrentTime={getCurrentTime} />}
+          <Route exact path="/farmer" element={
+            isLogged ? <FarmerPage getCurrentTime={getCurrentTime} user={user} />
+              : <Navigate replace to="/" />
+          }
           />
+          {/*the old page is here*/}
+          <Route exact path="/farmer2" element={<Farmer2 getCurrentTime={getCurrentTime} user={user} />} />
+
+          <Route exact path="/farmer/yourproducts"
+            element={
+              isLogged ? <FarmerProducts user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
+
+          <Route exact path="/farmer/orders"
+            element={
+              isLogged ? <ConfirmOrdersSection user={user} getCurrentTime={getCurrentTime} />
+                : <Navigate replace to="/" />
+            }
+          />
+
 
           {/**MANAGER ROUTER */}
           {/**Route for the main page of the manager */}
@@ -492,5 +457,17 @@ function ErrorPage() {
     </Container>
   );
 }
-
+function LoadingPage() {
+  return (<Container className="vh-100 d-flex fixed-center justify-content-center align-items-center">
+    <Col>
+    </Col>
+    <Col className="align-items-center">
+      <Row> <h1>Hold on</h1> </Row>
+      <Row> <Spinner animation="border" variant="primary" /></Row>
+      <Row><h5>We're landing on the right page - - -</h5></Row>
+    </Col>
+    <Col>
+    </Col>
+  </Container>)
+}
 export default App;

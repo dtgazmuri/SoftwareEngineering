@@ -23,6 +23,24 @@ exports.getCustomers = (db) => {
   });
 };
 
+exports.getCustomerById = (db, id) => {
+  return new Promise((resolve, reject) => {
+    console.log(id)
+    //UPDATED query for getting customers in order to return also the username (email)
+    const sql = "SELECT USERNAME FROM users U WHERE U.ROLE = 'customer' AND U.USERID=?";
+    db.get(sql, [id], (err, row) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(row.USERNAME);
+    });
+  });
+};
+
+
+
 // get all products (with the werehouse quantity)
 exports.listProductsAll = (db) => {
   return new Promise((resolve, reject) => {
@@ -133,9 +151,12 @@ exports.getOrderAll = (db) => {
         return;
       }
 
+      console.log("ci", rows)
       //If not, map the answere on a const array
+      
       const orders = rows.map((e) => ({
         id: e.ID,
+        username: e.USERNAME,
         customerid: e.CUSTOMER,
         state: e.STATE,
         delivery: e.DELIVERY,

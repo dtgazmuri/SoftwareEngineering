@@ -221,7 +221,7 @@ module.exports = function (app, db, testUser, bot) {
     }
   });
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id", async (req, res) => {
+  app.get("/api/farmer/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Get the farmer ID
       const farmerID = Number(req.params.id);
@@ -249,7 +249,7 @@ module.exports = function (app, db, testUser, bot) {
 
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
-      console.log(orders);
+
 
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
@@ -258,17 +258,18 @@ module.exports = function (app, db, testUser, bot) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
-
+        let username = await employeeDAO.getCustomerById(db, orders[i].customerid)
+        
         //Create the order object
         const order = {
           id: orderid,
           customerid: orders[i].customerid,
+          username: username,
           state: orders[i].state,
           delivery: orders[i].delivery,
           total: orders[i].total,
           products: items,
         };
-
         //Add it to the res array
         resultArray.push(order);
       }
@@ -510,7 +511,7 @@ module.exports = function (app, db, testUser, bot) {
   //STORY NUMBER 9
   //getting the list of products sold by a specific farmer
   // GET /api/farmer/:filter/products
-  app.get("/api/farmer/:filter/products", (req, res) => {
+  app.get("/api/farmer/:filter/products", isLogged, isFarmer, (req, res) => {
     // products of farmer can be also get through their name/surname
     const farmerId = parseInt(req.params.filter);
     if (Number.isNaN(farmerId)) {
@@ -789,7 +790,7 @@ module.exports = function (app, db, testUser, bot) {
   //STORY N. 14
   //Getting all orders for a specific farmer given its id
   //GET /api/farmerOrders
-  app.get("/api/farmerOrders/:id", async (req, res) => {
+  app.get("/api/farmerOrders/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Create an array that will contain the result
       const result = [];
