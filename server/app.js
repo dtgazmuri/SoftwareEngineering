@@ -24,15 +24,13 @@ module.exports = function (app, db, testUser, bot) {
   app.use('/sayHello', router);
   router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
 
-  let users = [];
   if (!testUser) {
     bot.command("start", (ctx) => {
       //console.log(ctx.from);
-      users.push(ctx.chat.id);
-      // console.log(users.length);
+      myUserDao.addNewTelegramUser(db, ctx.chat.id);
       bot.telegram.sendMessage(
         ctx.chat.id,
-        "Hello there! Welcome to SPG telegram bot.",
+        `Hello ${ctx.chat.first_name}! Welcome to SPG telegram bot.`,
         {}
       );
     });
@@ -250,7 +248,6 @@ module.exports = function (app, db, testUser, bot) {
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
 
-
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
         //Get the i-th order
@@ -258,8 +255,11 @@ module.exports = function (app, db, testUser, bot) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
-        let username = await employeeDAO.getCustomerById(db, orders[i].customerid)
-        
+        let username = await employeeDAO.getCustomerById(
+          db,
+          orders[i].customerid
+        );
+
         //Create the order object
         const order = {
           id: orderid,
@@ -714,8 +714,8 @@ module.exports = function (app, db, testUser, bot) {
   });
 
   app.post("/api/notifyTime", (req, res) => {
-    new Promise((resolve, reject) => {
-      console.log(users.length);
+    new Promise(async (resolve, reject) => {
+      const users = await myUserDao.getAllTelegramUsers(db);
       users.forEach((id) => {
         console.log(id);
         bot.telegram.sendMessage(
