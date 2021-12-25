@@ -1,4 +1,5 @@
 module.exports = function (app, db, testUser, bot) {
+  const schedule = require("node-schedule");
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
@@ -732,7 +733,21 @@ module.exports = function (app, db, testUser, bot) {
         res.status(500).end();
       });
   });
-
+  /*
+  const j = schedule.scheduleJob(
+    { dayOfWeek: 6, hour: 9, minute: 0 },
+    async () => {
+      const users = await myUserDao.getAllTelegramUsers(db);
+      users.forEach((id) => {
+        console.log(id);
+        bot.telegram.sendMessage(
+          id,
+          "** The updated list of available products is available **"
+        );
+      });
+    }
+  );
+*/
   app.get("/api/customers/:id", isLoggedIn, (req, res) => {
     // shoud we check the role of the requester?  (req.user.role)  v
     customerDao
