@@ -260,7 +260,7 @@ function Basket(props) {
           <h2 id="empty">Your basket is empty</h2>
           <br></br>
           <Link to={`/customer`}>
-            <Button>Return</Button>
+            <Button variant="secondary">Return</Button>
           </Link>
         </>
       )}
@@ -359,7 +359,7 @@ export function ConfirmDeliveryPanel(props) {
             <Col></Col>
             <Col>
               <Link to={`/customer`}>
-                <Button>Return</Button>
+                <Button variant="secondary">Return</Button>
               </Link>
             </Col>
             <Col></Col>

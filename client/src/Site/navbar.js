@@ -11,7 +11,7 @@ function MyNavbar(props) {
   useEffect(() => {
     const handleLocation = () => {
         const l = location.pathname.split("/")[1];
-        if(l === "home" || (l==="shopemployee" && location.pathname.split("/")[2]===undefined) || l==="customer" || l==="farmer")
+        if(l === "home" || (l==="shopemployee" && location.pathname.split("/")[2]===undefined) || l==="customer" || l==="farmer" || (l==="manager" && location.pathname.split("/")[2]===undefined))
           setLoc(false);
         else
           setLoc(true);
