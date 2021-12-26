@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { Form, Button, Table, Modal, Container, Card, OverlayTrigger, Popover } from "react-bootstrap";
+import { Form, Button, Table, Modal, Container, Card, OverlayTrigger, Popover, Row, Col } from "react-bootstrap";
 import API from "../../API";
 
 import '../../App.css';
@@ -8,27 +8,28 @@ import '../../App.css';
 import CustomerSelection from "./CustomerSelection.js"
 
 
-function Information(props){
-    return(
-    <OverlayTrigger
-        rootCloseEvent="mousedown"
-        overlay={
-          <Popover style={{ margin: 0 }}>
-            <Popover.Header as="h3">Quantity per Package</Popover.Header>
-            <Popover.Body>
-              The quantity of product for each package is {props.quantity} g.
-            </Popover.Body>
-          </Popover>
-        }
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-         <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-        </svg>
-      </OverlayTrigger>
-    
-    
-    )}
+function Information(props) {
+    return (
+        <OverlayTrigger
+            rootCloseEvent="mousedown"
+            overlay={
+                <Popover style={{ margin: 0 }}>
+                    <Popover.Header as="h3">Quantity per Package</Popover.Header>
+                    <Popover.Body>
+                        The quantity of product for each package is {props.quantity} g.
+                    </Popover.Body>
+                </Popover>
+            }
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+            </svg>
+        </OverlayTrigger>
+
+
+    )
+}
 
 
 function ProductListEmployee(props) {
@@ -39,6 +40,8 @@ function ProductListEmployee(props) {
 
     const [delivery, setDelivery] = useState(false);
     const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [cap, setCap] = useState("");
 
     const [order, setOrder] = useState([]) //List of all ordererd products
 
@@ -86,6 +89,18 @@ function ProductListEmployee(props) {
         if (address === "" && good && delivery) {
             setCartError(true);
             setCartErrorMessage("Please enter the delivery address");
+            good = false;
+        }
+
+        if (city === "" && good && delivery) {
+            setCartError(true);
+            setCartErrorMessage("Please enter the delivery city");
+            good = false;
+        }
+
+        if (cap === "" && good && delivery) {
+            setCartError(true);
+            setCartErrorMessage("Please enter the delivery CAP");
             good = false;
         }
 
@@ -204,8 +219,8 @@ function ProductListEmployee(props) {
         let total = 0;
         let wantsDelivery = "False";
         let deladd = "Shop";
-        if (delivery && address != "") {
-            deladd = address;
+        if (delivery && address != "" && city !== "" && cap !== "") {
+            deladd = address+", "+city+", "+cap;
             wantsDelivery = "True";
         }
         let deliveryDate = orderDate;
@@ -219,15 +234,17 @@ function ProductListEmployee(props) {
             await API.postOrderByEmployee({ customerid: customerid, state: "pending", delivery: wantsDelivery, total: total, listitems: order, date: dateTime, address: deladd });
             props.setMessage({ type: "success", msg: `Order added correctly` })
             setTimeout(() => {
-                    props.setMessage({ type: "", msg: "" })}
-                ,3000)
+                props.setMessage({ type: "", msg: "" })
+            }
+                , 3000)
 
         } catch (err) {
             console.log(err.error);
             props.setMessage({ type: "danger", msg: `Error on processing the order, try again` })
             setTimeout(() => {
-                props.setMessage({ type: "", msg: "" })}
-            ,3000)
+                props.setMessage({ type: "", msg: "" })
+            }
+                , 3000)
         }
 
         setShow(false);
@@ -273,7 +290,7 @@ function ProductListEmployee(props) {
                                             cartError ?
                                                 <ErrorCartModal handleClose={handleClose} show={show} errorMessage={cartErrorMessage} />
                                                 :
-                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate} />
+                                                <RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} city={city} cap={cap} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate} />
                                         }
 
 
@@ -282,7 +299,7 @@ function ProductListEmployee(props) {
                                         <ProductTable productList={products} getBookedProduct={getBookedProduct} addOrder={addOrder} removeOrder={removeOrder}></ProductTable>
 
                                         {/* FOOTER TO SET THE DELIVERY DATE/TIME/ADDRESS */}
-                                        <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow}></ConfirmDeliveryPanel>
+                                        <ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} city={city} setCity={setCity} cap={cap} setCap={setCap} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow}></ConfirmDeliveryPanel>
                                     </>
                             }
                         </Container>
@@ -337,9 +354,23 @@ export function ConfirmDeliveryPanel(props) {
 
                         {
                             props.delivery ?
-                                <Form.Group className="mb-3" controlId="delivery">
-                                    <Form.Control id="address" type="address" placeholder="Enter Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
-                                </Form.Group>
+                                <>
+                                    <Form.Group className="mb-3" controlId="delivery">
+                                        <Form.Control id="address" type="address" placeholder="Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
+                                    </Form.Group>
+                                    <Row>
+                                        <Col>
+                                            <Form.Group className="mb-3" controlId="delivery">
+                                                <Form.Control id="city" type="address" placeholder="City" value={props.city} onChange={ev => props.setCity(ev.target.value)} />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col>
+                                            <Form.Group className="mb-3" controlId="delivery">
+                                                <Form.Control id="cap" type="address" placeholder="CAP" value={props.cap} onChange={ev => props.setCap(ev.target.value)} />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </>
                                 :
                                 <></>
                         }
@@ -397,7 +428,7 @@ export function ProductTableRow(props) {
             <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} bgcolor={bookedQTA > 0 ? "#99ff99" : ""}>
                 <td>{prod.name}</td>
                 <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                <td>{prod.price} € <Information quantity={prod.quantity}/></td>
+                <td>{prod.price} € <Information quantity={prod.quantity} /></td>
                 <td>{prod.availability}</td>
                 {bookedQTA >= prod.quantity ?
                     <td><Button disabled id="add" onClick={() => props.addOrder(prod)}>+</Button></td>
@@ -516,7 +547,7 @@ export function RecapCart(props) {
                             </td>
                             <td colSpan="2" id="address">
                                 {
-                                    props.delivery ? props.address : "Pick-up at the shop"
+                                    props.delivery ? props.address+", "+props.city+" "+props.cap : "Pick-up at the shop"
                                 }
                             </td>
                         </tr>

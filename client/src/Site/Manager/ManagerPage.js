@@ -10,78 +10,78 @@ import API from '../../ManagerAPI'
 
 
 
-function ManagerPage(props){
+function ManagerPage(props) {
 
     return (
         <>
-        <Container fluid className="below-nav vh-100 align-items-center">
-            <Row id = "managerFunctions">
-                
-                    <SeeFarmerOrdersButton /> 
+            <Container fluid className="below-nav vh-100 align-items-center">
+                <Row id="managerFunctions">
+
+                    <SeeFarmerOrdersButton />
 
                     <SeeReportsButton />
-                
 
-            </Row>
-        </Container>
+
+                </Row>
+            </Container>
         </>
-      )
+    )
 }
 
-function SeeFarmerOrdersButton () {
+function SeeFarmerOrdersButton() {
     //this is a button shown in the mainpage of the manager that redirects to /manager/farmerOrders
-    return(
-        <Col id = "ackFarmerOrder">
+    return (
+        <Col id="ackFarmerOrder">
             <Link to="/manager/farmerorders">
                 <Container id="del-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
-                {deliverybig}
-                <h3>See Farmer Orders</h3>
+                    {deliverybig}
+                    <h3>See Farmer Orders</h3>
                 </Container>
             </Link>
         </Col>
     )
 }
 
-function SeeReportsButton () {
+function SeeReportsButton() {
     //this is a button shown in the mainpage of the manager that redirects to /manager/farmerOrders
-    return(
-        <Col id = "ackFarmerOrder">
+    return (
+        <Col id="ackFarmerOrder">
             <Link to="/manager/reports">
                 <Container id="del-button" fluid className="LoginButton border border-dark rounded nolink mb-3" align="center" >
-                {managerreport}
-                <br></br><br></br>
-                <h3>See Reports</h3>
+                    {managerreport}
+                    <br></br><br></br>
+                    <h3>See Reports</h3>
                 </Container>
             </Link>
         </Col>
     )
 }
 
-function ManagerPageFarmerOrders (props) {
+function ManagerPageFarmerOrders(props) {
     const [orders, setOrders] = useState([]);
     const [ordersToShow, setOrdersToShow] = useState([]);
     const [loading, setLoading] = useState(true);
     const [orderToSearch, setOrderToSearch] = useState("");
 
-    
+
     //orders from farmer are delivered from Monday 9:00 (after confirmation) to Tuesday evening (let's say 21:00)
     let validTime = false;
     const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
 
-    if(currentTime.day() === 1 && currentTime.hour() > 8) //if it's Monday after 8.59, can set ack
+    if (currentTime.day() === 1 && currentTime.hour() > 8) //if it's Monday after 8.59, can set ack
         validTime = true;
-    if(currentTime.day() === 2 && currentTime.hour() < 21) //if it's Tuesday before 21, can set ack for delivery
+    if (currentTime.day() === 2 && currentTime.hour() < 21) //if it's Tuesday before 21, can set ack for delivery
         validTime = true;
 
     //use effect that when we type something in the searchbar, triggers the filtering
     useEffect(() => {
         const value = orderToSearch;
-        if(value === ""){
+        if (value === "") {
             setOrdersToShow(orders);
             return;
         }
-        const tmp = orders.filter( order => {
-            if(order.id === Number.parseInt(value))
+        const tmp = orders.filter(order => {
+            if (order.id === Number.parseInt(value))
                 return true;
             else if (order.farmerName.toUpperCase().startsWith(value.toUpperCase()))
                 return true;
@@ -91,7 +91,7 @@ function ManagerPageFarmerOrders (props) {
                 return true;
             else if (order.listitems.find(item => item.name.toUpperCase().startsWith(value.toUpperCase())))
                 return true;
-        
+
             return false;
         });
         //TODO: complete this function
@@ -112,38 +112,38 @@ function ManagerPageFarmerOrders (props) {
                 setOrdersToShow([]);
             }
             );
-      }, [])
-   
+    }, [])
+
 
     return (
         <Col>
             {loading && <Alert variant='warning'> {alarm} Please wait while loading farmer orders... {alarm}</Alert>}
             {(orders.length && !loading) ?
-                <ListGroup id="list" variant = "primary" className = "mb-5"> 
-                    <ListGroup.Item variant="primary" key = "title">
-                        <h5 id = "manager-farmer-orders-title">List of all the farmer orders</h5>
+                <ListGroup id="list" variant="primary" className="mb-5">
+                    <ListGroup.Item variant="primary" key="title">
+                        <h5 id="manager-farmer-orders-title">List of all the farmer orders</h5>
                     </ListGroup.Item>
-                    <ListGroup.Item variant="secondary" key = "explaination">
-                        <h6 id = "manager-farmer-orders-explaination">Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00</h6>
+                    <ListGroup.Item variant="secondary" key="explaination">
+                        <h6 id="manager-farmer-orders-explaination">Delivery from farmers can be acknowledged from Monday 9:00 to Tuesday 21:00</h6>
                     </ListGroup.Item>
-                    <ListGroup.Item variant="secondary" key = "search">
+                    <ListGroup.Item variant="secondary" key="search">
                         <Form>
                             <Form.Group controlId="manager-farmer-orders-searching">
-                                <Form.Control value = {orderToSearch} placeholder = "Filter farmer orders by id, farmer name, farmer surname, state or product"
-                                onChange={(event) => setOrderToSearch(event.target.value)}/>       
+                                <Form.Control value={orderToSearch} placeholder="Filter farmer orders by id, farmer name, farmer surname, state or product"
+                                    onChange={(event) => setOrderToSearch(event.target.value)} />
                             </Form.Group>
                         </Form>
                     </ListGroup.Item>
-                    
+
                     {ordersToShow.map(order => {
                         return (
-                            <FarmerOrderItem key = {order.id} order = {order} validTime = {validTime}/>  
-                        ); 
+                            <FarmerOrderItem key={order.id} order={order} validTime={validTime} />
+                        );
                     })
                     }
-                </ListGroup> 
-            : <Alert variant='danger'>No orders found.</Alert>
-            }     
+                </ListGroup>
+                : <Alert variant='danger'>No orders found.</Alert>
+            }
         </Col>
     )
 }
@@ -153,24 +153,24 @@ function FarmerOrderItem(props) {
     const [errorMsg, setErrorMsg] = useState(false);
     const [ackedSuccessfully, setAckedSuccessfully] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
-    
+
     let order = props.order;
 
     //useEffect for closing alert after 3 seconds
     useEffect(() => {
-        if(ackedSuccessfully){
-            window.setTimeout(()=>{
+        if (ackedSuccessfully) {
+            window.setTimeout(() => {
                 setAckedSuccessfully(false);
-              },3000)
+            }, 3000)
         }
-      }, [ackedSuccessfully]);
-    
+    }, [ackedSuccessfully]);
+
     const ackClicked = (orderid) => {
         setAcked(true);
         API.ackFarmerOrder(orderid)
             .then((newOrder) => {
                 //returning an obj with id and state = "delivered"
-                order.state = newOrder.state; 
+                order.state = newOrder.state;
                 setAcked(false);
                 setErrorMsg(false);
                 //this alert of successfully acked will disappear in 3 seconds
@@ -183,64 +183,65 @@ function FarmerOrderItem(props) {
     }
 
     return (
-        <ListGroup.Item id = {order.id} key = {order.id}>
-            <Row key = "order-id">
+        <ListGroup.Item id={order.id} key={order.id}>
+            <Row key="order-id">
                 <h4><strong>Order id: {order.id}</strong></h4>
             </Row>
-            <Row key = "order-info">
-            <Col sm = {4}>
-                {/**ORDER INFO */}
-                <h5><strong>Order info</strong></h5>
-                <p>
-                    State: {acked ? <span className = "bg-warning">delivered</span> : <span>{order.state}</span>} <br></br>
-                    Total: {order.total.toFixed(2)}€<br></br>
-                    Date: {order.time}<br></br>
-                </p>
+            <Row key="order-info">
+                <Col sm={4}>
+                    {/**ORDER INFO */}
+                    <h5><strong>Order info</strong></h5>
+                    <p class="lead"><u>
+                        State: {acked ? <span className="bg-warning">delivered</span> : <span>{order.state}</span>} <br></br>
+                        Total: {order.total.toFixed(2)}€<br></br>
+                        Date: {order.time}<br></br>
+                    </u>
+                    </p>
 
-                {!showDetails ?
-                    <Button variant="link" className="p-0" onClick = {() => setShowDetails(true)}>Show more info</Button>
-                :
-                    <>
-                    <Button variant="link" className="p-0" onClick = {() => setShowDetails(false)}>Hide more info</Button><br></br>
-                    {/**This ol can be split into another function component */}
-                    <ol data-testid="farmer-order-products">
-                        {order.listitems.map(product => {
-                            return <li key = {product.id}>
-                                <span><strong className = "pr-3">{product.name}</strong></span>
-                                <span className = "pr-3">Qty: <strong>{product.quantity}</strong></span>
-                                <span>Total: <strong>{product.price}€</strong></span>
-                            </li>
-                        })}
-                    </ol>
-                    
-                    </>
-                }
-                
-            </Col>
-            <Col sm = {4}>
-                {/**FARMER INFO */}
-                <h5><strong>Farmer info</strong></h5>
-                <p>
-                    Farmer id: {order.farmerid} <br></br>
-                    Name: {order.farmerName} <br></br>
-                    Surname: {order.farmerSurname}<br></br>
-                </p>
-            </Col>
-            <Col sm = {4}>
-                {/**CONTROLS AND ALERT */}
-                {/**It's possible to set acknowledgment of delivery only at valid times */}
-                {   (order.state === "pending" && props.validTime) &&
-                        <Button className = "mb-3" onClick = {() => ackClicked(order.id)}>Acknowledge delivery</Button>
-                }
-                {   
-                    errorMsg && <Alert variant = "danger">Error while trying to acknowledge delivery...</Alert>
-                }
-                {
-                    ackedSuccessfully && <Alert variant = "success">Order n.{order.id} acked successfully</Alert>
-                }
-            </Col>
+                    {!showDetails ?
+                        <Button variant="link" className="p-0" onClick={() => setShowDetails(true)}>Show more info</Button>
+                        :
+                        <>
+                            <Button variant="link" className="p-0" onClick={() => setShowDetails(false)}>Hide more info</Button><br></br>
+                            {/**This ol can be split into another function component */}
+                            <ol data-testid="farmer-order-products">
+                                {order.listitems.map(product => {
+                                    return <li key={product.id}>
+                                        <span><strong className="pr-3">{product.name}</strong></span>
+                                        <span className="pr-3">Qty: <strong>{product.quantity}</strong></span>
+                                        <span>Total: <strong>{product.price}€</strong></span>
+                                    </li>
+                                })}
+                            </ol>
+
+                        </>
+                    }
+
+                </Col>
+                <Col sm={4}>
+                    {/**FARMER INFO */}
+                    <h5><strong>Farmer info</strong></h5>
+                    <p>
+                        Farmer id: {order.farmerid} <br></br>
+                        Name: {order.farmerName} <br></br>
+                        Surname: {order.farmerSurname}<br></br>
+                    </p>
+                </Col>
+                <Col sm={4}>
+                    {/**CONTROLS AND ALERT */}
+                    {/**It's possible to set acknowledgment of delivery only at valid times */}
+                    {(order.state === "pending" && props.validTime) &&
+                        <Button className="mb-3" onClick={() => ackClicked(order.id)}>Acknowledge delivery</Button>
+                    }
+                    {
+                        errorMsg && <Alert variant="danger">Error while trying to acknowledge delivery...</Alert>
+                    }
+                    {
+                        ackedSuccessfully && <Alert variant="success">Order n.{order.id} acked successfully</Alert>
+                    }
+                </Col>
             </Row>
-        </ListGroup.Item>  
+        </ListGroup.Item>
     )
 }
 
@@ -274,7 +275,7 @@ function ManagerReports(props) {
                 setWeeklyReports([]);
             }
             );
-      }, [])
+    }, [])
 
     /* THIS IS WHAT THE ARRAYS LOOK LIKE
     let weekArray = [
@@ -360,11 +361,11 @@ function ManagerReports(props) {
 
     return (
         <>
-            <ListGroup id="list" variant = "primary" >
-                <ListGroup.Item variant="primary" key = "title">
+            <ListGroup id="list" variant="primary" >
+                <ListGroup.Item variant="primary" key="title">
                     <h2>Manager Reports</h2>
                 </ListGroup.Item>
-                <ListGroup.Item variant="light" key = "information">
+                <ListGroup.Item variant="light" key="information">
                     <h6>Reports are completely generated after each week and after each month. Only partial version are available before that.</h6>
                 </ListGroup.Item>
             </ListGroup>
@@ -376,14 +377,14 @@ function ManagerReports(props) {
             {(!loading && areThereReports) ?
                 <Row>
                     <Col>
-                        <ListGroup id="list" variant = "primary" className = "mb-5">
-                            <ListGroup.Item variant="secondary" key = "title monthly">
+                        <ListGroup id="list" variant="primary" className="mb-5">
+                            <ListGroup.Item variant="secondary" key="title monthly">
                                 <h4>Monthly Reports</h4>
                             </ListGroup.Item>
 
                             {monthlyReports.map(report => {
                                 return (
-                                    <ReportMonthItem report = {report} />
+                                    <ReportMonthItem report={report} />
                                 );
                             })}
 
@@ -391,28 +392,28 @@ function ManagerReports(props) {
                     </Col>
 
                     <Col>
-                        <ListGroup id="list" variant = "primary" className = "mb-5">
-                            <ListGroup.Item variant="secondary" key = "title weekly">
+                        <ListGroup id="list" variant="primary" className="mb-5">
+                            <ListGroup.Item variant="secondary" key="title weekly">
                                 <h4>Weekly Reports</h4>
                             </ListGroup.Item>
 
                             {weeklyReports.map(report => {
                                 return (
-                                    <ReportWeekItem report = {report} />
+                                    <ReportWeekItem report={report} />
                                 );
                             })}
 
                         </ListGroup>
                     </Col>
                 </Row>
-            : <Alert variant='danger'>No reports found.</Alert>
+                : <Alert variant='danger'>No reports found.</Alert>
             }
         </>
     )
 }
 
 function ReportWeekItem(props) {
-    const[show, setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
     const ShowWeeklyReport = () => {
         setShow(true);
@@ -442,17 +443,17 @@ function ReportWeekItem(props) {
         "December"
     ]
 
-    let initialDateYear = report.weekStartDate.substring(0,4);
-    let finalDateYear = report.weekEndDate.substring(0,4);
-    let initialDateMonth = monthArray[report.weekStartDate.substring(5,7).toString() - 1];
-    let finalDateMonth = monthArray[report.weekEndDate.substring(5,7).toString() - 1];
+    let initialDateYear = report.weekStartDate.substring(0, 4);
+    let finalDateYear = report.weekEndDate.substring(0, 4);
+    let initialDateMonth = monthArray[report.weekStartDate.substring(5, 7).toString() - 1];
+    let finalDateMonth = monthArray[report.weekEndDate.substring(5, 7).toString() - 1];
     let initialDateDay = report.weekStartDate.substring(8,);
     let finalDateDay = report.weekEndDate.substring(8,);
 
     let startDateWords = initialDateMonth + " " + initialDateDay + ", " + initialDateYear;
     let finalDateWords = finalDateMonth + " " + finalDateDay + ", " + finalDateYear;
 
-    for (const[key, value] of Object.entries(report.lostFood)) {
+    for (const [key, value] of Object.entries(report.lostFood)) {
         entry = {
             "Food": key,
             "Quantity": value
@@ -464,7 +465,7 @@ function ReportWeekItem(props) {
 
     return (
         <>
-            <ListGroup.Item action variant="light" onClick = {() => ShowWeeklyReport(report)}>
+            <ListGroup.Item action variant="light" onClick={() => ShowWeeklyReport(report)}>
                 <h6>{startDateWords} - {finalDateWords}</h6>
             </ListGroup.Item>
             <Modal show={show} onHide={handleClose}>
@@ -485,13 +486,13 @@ function ReportWeekItem(props) {
 
                         <tbody>
                             {foodArray.map(food => {
-                            return (
-                                <tr>
-                                    <td> {food["Food"]} </td>
-                                    <td> {food["Quantity"]} </td>
-                                </tr>      
-                            );
-                        })}
+                                return (
+                                    <tr>
+                                        <td> {food["Food"]} </td>
+                                        <td> {food["Quantity"]} </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
 
                         <tfoot>
@@ -512,13 +513,13 @@ function ReportWeekItem(props) {
                 </Modal.Footer>
             </Modal>
         </>
-        
+
     )
 }
 
 
 function ReportMonthItem(props) {
-    const[show, setShow] = useState(false);
+    const [show, setShow] = useState(false);
 
     const ShowMonthlyReport = () => {
         setShow(true);
@@ -533,7 +534,7 @@ function ReportMonthItem(props) {
     let total = 0;
     let entry;
 
-    for (const[key, value] of Object.entries(report.lostFood)) {
+    for (const [key, value] of Object.entries(report.lostFood)) {
         entry = {
             "Food": key,
             "Quantity": value
@@ -560,7 +561,7 @@ function ReportMonthItem(props) {
 
     return (
         <>
-            <ListGroup.Item action variant="light" onClick = {() => ShowMonthlyReport(report)} >
+            <ListGroup.Item action variant="light" onClick={() => ShowMonthlyReport(report)} >
                 <h6>{monthArray[report.month - 1]} {report.year}</h6>
             </ListGroup.Item>
             <Modal show={show} onHide={handleClose}>
@@ -581,13 +582,13 @@ function ReportMonthItem(props) {
 
                         <tbody>
                             {foodArray.map(food => {
-                            return (
-                                <tr>
-                                    <td> {food["Food"]} </td>
-                                    <td> {food["Quantity"]} </td>
-                                </tr>      
-                            );
-                        })}
+                                return (
+                                    <tr>
+                                        <td> {food["Food"]} </td>
+                                        <td> {food["Quantity"]} </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
 
                         <tfoot>
@@ -614,4 +615,4 @@ function ReportMonthItem(props) {
 
 
 
-export {ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem, ManagerReports};
+export { ManagerPage, ManagerPageFarmerOrders, FarmerOrderItem, ManagerReports };
