@@ -57,3 +57,33 @@ exports.addNewUser = (db, user, role) => {
       reject(err);
     });
 };
+
+exports.addNewTelegramUser = (db, chatId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO telegramBot(chatId) VALUES (?)";
+    db.run(sql, [chatId], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+};
+
+exports.getAllTelegramUsers = (db) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT chatId from telegramBot";
+    db.all(sql, [], function (err, rows) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const users = [];
+      rows.map((u) => {
+        users.push(u.chatId);
+      });
+      resolve(users);
+    });
+  });
+};

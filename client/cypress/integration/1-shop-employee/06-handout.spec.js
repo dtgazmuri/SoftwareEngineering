@@ -52,8 +52,8 @@ context("Handout Order", () => {
             })
 
         })
+        const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD")
         cy.getById("confirm").within(() => {
-            const tomorrow = dayjs().add(1, "day").format("YYYY-MM-DD")
             cy.getById("date").type(tomorrow).should("have.value", tomorrow)
             cy.getById("time").type("12:00").should("have.value", "12:00")
             cy.getById("delivery").check().should("have.value", "on")
@@ -67,8 +67,7 @@ context("Handout Order", () => {
             })
             cy.getById("delivery").within(() => {
                 cy.getById("address").should("have.text", "Via Fermi 2")
-                cy.getById("date").should("have.text", "2021-12-08 at 12:00")
-            })
+                cy.getById("date").should("have.text", `${tomorrow} at 12:00`)            })
             cy.getById("sendorder").click()
             cy.intercept("/api/order/customer").then(({ body }) => { id = body })
             console.log(id)

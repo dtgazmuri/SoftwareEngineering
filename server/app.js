@@ -1,4 +1,5 @@
-module.exports = function (app, db, testUser) {
+module.exports = function (app, db, testUser, bot) {
+  const schedule = require("node-schedule");
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
@@ -16,6 +17,7 @@ module.exports = function (app, db, testUser) {
   const session = require("express-session");
   const myUserDao = require("./Dao/userDao");
   const customerDao = require("./Dao/customerDao");
+  const managerDao = require("./Dao/managerDAO");
 
   const userDao = require("./Dao/dbusers");
 
@@ -23,30 +25,41 @@ module.exports = function (app, db, testUser) {
   app.use('/sayHello', router);
   router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
 
+  if (!testUser) {
+    bot.command("start", (ctx) => {
+      //console.log(ctx.from);
+      myUserDao.addNewTelegramUser(db, ctx.chat.id);
+      bot.telegram.sendMessage(
+        ctx.chat.id,
+        `Hello ${ctx.chat.first_name}! Welcome to SPG telegram bot.`,
+        {}
+      );
+    });
+  }
+
   function handleMail(req, res) {
     // Not the movie transporter!
     var transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      service: "Gmail",
       auth: {
-        user: 'spg.p13.polito@gmail.com', // Email id
-        pass: 'spgp13gmail' // Password
-      }
+        user: "spg.p13.polito@gmail.com", // Email id
+        pass: "spgp13gmail", // Password
+      },
     });
     var text = "Your order has been confirmed!";
     var mailOptions = {
-      from: 'spg.p13.polito@gmail.com>', // sender address
+      from: "spg.p13.polito@gmail.com>", // sender address
       to: req.body.user, // list of receivers
-      subject: 'Order confirmed', // Subject line
-      text: text //, // plaintext body
-
+      subject: "Order confirmed", // Subject line
+      text: text, //, // plaintext body
     };
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
-        res.json({ yo: 'error' });
+        res.json({ yo: "error" });
       } else {
         res.json({ yo: info.response });
-      };
+      }
     });
   }
 
@@ -125,7 +138,6 @@ module.exports = function (app, db, testUser) {
     return res.status(401).json({ error: "Unauthorized action" });
   };
 
-
   const isManager = (req, res, next) => {
     if (testUser) {
       return next();
@@ -177,7 +189,6 @@ module.exports = function (app, db, testUser) {
     res.end();
   });
 
-  
   //Active session restore
   app.get("/api/sessions/current", (req, res) => {
     if (req.isAuthenticated()) {
@@ -199,29 +210,17 @@ module.exports = function (app, db, testUser) {
     }
   });
 
-  app.get("/api/:username", async (req,res) => {
-    try{
-      const id = await userDao.getId(db, req.params.username)
-      res.status(200).json(id);
-
-    }
-    catch (err) {
-      res.status(404).end();
-    }
-  });
-
-   app.get("/api/customers/get", async (req, res) => {
+  app.get("/api/customers/get", async (req, res) => {
     try {
       const obj = await employeeDAO.getCustomers(db);
       res.status(200).json(obj);
-      console.log("here")
+      console.log("here");
     } catch (err) {
-
       res.status(404).json();
     }
   });
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id", async (req, res) => {
+  app.get("/api/farmer/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Get the farmer ID
       const farmerID = Number(req.params.id);
@@ -257,17 +256,21 @@ module.exports = function (app, db, testUser) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
+        let username = await employeeDAO.getCustomerById(
+          db,
+          orders[i].customerid
+        );
 
         //Create the order object
         const order = {
           id: orderid,
           customerid: orders[i].customerid,
+          username: username,
           state: orders[i].state,
           delivery: orders[i].delivery,
           total: orders[i].total,
           products: items,
         };
-
         //Add it to the res array
         resultArray.push(order);
       }
@@ -446,8 +449,6 @@ module.exports = function (app, db, testUser) {
     }
   );
 
-
-
   //SERVER SIDE FOR THE STORIES NUMBER 4-5-9
   //STORY NUMBER 4
 
@@ -511,7 +512,7 @@ module.exports = function (app, db, testUser) {
   //STORY NUMBER 9
   //getting the list of products sold by a specific farmer
   // GET /api/farmer/:filter/products
-  app.get("/api/farmer/:filter/products", (req, res) => {
+  app.get("/api/farmer/:filter/products", isLogged, isFarmer, (req, res) => {
     // products of farmer can be also get through their name/surname
     const farmerId = parseInt(req.params.filter);
     if (Number.isNaN(farmerId)) {
@@ -578,8 +579,6 @@ module.exports = function (app, db, testUser) {
       }
     }
   );
-
- 
 
   // POST /api/customer
   app.post(
@@ -715,6 +714,40 @@ module.exports = function (app, db, testUser) {
       });
   });
 
+  app.post("/api/notifyTime", (req, res) => {
+    new Promise(async (resolve, reject) => {
+      const users = await myUserDao.getAllTelegramUsers(db);
+      users.forEach((id) => {
+        console.log(id);
+        bot.telegram.sendMessage(
+          id,
+          "** The updated list of available products is available **"
+        );
+      });
+      resolve();
+    })
+      .then(() => {
+        res.status(200).json();
+      })
+      .catch((err) => {
+        res.status(500).end();
+      });
+  });
+  /*
+  const j = schedule.scheduleJob(
+    { dayOfWeek: 6, hour: 9, minute: 0 },
+    async () => {
+      const users = await myUserDao.getAllTelegramUsers(db);
+      users.forEach((id) => {
+        console.log(id);
+        bot.telegram.sendMessage(
+          id,
+          "** The updated list of available products is available **"
+        );
+      });
+    }
+  );
+*/
   app.get("/api/customers/:id", isLoggedIn, (req, res) => {
     // shoud we check the role of the requester?  (req.user.role)  v
     customerDao
@@ -769,23 +802,30 @@ module.exports = function (app, db, testUser) {
     }
   );
 
-
   //STORY N. 14
   //Getting all orders for a specific farmer given its id
   //GET /api/farmerOrders
-  app.get("/api/farmerOrders/:id", async (req, res) => {
+  app.get("/api/farmerOrders/:id", isLogged, isFarmer, async (req, res) => {
     try {
       //Create an array that will contain the result
       const result = [];
-      
+
       //Get orders for the specified farmer given its id
       const orders = await farmerDAO.getFarmerOrderIds(db, req.params.id);
 
       //For each order get the quantity and name of the product
       for (let i = 0; i < orders.length; i++) {
-        const products = await farmerDAO.getOrdersInfo(db, orders[i].id, req.params.id);
+        const products = await farmerDAO.getOrdersInfo(
+          db,
+          orders[i].id,
+          req.params.id
+        );
 
-        result.push({ id: orders[i].id, status: orders[i].status, products: products });
+        result.push({
+          id: orders[i].id,
+          status: orders[i].status,
+          products: products,
+        });
       }
 
       res.status(200).json(result);
@@ -812,7 +852,6 @@ module.exports = function (app, db, testUser) {
       });
     }
   });
-
 
   //STORY N.15
   //Getting all farmer orders, along with their info (i.e. all the items they contain)
@@ -854,7 +893,8 @@ module.exports = function (app, db, testUser) {
   });
 
   //ACKNOWLEDGE DELIVERY -> try to change the state of the order id from pending to delivered
-  app.post("/api/farmerOrders/:id/ack",
+  app.post(
+    "/api/farmerOrders/:id/ack",
     isLogged,
     isManager,
     [
@@ -888,4 +928,80 @@ module.exports = function (app, db, testUser) {
       }
     }
   );
+
+  // Getting all the information required for the manager reports
+  // GET /api/managerReports
+  app.get("/api/managerReports", isLogged, isManager, async (req, res) => {
+    try {
+      // Create an empty array as an answer
+      const reportArray = [];
+
+      // Get the reports and all the food that has been lost (i.e. not picked up)
+      const reports = await managerDao.getReports(db);
+      const lostFood = await managerDao.getLostFood(db);
+
+      // For each report, an entry is added to reportArray
+      // To each report, the correct lost food must be added (dates must match)
+      for (let i = 0; i < reports.length; i++) {
+        let currentReport = reports[i];
+        let initialDate = currentReport.initialDate;
+        let finalDate = currentReport.finalDate;
+        let reportForArray;
+        let foodDictionary = {};
+
+        for (let j = 0; j < lostFood.length; j++) {
+          let currentProduct = lostFood[j];
+          foodDate = new Date(lostFood[j].date);
+          var d1 = new Date(initialDate);
+          var d2 = new Date(finalDate);
+
+          if (foodDate <= d2 && foodDate >= d1) {
+            // If it is already there, just add it
+            let currentNumber = 0;
+            if (currentProduct.product in foodDictionary) {
+              currentNumber = foodDictionary[currentProduct.product];
+            }
+            foodDictionary[currentProduct.product] =
+              currentProduct.quantity + currentNumber;
+          }
+        }
+
+        // If report is of type week
+        if (currentReport.type == 0) {
+          reportForArray = {
+            type: 0,
+            weekStartDate: currentReport.initialDate,
+            weekEndDate: currentReport.finalDate,
+            lostFood: foodDictionary,
+          };
+        }
+        // Else, report is for the entire month
+        else if (currentReport.type == 1) {
+          let year = currentReport.initialDate.substring(0, 4);
+          let month = currentReport.initialDate.substring(5, 7);
+          reportForArray = {
+            type: 1,
+            month: month,
+            year: year,
+            lostFood: foodDictionary,
+          };
+        }
+
+        //Add it to the report array
+        reportArray.push(reportForArray);
+      }
+      res.status(200).json(reportArray);
+    } catch (err) {
+      res.status(500).end();
+    }
+  });
+
+  app.get("/api/:username", async (req, res) => {
+    try {
+      const id = await userDao.getId(db, req.params.username);
+      res.status(200).json(id);
+    } catch (err) {
+      res.status(404).end();
+    }
+  });
 };

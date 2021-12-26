@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 
 context("Ack a order", () => {
+  
   it("Create a new order",() => {
     cy.visit("localhost:3000");
     cy.getById("login-col").click()
@@ -47,7 +48,7 @@ context("Ack a order", () => {
       cy.getById("address").should("exist").type("Via Fermi 2").should("have.value", "Via Fermi 2")
       cy.getById("sendorder").click()
     })
-
+    
     cy.getById("receipt").should("be.visible").within(() => {
         cy.getById("items-list").within(()=>{
           cy.get("tr").its('length').should('be.gte', 2)
@@ -58,10 +59,9 @@ context("Ack a order", () => {
         })
         cy.getById("sendorder").click()
         cy.intercept("/api/order/customer", {statusCode:200})
+        cy.getByTestId("logout").click()
+
     })
-
-    cy.getByTestId("logout").click()
-
   })
   
   it("Log as manager", () => {
@@ -73,8 +73,6 @@ context("Ack a order", () => {
     cy.location('pathname', { timeout: 10000 }).should('eq', '/manager');
 
   })
-
-
 
   it("Ack order", () => {
     cy.getById("del-button").click()

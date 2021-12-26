@@ -207,7 +207,6 @@ function OrderList(props) {
     useEffect(() => {
         API.getOrders()
             .then(all_orders => {
-                console.log(all_orders);
                 setOrderList(all_orders);
             })
             .catch(e => handleErrors(e));
@@ -262,7 +261,8 @@ function OrderList(props) {
                                 <h5>Order number: {order.id}</h5>
                                 <Row id={order.customerid}>
                                     <Col>
-
+                                        <Row>Customer mail: {order.username} </Row>
+                                        
                                         <Row>Customer id: {order.customerid} </Row>
                                         <Row>Order state: {order.state} </Row>
                                         <Row>Order total: {order.total.toFixed(2)}</Row>
@@ -270,7 +270,7 @@ function OrderList(props) {
                                     <Col>
                                         {invalidTime &&
                                             <Alert variant="warning" >
-                                                Sorry, handouts are possible between Wednesday at 9 and Friday at 21.
+                                                Sorry, handouts are only possible between Wednesday at 9:00 and Friday at 21:00.
                                             </Alert>
                                         }
                                         {(order.state === "pending" && !invalidTime) &&
