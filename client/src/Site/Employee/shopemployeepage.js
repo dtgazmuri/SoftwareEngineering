@@ -69,6 +69,7 @@ function MyPage(props) {
               </Link>
           </Col>
           </Row>
+          <br></br>
           
           <SignupForm show={show} handleShow={handleShow} handleClose={handleClose} addClient={props.addClient} />
         </Container>

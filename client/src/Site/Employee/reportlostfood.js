@@ -13,6 +13,8 @@ function ReportLostFood(props) {
     const [alert, setAlert] = useState("Please enter all data properly");
     const [error, setError] = useState(true);
 
+    const [productList, setProductList] = useState([]);
+
     const [productName, setProductName] = useState(""); //state used for searching a specific product
     const [productsToBeShown, setProductsToBeShown] = useState([]);
     const [products, setProducts] = useState(
@@ -67,6 +69,7 @@ function ReportLostFood(props) {
                 console.log(all_products);
                 //setProducts(all_products);
                 setProductsToBeShown(all_products);
+                setProductList(all_products);
             })
             .catch(e => handleErrors(e));
     }, [])
@@ -93,7 +96,6 @@ function ReportLostFood(props) {
 
     const handleCheck = () => {
         let productInt = parseFloat(productAmount);
-        console.log(productInt);
         if (isNaN(productInt)) {
             setAlert("Quantity entered is not a number");
         }
@@ -111,9 +113,43 @@ function ReportLostFood(props) {
     }
 
     const handlePostLostFood = () => {
-        console.log(selectedProduct);
-        console.log(props.getCurrentTime());
-        // This must post the request
+        let date = props.getCurrentTime().split(" ");
+        let dateArray = date[1].split("/");
+        let product;
+        for (let i = 0; i < productList.length ; i++){
+            if (productList[i].id == selectedProduct) {
+                product = productList[i];
+                break;
+            }
+        }
+        let monthArray = {
+            "January": 1,
+            "February": 2,
+            "March": 3,
+            "April": 4,
+            "May": 5,
+            "June": 6,
+            "July": 7,
+            "August": 8,
+            "September": 9,
+            "October": 10,
+            "November": 11,
+            "December": 12,
+        }
+
+        let dateCorrectFormat = dateArray[2] + "-" + monthArray[dateArray[1]] + "-" + dateArray[0];
+
+        // Needed data: product name, quantity, date, month (int), productid
+        const productData = {
+            name: product.name,
+            quantity: parseInt(productAmount),
+            date: dateCorrectFormat,
+            month: monthArray[dateArray[1]],
+            productid: product.id,
+        }
+        console.log(productData);
+        let response = API.postLostFood(productData);
+        //setAlert(response);
     }
 
     return (
@@ -128,7 +164,7 @@ function ReportLostFood(props) {
             </ListGroup>
             <br></br>
 
-            {(invalidTime) ?
+            {(!invalidTime) ?
 
             <>
                 <ListGroup id="list" variant = "primary" >
@@ -184,7 +220,7 @@ function ReportLostFood(props) {
                         orders.map(order => {
                             if (order.state === 'pending') {
                                 return (
-                                    <DisplayOrder order={order}/>
+                                    <DisplayOrder order={order} productList={productList} getCurrentTime={props.getCurrentTime}/>
                                 )
                             }
                         })
@@ -205,9 +241,16 @@ function DisplayOrder(props) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [orderStatusChanged, setOrderStatusChanged] = useState(false);
     const [showButtons, setShowButtons] = useState(true);
+    const [alert, setAlert] = useState("Are you sure? This can't be undone");
+    const [alertStatus, setAlertStatus] = useState("primary");
 
     const showConfirmButton = () => {
-        setShowConfirm(true);
+        if (showConfirm) {
+            setShowConfirm(false);
+        }
+        else {
+            setShowConfirm(true);
+        }
     }
 
     const changeOrderStatus = () => {
@@ -220,17 +263,74 @@ function DisplayOrder(props) {
 
     const confirmLostOrder = () => {
         console.log(props.order);
-        // This must:
-        // 1. Change status of order to "lost" or something
-        // 2. Post each element of the order as a different entry in lostfood
-        // Elements are located in order.items
+
+        let date = props.getCurrentTime().split(" ");
+        let dateArray = date[1].split("/");
+
+        let monthArray = {
+            "January": 1,
+            "February": 2,
+            "March": 3,
+            "April": 4,
+            "May": 5,
+            "June": 6,
+            "July": 7,
+            "August": 8,
+            "September": 9,
+            "October": 10,
+            "November": 11,
+            "December": 12,
+        }
+
+        let dateCorrectFormat = dateArray[2] + "-" + monthArray[dateArray[1]] + "-" + dateArray[0];
+
+        let productList = props.productList;
+        if (props.order.products.length > 0) {
+            let length = props.order.products.length;
+            let products = props.order.products;
+            for (let i = 0; i < length; i++) {
+                let product = products[i];
+                let productId = product.productid;
+                let currentProduct;
+                for (let j = 0; j < productList.length; j++) {
+                    if (productId == productList[j].id) {
+                        currentProduct = productList[j];
+                        break;
+                    }
+                }
+                const productData = {
+                    name: currentProduct.name,
+                    quantity: parseInt(product.quantity),
+                    date: dateCorrectFormat,
+                    month: monthArray[dateArray[1]],
+                    productid: productId,
+                }
+                console.log(productData);
+                let response = API.postLostFood(productData);
+            }
+            API.lostOrderStatus(props.order.id);
+            setAlert("Food from order reported as lost correctly");
+            setAlertStatus("success");
+            
+        }
+        else {
+            // Set alert that says the order is empty, so nothing was posted
+            // API.lostOrderStatus(props.order.id);
+            setAlert("Error: Order is empty");
+            setAlertStatus("danger");
+        }
     }
+
     return (
         <>
             <ListGroup.Item>
                 <Row>
                     <Col>
                         <h6>Order number {props.order.id}</h6>
+                        {(props.order.products.length > 0) ?
+                            <h7>Items in order: {props.order.products.length}</h7>
+                            : <h7>Order Empty</h7>
+                        }
                     </Col>
                     <Col>
                         {(showButtons) ?
@@ -240,11 +340,11 @@ function DisplayOrder(props) {
                     </Col>
                     <Col>
                         {(showConfirm && !orderStatusChanged) ? 
-                            <Alert>Are you sure? This can't be undone</Alert>
+                            <Alert variant={alertStatus}>{alert}</Alert>
                             : <></>
                         }
                         {(showConfirm && orderStatusChanged) ?
-                            <Alert variant="success">Food has been reported as lost</Alert>
+                            <Alert variant={alertStatus}>{alert}</Alert>
                             : <></>
                         }
                     </Col>

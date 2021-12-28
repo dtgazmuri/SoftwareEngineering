@@ -60,6 +60,24 @@ async function handOutOrder(id) {
     }
 }
 
+async function lostOrderStatus(id) {
+    const aa = "lost";
+    let response = await fetch('/api/orders/'+id+'/reportLost', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application.json',
+        },
+        body: JSON.stringify(aa),
+    });
+    let responseBody = await response.json();
+    if(response.ok) {
+        return responseBody;
+    }
+    else {
+        throw responseBody;
+    }
+}
+
 async function getOrdersWithInsufficientWalletBalance() {
     let response = await fetch('/api/orders/insufficientWallet');
     let responseBody = await response.json();
@@ -71,6 +89,44 @@ async function getOrdersWithInsufficientWalletBalance() {
     }
 }
 
+async function postLostFood(order_obj) {
+    const url = '/api/lostfood';
+    const data = order_obj;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data) 
+      });
+  
+      if (response.ok) {
+        return {};
+      }
+      else {
+        return { error: ` error code ${response.status}` };
+      }
+    }
+    catch (error) {
+      return { error: `${error}` };
+    }
+  }
 
-const API = { getOrders, getCustomers, updateCustomerWallet, handOutOrder, getOrdersWithInsufficientWalletBalance };
+async function getProductById(id) {
+    const url = '/api/product/'+id;
+    const response = await fetch(url);
+    let responseBody = await response.json();
+    if(response.ok) {
+        return responseBody;
+    }
+    else {
+        throw responseBody;  // an object with the error coming from the server
+    }
+
+}
+
+
+const API = { getOrders, getCustomers, updateCustomerWallet, handOutOrder, lostOrderStatus, getOrdersWithInsufficientWalletBalance, postLostFood, getProductById };
 export default API;

@@ -219,6 +219,20 @@ exports.handOutOrder = (db, id) => {
   });
 };
 
+exports.lostOrderStatus = (db, id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE clientorder SET STATE = ? WHERE ID = ?";
+
+    db.run(sql, ["lost", id], (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(id);
+    });
+  });
+};
+
 // get all the orders
 exports.getOrderAll = (db) => {
   return new Promise((resolve, reject) => {
@@ -387,3 +401,48 @@ exports.createNewUser = (db, user) => {
     );
   });
 };
+
+// Post lost food
+exports.postLostFood = (db, order) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO lostfood(PRODUCT, QUANTITY, DATE, MONTH, PRODUCTID) VALUES (?, ?, ?, ?, ?)";
+
+    db.run(
+      sql,
+      [order.product, order.quantity, order.date, order.month, order.productid],
+      function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(order);
+      }
+    )
+  })
+};
+
+exports.getProductById = (db, id) => {
+  console.log(id);
+  let newId = parseInt(id);
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM product WHERE ID = ?";
+
+    db.all(sql, [newId], (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        console.log(rows);
+        const product = rows.map((e) => ({
+          id: e.ID,
+          name: e.NAME,
+          farmer: e.FARMER,
+          price: e.PRICE,
+          availability: e.AVAILABILITY,
+        }));
+        resolve(product);
+      }
+    )
+  })
+};
+
