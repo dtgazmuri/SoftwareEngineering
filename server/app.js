@@ -269,6 +269,19 @@ module.exports = function (app, db, testUser) {
     }
   });
 
+   // GET product by id
+   app.get("/api/product/:id", isLogged, isEmployee, async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      const obj = await employeeDAO.getProductById(db, id);
+
+      res.status(200).json(obj);
+    } catch(err) {
+      res.status(404).end();
+    }
+   });
+
   // TODO : the customer if FOR NOW is passed in the request, for the client side we need to get it from the cookie, so we probably need another route!
   // NOTE : the route has an /employee in its path because we will need a /client route to take in account the login, the two route can't be the same, due to the fact that the eployee passes the client id as a parameter, while the client need to be recovered from the cookie
 
@@ -349,6 +362,37 @@ module.exports = function (app, db, testUser) {
         res.status(200).json({ orderid: order_id }); //Manda indietro un json (meglio di send e basta, e' piu' sucuro che vada)
       } catch (err) {
         res.status(500).end(); //Mando errore!
+      }
+    }
+  );
+
+  // POST lost food
+  app.post(
+    "/api/lostfood",
+    isLogged,
+    isEmployee,
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array()});
+      }
+      try {
+        let order = {
+          product: req.body.name,
+          quantity: req.body.quantity,
+          date: req.body.date,
+          month: req.body.month,
+          productid: req.body.productid,
+        }
+        console.log("Order en app.js:")
+        console.log(order);
+        let result = await employeeDAO.postLostFood(db, order);
+        return res.status(200).json(result);
+      }
+      catch (err) {
+        return res
+          .status(500)
+          .json({ error: "DB error while posting lost food" });
       }
     }
   );
@@ -462,6 +506,28 @@ module.exports = function (app, db, testUser) {
         return res
           .status(500)
           .json({ error: "DB error while handing out order" });
+      }
+    }
+  );
+
+  app.post(
+    "/api/orders/:id/reportLost",
+    isLogged,
+    isEmployee,
+    [check("id").isInt()],
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+      try {
+        const id = req.params.id;
+        let result = await employeeDAO.lostOrderStatus(db, id);
+        return res.status(200).json(result);
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ error: "DB error while reporting order as lost" });
       }
     }
   );
