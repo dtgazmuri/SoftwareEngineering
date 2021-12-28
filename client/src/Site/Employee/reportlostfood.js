@@ -164,7 +164,7 @@ function ReportLostFood(props) {
             </ListGroup>
             <br></br>
 
-            {(invalidTime) ?
+            {(!invalidTime) ?
 
             <>
                 <ListGroup id="list" variant = "primary" >
