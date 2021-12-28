@@ -360,12 +360,12 @@ export function ConfirmDeliveryPanel(props) {
                                     </Form.Group>
                                     <Row>
                                         <Col>
-                                            <Form.Group className="mb-3" controlId="delivery">
+                                            <Form.Group className="mb-3" controlId="city">
                                                 <Form.Control id="city" type="address" placeholder="City" value={props.city} onChange={ev => props.setCity(ev.target.value)} />
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <Form.Group className="mb-3" controlId="delivery">
+                                            <Form.Group className="mb-3" controlId="cap">
                                                 <Form.Control id="cap" type="address" placeholder="CAP" value={props.cap} onChange={ev => props.setCap(ev.target.value)} />
                                             </Form.Group>
                                         </Col>

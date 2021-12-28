@@ -3,23 +3,9 @@
 const dayjs = require("dayjs");
 
 context("Handout Order", () => {
-    it("Login", () => {
-        cy.visit("localhost:3000");
-        cy.clearLocalStorage();
-        cy.getById("login-col").click()
-        cy.url().should('eq', "http://localhost:3000/loginpage")
-        cy.getByTestId("username").type("shopemployee@gmail.com").should("have.value", "shopemployee@gmail.com")
-        cy.getByTestId("password").type("shopemployee").should("have.value", "shopemployee")
-        cy.getByTestId("login-button").click()
-        cy.url().should('eq', "http://localhost:3000/shopemployee")
-        cy.intercept("GET", {
-            url: "/api/sessions/current",
-            statusCode: 200,
-            timeout: 3000
-        })
-    })
-    let id;
     it("create a new order", () => {
+        cy.loginshopemp()
+        let id;
         cy.getByTestId("show-button").click()
         cy.url().should('eq', "http://localhost:3000/shopemployee/products")
         cy.getById("time-elapsed").should("not.exist")
@@ -58,6 +44,8 @@ context("Handout Order", () => {
             cy.getById("time").type("12:00").should("have.value", "12:00")
             cy.getById("delivery").check().should("have.value", "on")
             cy.getById("address").type("Via Fermi 2").should("have.value", "Via Fermi 2")
+            cy.getById("city").type("Torino").should("have.value", "Torino")
+            cy.getById("cap").type("10141").should("have.value", "10141")
             cy.getById("confirm-button").click()
         })
         cy.getById("receipt").should("be.visible").within(() => {
@@ -66,7 +54,7 @@ context("Handout Order", () => {
                 cy.getById("quantity").should("have.text", 4)
             })
             cy.getById("delivery").within(() => {
-                cy.getById("address").should("have.text", "Via Fermi 2")
+                cy.getById("address").should("have.text", "Via Fermi 2, Torino 10141")
                 cy.getById("date").should("have.text", `${tomorrow} at 12:00`)            })
             cy.getById("sendorder").click()
             cy.intercept("/api/order/customer").then(({ body }) => { id = body })
@@ -79,7 +67,7 @@ context("Handout Order", () => {
     it("handout order", () => {
         cy.getByTestId("handout-button").click()
         cy.url().should('eq', "http://localhost:3000/shopemployee/handout")
-        
+
         
 
     })

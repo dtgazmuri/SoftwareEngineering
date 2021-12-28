@@ -1,12 +1,5 @@
 it("Create a new order",() => {
-    cy.visit("localhost:3000");
-    cy.getById("login-col").click()
-    cy.url().should('eq', "http://localhost:3000/loginpage")
-    cy.getByTestId("username").type("customer@gmail.com").should("have.value", "customer@gmail.com")
-    cy.getByTestId("password").type("customer").should("have.value", "customer")
-    cy.getByTestId("login-button").click()
-    cy.location('pathname', { timeout: 10000 }).should('eq', '/customer');
-
+    cy.logincustomer()
     cy.getById("time-elapsed").should("not.exist")
 
     const dayjs = require("dayjs");

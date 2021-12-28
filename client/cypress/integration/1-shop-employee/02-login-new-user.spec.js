@@ -7,12 +7,10 @@ context("Log as new User", () => {
         cy.clearLocalStorage();
         cy.getById("login-col").click()
         cy.url().should('eq', "http://localhost:3000/loginpage")
-        cy.getByTestId("username").type("stestrippoli@gmail.com").should("have.value", "stestrippoli@gmail.com")
-        cy.getByTestId("password").type("stestrippoli").should("have.value", "stestrippoli")
+        cy.getByTestId("username").type("shopemployee@gmail.com").should("have.value", "shopemployee@gmail.com")
+        cy.getByTestId("password").type("shopemployee").should("have.value", "shopemployee")
         cy.getByTestId("login-button").click()
         cy.location('pathname', {timeout: 10000 }).should('eq', '/shopemployee');
-
-
         
     })
 })

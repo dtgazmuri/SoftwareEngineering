@@ -36,4 +36,50 @@ Cypress.Commands.add('getById', id => {
 Cypress.Commands.add('getByControlId', id => {
     cy.get(`[controlId="${id}"]`);
 });
+
+Cypress.Commands.add('loginfarmer',()  => {
+  cy.visit("localhost:3000");
+  cy.clearLocalStorage();
+  cy.getById("login-col").click()
+  cy.url().should('eq', "http://localhost:3000/loginpage")
+  cy.getByTestId("username").type("farmer@gmail.com").should("have.value", "farmer@gmail.com")
+  cy.getByTestId("password").type("farmer").should("have.value", "farmer")
+  cy.getByTestId("login-button").click()
+  cy.location('pathname', {timeout: 10000 }).should('eq', '/farmer');
+});
+Cypress.Commands.add('loginmanager',()  => {
   
+        cy.visit("localhost:3000");
+        cy.clearLocalStorage();
+        cy.getById("login-col").click()
+        cy.url().should('eq', "http://localhost:3000/loginpage")
+        cy.getByTestId("username").type("manager@gmail.com").should("have.value", "manager@gmail.com")
+        cy.getByTestId("password").type("manager").should("have.value", "manager")
+        cy.getByTestId("login-button").click()
+        cy.location('pathname', {timeout: 10000 }).should('eq', '/manager');
+        
+})
+
+Cypress.Commands.add('loginshopemp',()  => {
+  cy.visit("localhost:3000");
+  cy.clearLocalStorage();
+  cy.getById("login-col").click()
+  cy.url().should('eq', "http://localhost:3000/loginpage")
+  cy.getByTestId("username").type("shopemployee@gmail.com").should("have.value", "shopemployee@gmail.com")
+  cy.getByTestId("password").type("shopemployee").should("have.value", "shopemployee")
+  cy.getByTestId("login-button").click()
+  cy.location('pathname', {timeout: 10000 }).should('eq', '/shopemployee');
+});
+
+
+
+Cypress.Commands.add('logincustomer',()  => {
+  cy.visit("localhost:3000");
+  cy.clearLocalStorage();
+  cy.getById("login-col").click()
+  cy.url().should('eq', "http://localhost:3000/loginpage")
+  cy.getByTestId("username").type("customer@gmail.com").should("have.value", "customer@gmail.com")
+  cy.getByTestId("password").type("customer").should("have.value", "customer")
+  cy.getByTestId("login-button").click()
+  cy.location('pathname', {timeout: 10000 }).should('eq', '/customer');
+});

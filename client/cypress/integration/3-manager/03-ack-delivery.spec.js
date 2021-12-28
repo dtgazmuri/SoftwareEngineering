@@ -64,17 +64,10 @@ context("Ack a order", () => {
     })
   })
   
-  it("Log as manager", () => {
-    cy.getById("login-col").click()
-    cy.url().should('eq', "http://localhost:3000/loginpage")
-    cy.getByTestId("username").type("manager@gmail.com").should("have.value", "manager@gmail.com")
-    cy.getByTestId("password").type("manager").should("have.value", "manager")
-    cy.getByTestId("login-button").click()
-    cy.location('pathname', { timeout: 10000 }).should('eq', '/manager');
-
-  })
+  
 
   it("Ack order", () => {
+    cy.loginmanager()
     cy.getById("del-button").click()
     
     
