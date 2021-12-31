@@ -248,6 +248,7 @@ module.exports = function (app, db, testUser, bot) {
 
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
+      console.log("/api/orders/all -> getOrderAll completed: "+orders.length);
 
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
@@ -256,10 +257,14 @@ module.exports = function (app, db, testUser, bot) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
+        console.log("/api/orders/all -> getOrderItems completed: "+items.length);
+
         let username = await employeeDAO.getCustomerById(
           db,
           orders[i].customerid
         );
+        console.log("/api/orders/all -> getCustomerById completed: "+username);
+
 
         //Create the order object
         const order = {

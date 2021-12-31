@@ -33,6 +33,10 @@ exports.getCustomerById = (db, id) => {
         reject(err);
         return;
       }
+      if(row === undefined){
+        reject({err: "undefined username"});
+        return;
+      }
 
       resolve(row.USERNAME);
     });

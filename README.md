@@ -5,6 +5,6 @@ To explore the developed functions, login into the application using the followi
 | Username          |  Password       |  Role      |
 | ---------------   | --------------- | ---------- |
 |stefano@polito.it  | stefano         |   farmer   |
-|riccardo@benzoni.it| ricardo         |  employee  |
+|riccardo@benzoni.it| riccardo         |  employee  |
 |vitto@pappa.it     | vittoria        | customer   |
 |manager@gmail.com  | manager         | manager    |
