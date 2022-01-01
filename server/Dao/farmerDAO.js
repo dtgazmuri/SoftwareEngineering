@@ -143,8 +143,11 @@ exports.ackDeliveryFarmerOrder = (db, orderid) => {
 //get farmer orders given the farmer id
 exports.getFarmerOrderIds = (db, farmerId) => {
   return new Promise((resolve, reject) => {
-    console.log("we")
-    const sql = "SELECT DISTINCT ORDERID, STATE FROM farmerorderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
+    console.log("we");
+
+    //NON e' farmerorderitems! e' orderitems!
+
+    const sql = "SELECT DISTINCT ORDERID, STATE FROM orderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
     db.all(sql, [farmerId], (err, rows) => {
       if (err) {
         reject(err);
@@ -154,6 +157,9 @@ exports.getFarmerOrderIds = (db, farmerId) => {
       for (let row of rows) {
         list.push({ id: row.ORDERID, status: row.STATE });
       }
+
+      console.log(list);
+
       resolve(list);
     });
   });
