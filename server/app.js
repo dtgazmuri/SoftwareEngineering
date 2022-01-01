@@ -381,6 +381,14 @@ module.exports = function (app, db, testUser, bot) {
     "/api/lostfood",
     isLogged,
     isEmployee,
+    [
+      check("name")
+        .isString()
+        .isLength({ min: 1 })
+        .withMessage("name is incorrect"),
+        check("quantity").isNumeric().withMessage("quantity is incorrect"),
+        check("productid").isNumeric().withMessage("quantity is incorrect"),
+    ],
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

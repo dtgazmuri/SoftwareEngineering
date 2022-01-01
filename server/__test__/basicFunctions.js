@@ -205,3 +205,21 @@ exports.getClientOrderById = (id) => {
     });
   });
 };
+
+exports.addManagerReport = (report) => {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "INSERT INTO reports(TYPE, INITIALDATE, FINALDATE) VALUES (?, ?, ?)";
+    db.run(
+      sql,
+      [report.type, report.initialdate, report.finaldate],
+      function (err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(this.lastID);
+      }
+    );
+  });
+};

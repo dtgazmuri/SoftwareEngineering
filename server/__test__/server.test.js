@@ -891,4 +891,69 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("farmerorder", farmerOrderId);
     await functions.deleteTableWhereId("farmer", farmerId);
   });
+
+  //STORY #41
+  //testing EmployeeAPI.lostOrderStatus -> api/orders/:id/reportLost
+  test("response to /api/orders/:id/reportLost with a string instead of id ", async () => {
+    const res = await request(app).post("/api/orders/www/reportLost");
+    expect(res.statusCode).toBe(422);
+    expect(res.body).not.toBe({});
+  });
+  test("response to /api/orders/:id/reportLost with a correct id ", async () => {
+    const res = await request(app).post("/api/orders/1/reportLost");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe("1");
+  });
+
+  //testing EmployeeAPI.postLostFood -> api/lostfood
+  test("response to /api/lostfood with a correct body", async () => {
+    const productData = {
+      name: "productName",
+      quantity: 12,
+      date: "2021-12-27 12:15",
+      month: 12,
+      productid: 1,
+  }
+    const res = await request(app).post("/api/lostfood").send(productData);
+    expect(res.statusCode).toBe(200);
+    await functions.deleteTable("lostfood");
+  });
+  test("response to /api/lostfood with a wrong body", async () => {
+    const productData = {
+      name: "productName"
+    }
+    const res = await request(app).post("/api/lostfood").send(productData);
+    expect(res.statusCode).toBe(422);
+  });
+
+  //testing ManagerAPI.getManagerReports -> /api/managerReports
+  test("response to /api/managerReports when no reports are present", async () => {
+    const res = await request(app).get("/api/managerReports");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveLength(0);
+  });
+  test("response to /api/managerReports when some reports are present", async () => {
+    const weekReport = {
+      type: 0,
+      initialdate: "2021-11-01",
+      finaldate: "2021-11-07"
+    };
+    const monthlyReport = {
+      type: 1,
+      initialdate: "2021-11-01",
+      finaldate: "2021-11-30"
+    };
+
+    const id1 = await functions.addManagerReport(weekReport);
+    const id2 = await functions.addManagerReport(monthlyReport);
+    const res = await request(app).get("/api/managerReports");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveLength(2);
+
+    //delete reports just created
+    await functions.deleteTableWhereId("reports", id1);
+    await functions.deleteTableWhereId("reports", id2);
+  });
+
+  
 });
