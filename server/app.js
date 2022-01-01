@@ -217,7 +217,7 @@ module.exports = function (app, db, testUser, bot) {
     }
   });
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id", isLogged, async (req, res) => {
+  app.get("/api/farmer/:id", async (req, res) => {
     try {
       //Get the farmer ID
       const farmerID = Number(req.params.id);

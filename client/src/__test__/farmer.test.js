@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductList, ProductForm } from '../Site/Farmer/FarmerPage.js'
+import { ProductList, ProductForm, ConfirmOrdersSection, FarmerPage } from '../Site/Farmer/FarmerPage.js'
 import Farmer from '../Site/Farmer/FarmerPage.js'
 
 import { waitFor } from '@testing-library/dom';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 
 //TEST MOCK
 import API from '../FarmerAPI.js';
+import { BrowserRouter } from 'react-router-dom';
 jest.mock('../FarmerAPI.js');
 //END TEST MOCK
 
@@ -176,6 +177,36 @@ describe("test the ProductList component", () => {
     });
 
 });
+
+//######################################################## FarmerPage ########################################################//
+describe("test the FarmerPage component", () => {
+
+    const MockComponent = ((props) => {
+        return (
+            <BrowserRouter>
+                <FarmerPage></FarmerPage>
+            </BrowserRouter>
+        );
+    });
+
+    //TEST #1
+    test('check rendering', async () => {
+    
+        //Render the component
+        const elemet = render(<MockComponent/>);
+
+
+        //Check the rendering
+        const setProd = screen.getByText(/[Ss]et product amount/i);
+        const confirmOrders = screen.getByText(/[Cc]onfirm [Oo]rders/i);
+
+        expect(setProd).toBeInTheDocument();
+        expect(confirmOrders).toBeInTheDocument();
+
+    });
+
+});
+
 
 /*
 //######################################################## Farmer ########################################################//

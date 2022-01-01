@@ -18,6 +18,7 @@ import MyNavbar from './Site/navbar';
 import LoginPage from './Site/loginpage'
 import EmployeePage from './Site/Employee/shopemployeepage';
 import ProductList from './Site/Employee/ProductListEmployee';
+import { UnregisteredUserProductList } from './Site/Unregistered/undergisteredProductList';
 import { CustomerList, OrderList } from './Site/Employee/employee';
 import { CancelationOrderList } from './Site/Employee/cancelationorders';
 import { ReportLostFood } from './Site/Employee/reportlostfood';
@@ -245,6 +246,15 @@ function App() {
               )
             }
           />
+
+          {/* UNREGISTERED USER ROUTES */}
+          <Route
+            path="/unregistered-productlist/"
+            element={
+              <UnregisteredUserProductList time={!dirty ? time : faketime}/>
+            }
+          />
+          /
 
           {/**SHOP EMPLOYEE ROUTES */}
           <Route

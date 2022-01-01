@@ -215,7 +215,7 @@ export function ProductForm(props) {
 
 export function ConfirmOrdersSection(props) {
 
-    const [orders, setOrders] = useState({});
+    const [orders, setOrders] = useState([]);
 
 
 

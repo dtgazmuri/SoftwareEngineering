@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap"
 import { React } from 'react';
 import { Link } from "react-router-dom";
-import { login, signin } from "./icons";
+import { login, signin, productlist } from "./icons";
 
 /*
 function MyBody() 
@@ -72,6 +72,16 @@ function MyBody() {
                         <Link to="/sign-up" className="nolink fixed fixed-center">
                             {signin}
                             <h3>Sign-Up</h3>
+                        </Link>
+                    </Container>
+                </Col>
+
+                <Col id="seeproduct-col" className="v-100 d-sm-block">
+                    {/*<Button variant="outline-success">Log in</Button>*/}
+                    <Container fluid className="LoginButton border border-dark rounded nolink align-items-center">
+                        <Link to="/unregistered-productlist" className="nolink fixed fixed-center">
+                            {productlist}
+                            <h3>See Products</h3>
                         </Link>
                     </Container>
                 </Col>
