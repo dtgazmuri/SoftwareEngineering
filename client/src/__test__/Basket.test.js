@@ -187,11 +187,16 @@ describe("test the Basket component", () => {
     const mockNotifyBelance = jest.fn();
     const mockNotifyQuantity = jest.fn();
 
+    const MockComponent = ((props) => {
+      return (
+        <BrowserRouter>
+          <Basket user={props.user} setMessage={props.setMessage} notifyBalance={props.notifyBalance} notifyQuantity={props.notifyQuantity} />
+        </BrowserRouter>
+      );
+    });
+
     //TEST #1
     test('check rendering', async () => {
-
-        //Render the component
-        const elemet = render(<Basket user={fake_user} setMessage={mockSetMessage} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} />);
 
         //Mock the 
         //fetchCustomerById
@@ -206,12 +211,11 @@ describe("test the Basket component", () => {
         }
         const responseBody = Customer.from(obj);
 
-        console.log("CUST_BODY");
-        console.log(responseBody);
-
         mockFetchCustomerById.mockImplementation((cust_id) => Promise.resolve(responseBody));
 
 
+        //Render the component
+        const elemet = render(<MockComponent user={fake_user} setMessage={mockSetMessage} notifyBalance={mockNotifyBelance} notifyQuantity={mockNotifyQuantity} />);
 
         //Check major components rendering
         /*
@@ -227,6 +231,7 @@ describe("test the Basket component", () => {
         //const priceEl = await screen.findByText(/[Pp]rice/i);
 
         //Wait
+        
         /*
         await waitFor(() => {
 
@@ -248,6 +253,7 @@ describe("test the Basket component", () => {
           
         });
         */
+        
 
         
 
@@ -282,12 +288,18 @@ describe("test the ConfirmDeliveryPanel component", () => {
     const fake_time = "[fake_time]";
   
     const fake_delivery = false;
+
+    const mockGoodTime = (jest.fn().mockImplementation(
+        () => {
+            return dayjs("2021-12-11"); //on saturday it's not possible to ack delivery from farmer orders
+        }
+    ));
   
   
     const MockConfirmDeliveryPanel = (props) => {
         return (
             <BrowserRouter>
-                <ConfirmDeliveryPanel handleDelivery={props.handleDelivery} address={props.address} setAddress={props.setAddress} delivery={props.delivery} date={props.date} time={props.time} setTime={props.setTime} setDate={props.setDate} handleShow={props.handleShow} />
+                <ConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={props.handleDelivery} address={props.address} setAddress={props.setAddress} delivery={props.delivery} date={props.date} time={props.time} setTime={props.setTime} setDate={props.setDate} handleShow={props.handleShow} />
             </BrowserRouter>
         );
     }
@@ -296,7 +308,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     test('check form elements showing right', async () => {
   
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Check if the form elements are showing right
       const dateFormTextArea = screen.getByTitle("insert-date");
@@ -313,7 +325,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     test('check form elements insertion', async () => {
   
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Check if the form elements are showing right
       const dateFormTextArea = screen.getByTitle("insert-date");
@@ -333,7 +345,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     test('test delivery panel shows up', async () => {
   
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Check if the panel shows up
       const deliveryTestBox = screen.getByPlaceholderText("Enter Address");
@@ -345,7 +357,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     test('test delivery panel address insertion', async () => {
   
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Check if the panel shows up
       const deliveryTextBox = screen.getByPlaceholderText("Enter Address");
@@ -362,7 +374,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     test('test delivery panel confirm button', async () => {
   
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Get the button
       const confirmButton = screen.getByRole("button", { name: "Place Order Request" });

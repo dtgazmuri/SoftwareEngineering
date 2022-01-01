@@ -26,7 +26,8 @@ describe("test the ProductTableRow component", () => {
       surname: "cellamare"
     },
     price: 2.99,
-    quantity: 20
+    quantity: 20,
+    availability: 42
   };
 
 
@@ -39,12 +40,12 @@ describe("test the ProductTableRow component", () => {
     const prodNameColumn = screen.getByText("pizza");
     const farmerColumn = screen.getByText("paolo cellamare");
     const priceColumn = screen.getByText(/2.99 €/i);
-    const quantityColumn = screen.getByText(/20/i);
+    const availabilityColumn = screen.getByText(/42/i);
 
     expect(prodNameColumn).toBeInTheDocument();
     expect(farmerColumn).toBeInTheDocument();
     expect(priceColumn).toBeInTheDocument();
-    expect(quantityColumn).toBeInTheDocument();
+    expect(availabilityColumn).toBeInTheDocument();
 
   });
 
@@ -104,12 +105,19 @@ describe("test the ConfirmDeliveryPanel component", () => {
   //<ConfirmDeliveryPanel handleDelivery={handleDelivery} address={address} setAddress={setAddress} delivery={delivery} date={date} time={time} setTime={setTime} setDate={setDate} handleShow={handleShow}></ConfirmDeliveryPanel>
 
   const fakeHandleDelivery = jest.fn();
+
   const fakeSetAddress = jest.fn();
+  const fakeSetCap = jest.fn();
+  const fakeSetCity = jest.fn();
+  
   const fakeSetDate = jest.fn();
   const fakeSetTime = jest.fn();
   const fakeHandleShow = jest.fn();
 
-  const fake_address = "[fake_address]"
+  const fake_address = "[fake_address]";
+  const fake_city = "[fake_city]";
+  const fake_cap = "[fake_cap]";
+
   const fake_date = "[fake_date]";
   const fake_time = "[fake_time]";
 
@@ -122,7 +130,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
   test('check form elements showing right', async () => {
 
     //Reender the element
-    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} city={fake_city} setCity={fakeSetCity} cap={fake_cap} setCap={fakeSetCap} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
 
     //Check if the form elements are showing right
     const dateFormTextArea = screen.getByTitle("insert-date");
@@ -139,7 +147,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
   test('check form elements insertion', async () => {
 
     //Reender the element
-    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} city={fake_city} setCity={fakeSetCity} cap={fake_cap} setCap={fakeSetCap} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
 
     //Check if the form elements are showing right
     const dateFormTextArea = screen.getByTitle("insert-date");
@@ -159,28 +167,40 @@ describe("test the ConfirmDeliveryPanel component", () => {
   test('test delivery panel shows up', async () => {
 
     //Reender the element
-    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} city={fake_city} setCity={fakeSetCity} cap={fake_cap} setCap={fakeSetCap} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
 
     //Check if the panel shows up
-    const deliveryTestBox = screen.getByPlaceholderText("Enter Address");
-    expect(deliveryTestBox).toBeInTheDocument();
+    const addressTextBox = screen.getByPlaceholderText("Address");
+    const capTextBox = screen.getByPlaceholderText("CAP");
+    const cityTextBox = screen.getByPlaceholderText("City");
+
+    expect(addressTextBox).toBeInTheDocument();
+    expect(capTextBox).toBeInTheDocument();
+    expect(cityTextBox).toBeInTheDocument();
 
   });
 
   //TEST #4
-  test('test delivery panel address insertion', async () => {
+  test('test delivery panel address, city and cap insertion', async () => {
 
     //Reender the element
-    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} city={fake_city} setCity={fakeSetCity} cap={fake_cap} setCap={fakeSetCap} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
 
     //Check if the panel shows up
-    const deliveryTextBox = screen.getByPlaceholderText("Enter Address");
+    const addressTextBox = screen.getByPlaceholderText("Address");
+    const capTextBox = screen.getByPlaceholderText("CAP");
+    const cityTextBox = screen.getByPlaceholderText("City");
 
     //Fire event
-    fireEvent.change(deliveryTextBox, { target: { value: "fake_address" } });
+    fireEvent.change(addressTextBox, { target: { value: "new_address" } });
+    fireEvent.change(capTextBox, { target: { value: "new_cap" } });
+    fireEvent.change(cityTextBox, { target: { value: "new_city" } });
 
     //Check function called
     expect(fakeSetAddress).toHaveBeenCalled();
+    expect(fakeSetCap).toHaveBeenCalled();
+    expect(fakeSetCity).toHaveBeenCalled();
+   
 
   });
 
@@ -188,7 +208,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
   test('test delivery panel confirm button', async () => {
 
     //Reender the element
-    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+    const elemet = render(<ConfirmDeliveryPanel handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} city={fake_city} setCity={fakeSetCity} cap={fake_cap} setCap={fakeSetCap} delivery={true} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
 
     //Get the button
     const confirmButton = screen.getByRole("button", { name: "Confirm Order" });
@@ -296,7 +316,11 @@ describe("test the RecapCart component", () => {
   const fakeHandleClose = jest.fn();
   const fakeHandleSubmit = jest.fn();
 
-  const fake_address = "[fake_address]"
+  const fake_address = "Via Trentino 12";
+  const fake_city = "Torino";
+  const fake_cap= "10129";
+
+
   const fake_date = "[fake_date]";
   const fake_time = "[fake_time]";
 
@@ -324,11 +348,8 @@ describe("test the RecapCart component", () => {
 
     const fake_delivery = false;
 
-    //Reender the element
-
-    //<RecapCart order={order} handleClose={handleClose} show={show} handleSubmit={handleSubmit} address={address} delivery={delivery} date={date} time={time} setOrderDate={setOrderDate} setOrderTime={setOrderTime} orderTime={orderTime} orderDate={orderDate}/>
-
-    const elemet = render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
+    //Render the element
+    const elemet = render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} city={fake_city} cap={fake_cap} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
 
     //Check if all order element are present
     let i = 0;
@@ -357,7 +378,7 @@ describe("test the RecapCart component", () => {
     let fake_delivery = false;
 
     //Reender the element
-    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
+    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address}  city={fake_city} cap={fake_cap} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
 
     const el1 = screen.getByText("Pick-up at the shop");
     expect(el1).toBeInTheDocument();
@@ -383,10 +404,13 @@ describe("test the RecapCart component", () => {
     let fake_delivery = true;
 
     //Reender the element
-    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
+    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address}  city={fake_city} cap={fake_cap}  delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
 
     const el1 = screen.queryByText("Pick-up at the shop");
     expect(el1).not.toBeInTheDocument();
+
+    const concatenaton = screen.getByText(/Via Trentino 12, Torino 10129/i);
+    expect(concatenaton).toBeInTheDocument();
 
   });
 
@@ -409,7 +433,7 @@ describe("test the RecapCart component", () => {
     let fake_delivery = true;
 
     //Reender the element
-    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
+    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address}  city={fake_city} cap={fake_cap}  delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
 
     const cancelB = screen.getByRole("button", {name: "Cancel"});
     const saveB = screen.getByRole("button", {name: "Save"});
@@ -438,7 +462,7 @@ describe("test the RecapCart component", () => {
     let fake_delivery = true;
 
     //Reender the element
-    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address} delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
+    render(<RecapCart order={fake_order} handleClose={fakeHandleClose} show={true} handleSubmit={fakeHandleSubmit} address={fake_address}  city={fake_city} cap={fake_cap}  delivery={fake_delivery} date={fake_date} time={fake_time} setOrderDate={mockSetOrderDate} setOrderTime={mockSetOrderTime} orderTime={fakeOrderTime} orderDate={fakeOrderDate}/>);
 
     const cancelB = screen.getByRole("button", {name: "Cancel"});
     const saveB = screen.getByRole("button", {name: "Save"});
