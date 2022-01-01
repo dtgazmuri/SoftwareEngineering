@@ -52,10 +52,12 @@ export function UnregisteredUserProductList(props) {
     const checkTime = () => {
         let day = dayjs(props.time).get("d");
         let hour = dayjs(props.time).get("h");
-        if (day !== 0 || (hour < 23 && day === 0))
+        if (day !== 0 || (hour < 23 && day === 0)){
             return true
-        else
+        }  
+        else {
             return false;
+        }
     }
 
     return (
