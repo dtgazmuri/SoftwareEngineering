@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductList, ProductForm } from '../Site/Farmer/farmer.js'
-import Farmer from '../Site/Farmer/farmer.js'
+import { ProductList, ProductForm } from '../Site/Farmer/FarmerPage.js'
+import Farmer from '../Site/Farmer/FarmerPage.js'
 
 import { waitFor } from '@testing-library/dom';
 
@@ -177,6 +177,7 @@ describe("test the ProductList component", () => {
 
 });
 
+/*
 //######################################################## Farmer ########################################################//
 describe("test the Farmer component", () => {
 
@@ -326,3 +327,4 @@ describe("test the Farmer component", () => {
 
 
 });
+*/
