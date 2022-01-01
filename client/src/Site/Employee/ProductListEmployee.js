@@ -428,7 +428,7 @@ export function ProductTableRow(props) {
             <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} bgcolor={bookedQTA > 0 ? "#99ff99" : ""}>
                 <td>{prod.name}</td>
                 <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                <td>{prod.price} € <Information quantity={prod.quantity} /></td>
+                <td>{prod.price.toFixed(2)} € <Information quantity={prod.quantity} /></td>
                 <td>{prod.availability}</td>
                 {bookedQTA >= prod.quantity ?
                     <td><Button disabled id="add" onClick={() => props.addOrder(prod)}>+</Button></td>

@@ -128,7 +128,7 @@ export function UnregisteredProductTableRow(props) {
             <tr data-testid={`product-item-${id}`} test-id={`product-item-${id}`} key={"prod" + id} >
                 <td>{prod.name}</td>
                 <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
-                <td>{prod.price} € <Information quantity={prod.quantity} /></td>
+                <td>{prod.price.toFixed(2)} € <Information quantity={prod.quantity} /></td>
                 <td>{prod.availability}</td>
             </tr>
         </>
