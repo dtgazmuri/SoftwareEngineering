@@ -25,7 +25,6 @@ exports.getCustomers = (db) => {
 
 exports.getCustomerById = (db, id) => {
   return new Promise((resolve, reject) => {
-    console.log(id)
     //UPDATED query for getting customers in order to return also the username (email)
     const sql = "SELECT USERNAME FROM users U WHERE U.ROLE = 'customer' AND U.USERID=?";
     db.get(sql, [id], (err, row) => {

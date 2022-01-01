@@ -191,7 +191,7 @@ function FarmerOrderItem(props) {
                 <Col sm={4}>
                     {/**ORDER INFO */}
                     <h5><strong>Order info</strong></h5>
-                    <p class="lead"><u>
+                    <p className="lead"><u>
                         State: {acked ? <span className="bg-warning">delivered</span> : <span>{order.state}</span>} <br></br>
                         Total: {order.total.toFixed(2)}€<br></br>
                         Date: {order.time}<br></br>
@@ -384,7 +384,7 @@ function ManagerReports(props) {
 
                             {monthlyReports.map(report => {
                                 return (
-                                    <ReportMonthItem report={report} />
+                                    <ReportMonthItem key = {report.year+"/"+report.month} report={report} />
                                 );
                             })}
 
@@ -399,7 +399,7 @@ function ManagerReports(props) {
 
                             {weeklyReports.map(report => {
                                 return (
-                                    <ReportWeekItem report={report} />
+                                    <ReportWeekItem key = {report.weekStartDate+"/"+report.weekEndDate} report={report} />
                                 );
                             })}
 

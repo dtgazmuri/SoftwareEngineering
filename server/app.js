@@ -27,7 +27,6 @@ module.exports = function (app, db, testUser, bot) {
 
   if (!testUser) {
     bot.command("start", (ctx) => {
-      //console.log(ctx.from);
       myUserDao.addNewTelegramUser(db, ctx.chat.id);
       bot.telegram.sendMessage(
         ctx.chat.id,
@@ -109,7 +108,6 @@ module.exports = function (app, db, testUser, bot) {
 
   const isLogged = (req, res, next) => {
     if (testUser) {
-      // console.log(testUser);
       return next();
     }
     if (req.isAuthenticated()) {
@@ -214,13 +212,12 @@ module.exports = function (app, db, testUser, bot) {
     try {
       const obj = await employeeDAO.getCustomers(db);
       res.status(200).json(obj);
-      console.log("here");
     } catch (err) {
       res.status(404).json();
     }
   });
   // GET /api/farmer/:id
-  app.get("/api/farmer/:id", isLogged, isFarmer, async (req, res) => {
+  app.get("/api/farmer/:id", isLogged, async (req, res) => {
     try {
       //Get the farmer ID
       const farmerID = Number(req.params.id);
@@ -248,7 +245,6 @@ module.exports = function (app, db, testUser, bot) {
 
       //0) Get the orders from the table
       const orders = await employeeDAO.getOrderAll(db);
-      console.log("/api/orders/all -> getOrderAll completed: "+orders.length);
 
       //1) Then, for each order I need to get the orderitems
       for (let i = 0; i < orders.length; i++) {
@@ -257,14 +253,11 @@ module.exports = function (app, db, testUser, bot) {
 
         //Get the orderitems from the DB
         let items = await employeeDAO.getOrderItems(db, orderid);
-        console.log("/api/orders/all -> getOrderItems completed: "+items.length);
 
         let username = await employeeDAO.getCustomerById(
           db,
           orders[i].customerid
         );
-        console.log("/api/orders/all -> getCustomerById completed: "+username);
-
 
         //Create the order object
         const order = {
@@ -369,7 +362,7 @@ module.exports = function (app, db, testUser, bot) {
               price: el.price,
             };
 
-            console.log(`item instance : ${itemINST}`);
+            //console.log(`item instance : ${itemINST}`);
 
             //POST IT
             // const id_item = await employeeDAO.createOrderItem(itemINST);
@@ -484,7 +477,7 @@ module.exports = function (app, db, testUser, bot) {
               price: el.price,
             };
 
-            console.log(`item instance : ${itemINST}`);
+            //console.log(`item instance : ${itemINST}`);
 
             //POST IT
             // const id_item = await employeeDAO.createOrderItem(itemINST);

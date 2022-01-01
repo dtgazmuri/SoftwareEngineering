@@ -19,7 +19,7 @@ function ReportLostFood(props) {
     const [productsToBeShown, setProductsToBeShown] = useState([]);
     const [products, setProducts] = useState(
         productsToBeShown.map((e) => {
-            return <option value={e.id}>  {e.name}  </option>}
+            return <option key = {e.id} value={e.id}>  {e.name}  </option>}
     ));
     const [selectedProduct, setSelectedProduct] = useState();
 
@@ -78,7 +78,7 @@ function ReportLostFood(props) {
         setProductName(input);
         let newProducts = productsToBeShown.map(product => {
             if (product.name.toUpperCase().startsWith(input.toUpperCase())) {
-                return <option value={product.id}>{product.name}</option>
+                return <option key = {product.id} value={product.id}>{product.name}</option>
             }
         }
         );
@@ -328,8 +328,8 @@ function DisplayOrder(props) {
                     <Col>
                         <h6>Order number {props.order.id}</h6>
                         {(props.order.products.length > 0) ?
-                            <h7>Items in order: {props.order.products.length}</h7>
-                            : <h7>Order Empty</h7>
+                            <h6>Items in order: {props.order.products.length}</h6>
+                            : <h6>Order Empty</h6>
                         }
                     </Col>
                     <Col>
@@ -360,4 +360,4 @@ function DisplayOrder(props) {
     )
 }
 
-export {ReportLostFood};
+export {ReportLostFood, DisplayOrder};

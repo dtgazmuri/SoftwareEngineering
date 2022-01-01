@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ManagerPage, ManagerPageFarmerOrders,  FarmerOrderItem } from '../Site/Manager/ManagerPage.js'
+import { ManagerPage, ManagerPageFarmerOrders,  ManagerReports } from '../Site/Manager/ManagerPage.js'
 import { waitFor } from '@testing-library/dom';
 import { BrowserRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -34,9 +34,11 @@ describe("test the ManagerPage component", () => {
         //Render the component
         const element = render(<MockManagerPage />);
         //getting the element having the "See farmer orders" heading from the screen
-        const seeFarmerOrdersHeading = screen.getByText('See farmer orders');
+        const seeFarmerOrdersHeading = screen.getByText('See Farmer Orders');
+        const seeReports = screen.getByText('See Reports');
 
         expect(seeFarmerOrdersHeading).toBeInTheDocument();
+        expect(seeReports).toBeInTheDocument();
     });
 });
 
@@ -45,11 +47,18 @@ describe("test the ManagerPage component", () => {
 //########################################################## ManagerPageFarmerOrders ##########################################################//
 describe("test the ManagerPageFarmerOrders component", () => {
 
-    const mockGetCurrentTime = jest.fn().mockImplementation(
+    const getCorrectTime = () => {
+        return "Tuesday 28/December/2021 12:00";
+    }
+    const getBadTime = () => {
+        return "Friday 31/December/2021 00:00";
+    }
+
+    /*const mockGetCurrentTime = jest.fn().mockImplementation(
         () => {
-            return dayjs("2021-12-07"); //tuesday. On tuesday is possible to ack delivery
+            return dayjs("2021-12-28 12:00").format("DD/MMMM/YYYY HH:mm").toString("DD/MMMM/YYYY HH:mm"); //tuesday. On tuesday is possible to ack delivery
         }
-    );
+    );*/
 
     const fake_orders = [
         {
@@ -96,11 +105,11 @@ describe("test the ManagerPageFarmerOrders component", () => {
     //TEST #1
     test('check absence of buttons for acking delivery in the wrong days', async () => {
 
-        const mockBadTime = (jest.fn().mockImplementation(
+        /*const mockBadTime = (jest.fn().mockImplementation(
             () => {
                 return dayjs("2021-12-11"); //on saturday it's not possible to ack delivery from farmer orders
             }
-        ));
+        ));*/
 
         //Define a mock function
         const mockGetOrders = jest.spyOn(API, 'getFarmerOrders');
@@ -108,7 +117,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
         
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockBadTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getBadTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -122,7 +131,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockRestore();
      });
      
-    //TEST #2
+    //TEST #2 
     test('check for useEffect to trigger and display right when is possible to ack orders', async () => {
 
         //Define a mock function
@@ -131,7 +140,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
         
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -170,7 +179,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
 
     });
 
-    //TEST #3
+    //TEST #3 
     test('check button for acking order click', async () => {
 
         //getting the first fake order (only one, easier to test)
@@ -209,7 +218,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockUpdateOrder.mockImplementation((ord) => Promise.resolve({success : "success" }));
         
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -245,7 +254,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
     });
 
     
-    //TEST #4
+    //TEST #4 
     test('check button for acking order click - error', async () => {
         //getting the first fake order (only one, easier to test)
         const fake_order = [
@@ -283,7 +292,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockUpdateOrder.mockImplementation((ord) => Promise.reject({error : "error" }));
         
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -352,7 +361,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
 
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -411,7 +420,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
          mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
          
          //Render the component
-         render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+         render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
  
          //Check if the function is called
          await waitFor(() => {
@@ -434,7 +443,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
         mockGetOrders.mockImplementation(() => Promise.reject(responseBody));
         
         //Render the component
-        render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+        render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
         //Check if the function is called
         await waitFor(() => {
@@ -458,7 +467,7 @@ describe("test the ManagerPageFarmerOrders component", () => {
     mockGetOrders.mockImplementation(() => Promise.resolve(responseBody));
     
     //Render the component
-    render(<ManagerPageFarmerOrders getCurrentTime={mockGetCurrentTime}/>);
+    render(<ManagerPageFarmerOrders getCurrentTime={getCorrectTime}/>);
 
     //Check if the function is called
     await waitFor(() => {
@@ -579,5 +588,75 @@ describe("test the ManagerPageFarmerOrders component", () => {
     mockGetOrders.mockRestore();
 
 });
+
+
+});
+
+//########################################################## ManagerReports ##########################################################//
+describe("test the ManagerReports component", () => {
+    const weekReport = { 
+        lostFood: {}, 
+        type: 0, 
+        weekEndDate: "2021-11-28",
+        weekStartDate: "2021-11-22"
+    };
+    const monthReport = { 
+        lostFood: {}, 
+        type: 1, 
+        month: "11",
+        year: "2021"
+    };
+    //TEST #1
+    test('check rendering in case of no reports', async () => {
+        //Define a mock function
+        const mockReports = jest.spyOn(API, 'getManagerReports');
+        const responseBody = [];
+        mockReports.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        render(<ManagerReports />);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockReports).toHaveBeenCalled();
+        });
+
+        //check page content
+        expect(screen.getByText('Manager Reports')).toBeInTheDocument();
+        expect(screen.getByText('Reports are completely generated after each week and after each month. Only partial version are available before that.')).toBeInTheDocument();
+        expect(screen.getByText('No reports found.')).toBeInTheDocument();
+        
+        //Restore the API
+        mockReports.mockRestore();
+    });
+    //TEST #2
+    test('check rendering in case there are reports', async () => {
+        //Define a mock function
+        const mockReports = jest.spyOn(API, 'getManagerReports');
+        const responseBody = [monthReport, weekReport];
+        mockReports.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        render(<ManagerReports />);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockReports).toHaveBeenCalled();
+        });
+
+        //check page content
+        expect(screen.getByText('Manager Reports')).toBeInTheDocument();
+        expect(screen.getByText('Reports are completely generated after each week and after each month. Only partial version are available before that.')).toBeInTheDocument();
+        expect(screen.queryByText('No reports found.')).not.toBeInTheDocument();
+        expect(screen.getByText('Weekly Reports')).toBeInTheDocument();
+        expect(screen.getByText('Monthly Reports')).toBeInTheDocument();
+        expect(screen.getByText("November 2021")).toBeInTheDocument();
+        expect(screen.getByText('November 22, 2021 - November 28, 2021')).toBeInTheDocument();
+          
+        //Restore the API
+        mockReports.mockRestore();
+    });
+
+    //TODO: testing the modal showing the report info, weekly and monthly
 
 });

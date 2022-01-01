@@ -26,12 +26,14 @@ describe("test the MyPage component", () => {
         const showProductsEl = screen.getByText(/Show products/i);
         const handoutOrderEl = screen.getByText(/Handout Order/i);
         const orderPendingCalncelationEl = screen.getByText(/Orders pending cancelation/i);
+        const reportlostfood = screen.getByText(/Report Lost Food/i);
+        
 
         expect(newClientEl).toBeInTheDocument();
         expect(topUpWalletEl).toBeInTheDocument();
         expect(showProductsEl).toBeInTheDocument();
         expect(handoutOrderEl).toBeInTheDocument();
         expect(orderPendingCalncelationEl).toBeInTheDocument();
-
+        expect(reportlostfood).toBeInTheDocument();
     });
 });
