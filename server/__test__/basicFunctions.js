@@ -200,6 +200,7 @@ exports.getClientOrderById = (id) => {
       const items = rows.map((e) => ({
         id: e.ID,
         customer: e.CUSTOMER,
+        state: e.STATE,
       }));
       resolve(items);
     });

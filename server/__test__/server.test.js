@@ -8,6 +8,7 @@ const farmerDao = require("../Dao/farmerDAO");
 const userDao = require("../Dao/userDao");
 const customerDao = require("../Dao/customerDao");
 const employeeDAO = require("../Dao/employeeDBAccess");
+const managerDAO = require("../Dao/managerDAO");
 const { response } = require("express");
 
 //***************************************** TESTING DAO CLASSES************************************************************************** */
@@ -243,7 +244,6 @@ describe("Test Dao classes", () => {
     });
 
   });
-  /**Lorenzo Molteni trying to test  getOrderAll and getCustomers functions in employeeDBAccess.js*/
   describe("Test employeeDAO functions", () => {
     let customerId;
     //TESTING getCustomers
@@ -387,6 +387,80 @@ describe("Test Dao classes", () => {
       };
       const id = await employeeDAO.createNewUser(db, newUser);
       expect(typeof id).toBe("number");
+    });
+
+    //testing story#41, about manager reports
+    test("test postLostFood", async () => {
+      let order = {
+        product: "watermelon",
+        quantity: 12,
+        date: "2021-12-27 12:15",
+        month: 12,
+        productid: 1,
+      }
+      
+      const res = await employeeDAO.postLostFood(db, order);
+      expect(res).toEqual(order);
+      await functions.deleteTable("lostfood");
+    });
+    test("test lostOrderStatus", async () => {  
+      const fakeOrder = {
+        customerid: 1000,
+        state: "pending",
+        delivery: false,
+        total: 17.31,
+        date: "2021-12-01 12:00",
+      };
+      //create a pending order, set it as lost, and check if its state has changed
+      const orderid = await employeeDAO.createClientOrder(db, fakeOrder);
+      await employeeDAO.lostOrderStatus(db, orderid);
+      const orders = await functions.getClientOrderById(orderid);
+      expect(orders[0].state).toEqual("lost");
+    });
+    
+
+  });
+  describe("Test managerDAO functions", () => {
+    //testing getReports
+    test("test getReports", async () => {
+      const weekReport = {
+        type: 0,
+        initialdate: "2021-11-01",
+        finaldate: "2021-11-07"
+      };
+      const monthlyReport = {
+        type: 1,
+        initialdate: "2021-11-01",
+        finaldate: "2021-11-30"
+      };
+  
+      await functions.addManagerReport(weekReport);
+      await functions.addManagerReport(monthlyReport);
+      const res = await managerDAO.getReports(db);
+      expect(res).toHaveLength(2);
+
+      await functions.deleteTable("reports");
+      const res2 = await managerDAO.getReports(db);
+      expect(res2).toHaveLength(0);
+    });
+
+    //testing getLostFood
+    test("test getLostFood", async () => {
+      let lostFood = {
+        product: "watermelon",
+        quantity: 12,
+        date: "2021-12-27 12:15",
+        month: 12,
+        productid: 1,
+      }
+      //putting lostfood
+      await employeeDAO.postLostFood(db, lostFood);
+      const res = await managerDAO.getLostFood(db);
+      expect(res).toHaveLength(1);
+
+      await functions.deleteTable("lostfood");
+      const res2 = await managerDAO.getLostFood(db);
+      expect(res2).toHaveLength(0);
     });
   });
 });
