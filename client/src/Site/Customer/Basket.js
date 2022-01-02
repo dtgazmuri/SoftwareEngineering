@@ -10,7 +10,7 @@ import {
   Table,
   Badge,
 } from "react-bootstrap";
-import { CartPlus, CartDash } from "react-bootstrap-icons";
+import { CartPlus, CartDash, Plus, Dash } from "react-bootstrap-icons";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -328,8 +328,7 @@ export function ConfirmDeliveryPanel(props) {
             {props.delivery ? (
               <Form.Group className="mb-3" controlId="delivery">
                 <Form.Control
-                id="address"
-                
+                  id="address"
                   type="address"
                   placeholder="Enter Address"
                   value={props.address}
@@ -345,16 +344,14 @@ export function ConfirmDeliveryPanel(props) {
           <Row>
             <Col></Col>
             <Col>
-              
-                <Button
-                  id="sendorder"
-                  disabled={invalidTime ? true:false}
-                  variant="primary"
-                  onClick={() => props.handleShow()}
-                >
-                  Place Order Request
-                </Button>
-             
+              <Button
+                id="sendorder"
+                disabled={invalidTime ? true : false}
+                variant="primary"
+                onClick={() => props.handleShow()}
+              >
+                Place Order Request
+              </Button>
             </Col>
             <Col></Col>
             <Col>
@@ -463,7 +460,9 @@ export function RecapCart(props) {
             </tr>
           </tbody>
         </Table>
-        <Button id="sendorder" onClick={props.handleSubmit}>Save</Button>
+        <Button id="sendorder" onClick={props.handleSubmit}>
+          Save
+        </Button>
         &nbsp; &nbsp; &nbsp;
         <Button variant="secondary" onClick={props.handleClose}>
           Cancel
@@ -493,11 +492,9 @@ export function BasketItem(props) {
               notifyBalance={props.notifyBalance}
               notifyQuantity={props.notifyQuantity}
             ></BasketButton>
-            </Col>
-            <Col id="quantity">
-            {props.product.quantity}
-            </Col>
-            <Col id="buttonremove">
+          </Col>
+          <Col id="quantity">{props.product.quantity}</Col>
+          <Col id="buttonremove">
             <BasketButton
               product={props.product}
               mode={"delete"}
@@ -583,7 +580,7 @@ function BasketButton(props) {
       onClick={() => addOrDeleteBasketItem(props.product, props.mode)}
     >
       {/* eslint-disable-next-line eqeqeq*/}
-      {props.mode == "add" ? <CartPlus    id="add"/> : <CartDash    id="remove"/>}
+      {props.mode == "add" ? <Plus id="add" /> : <Dash id="remove" />}
     </Button>
   );
 }
@@ -594,10 +591,10 @@ function returnQuantity(id) {
   );
   for (let i = 0; i < basketItems.length; i++) {
     if (basketItems[i].id === id) {
-      return basketItems[i].quantity
+      return basketItems[i].quantity;
     }
   }
-  return ""
+  return "";
 }
 
 export { Basket, BasketButton, returnQuantity };
