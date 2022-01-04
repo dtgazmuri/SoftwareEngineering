@@ -297,7 +297,11 @@ export function ConfirmDeliveryPanel(props) {
                 name="date"
                 format="dd/MM/yyyy"
                 value={props.date}
-                onChange={(ev) => props.setDate(ev.target.value)}
+                onChange={(ev) => {
+                  props.setDate(ev.target.value);
+                  console.log(ev.target.value);
+                }
+                }
               />
             </Form.Group>
             <Form.Group controlId="form-deadline-time">
@@ -308,7 +312,11 @@ export function ConfirmDeliveryPanel(props) {
                 name="time"
                 id="time"
                 value={props.time}
-                onChange={(ev) => props.setTime(ev.target.value)}
+                onChange={(ev) => {
+                  props.setTime(ev.target.value);
+                  console.log(ev.target.value);
+                }
+              }
               />
             </Form.Group>
           </Card.Text>

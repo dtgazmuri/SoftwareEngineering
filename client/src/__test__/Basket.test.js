@@ -324,17 +324,25 @@ describe("test the ConfirmDeliveryPanel component", () => {
     //TEST #2
     test('check form elements insertion', async () => {
   
+      const realFakeDate = "2022-01-05";
+      const realFakeTime = "12:12";       //12:12 PM
+
       //Reender the element
-      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={fake_date} time={fake_time} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
+      const elemet = render(<MockConfirmDeliveryPanel getCurrentTime={mockGoodTime} handleDelivery={fakeHandleDelivery} address={fake_address} setAddress={fakeSetAddress} delivery={fake_delivery} date={realFakeDate} time={realFakeTime} setTime={fakeSetTime} setDate={fakeSetDate} handleShow={fakeHandleShow} />);
   
       //Check if the form elements are showing right
       const dateFormTextArea = screen.getByTitle("insert-date");
       const timeFormTextArea = screen.getByTitle("insert-time");
       const deliveryFormCheckbox = screen.getByTitle("insert-delivery");
   
-      fireEvent.change(dateFormTextArea, { target: { value: "data_pippo" } });
-      fireEvent.change(timeFormTextArea, { target: { value: "ora_pippo" } });
+      expect(dateFormTextArea.value).toBe(realFakeDate);
+      expect(timeFormTextArea.value).toBe(realFakeTime);
+      
+      fireEvent.change(dateFormTextArea, { target: { value: "2021-01-01" } });
+      fireEvent.change(timeFormTextArea, { target: { value: "00:34" } });
   
+      
+
       //Check function called
       fireEvent.click(deliveryFormCheckbox);
       expect(fakeHandleDelivery).toHaveBeenCalled();
@@ -483,6 +491,7 @@ describe("test the ConfirmDeliveryPanel component", () => {
     const fakeHandleSubmit = jest.fn();
   
     const fake_address = "[fake_address]"
+
     const fake_date = "[fake_date]";
     const fake_time = "[fake_time]";
   

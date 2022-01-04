@@ -68,14 +68,16 @@
 }
 
 .backg {
-  background-image: url("langhe.jpg");
+  background: url("langhe.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   position: fixed;
-  zoom: 150%;
   opacity: 0.8;
   z-index: -1;
   top: 41 px;
   left: 0px;
 }
+
 
 
 .buttonslog {

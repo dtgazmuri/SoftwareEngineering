@@ -138,7 +138,7 @@ describe("test the OrderList component", () => {
 
     const mockGetCurrentTime = jest.fn().mockImplementation(
         () => {
-            return dayjs("2018-06-03");
+            return dayjs('2022-01-06');
         }
     );
 
@@ -265,6 +265,10 @@ describe("test the OrderList component", () => {
     //TEST #3
     test('check button presence', async () => {
 
+        const test_date = dayjs('2022-01-06');
+        console.log(`date day : ${test_date.day()}`);
+
+
         //Define a fake order (only one, easier to test)
         const fake_order = [
             { 
@@ -304,6 +308,10 @@ describe("test the OrderList component", () => {
         //Check if the function is called
         await waitFor(() => {
             expect(mockGetOrders).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            expect(mockGetCurrentTime).toHaveBeenCalled();
         });
 
         await waitFor(() => {

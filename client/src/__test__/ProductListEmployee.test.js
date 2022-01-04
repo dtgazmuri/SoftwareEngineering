@@ -118,8 +118,8 @@ describe("test the ConfirmDeliveryPanel component", () => {
   const fake_city = "[fake_city]";
   const fake_cap = "[fake_cap]";
 
-  const fake_date = "[fake_date]";
-  const fake_time = "[fake_time]";
+  const fake_date = "2022-01-05";
+  const fake_time = "16:34";
 
   const fake_delivery = false;
 
@@ -154,8 +154,12 @@ describe("test the ConfirmDeliveryPanel component", () => {
     const timeFormTextArea = screen.getByTitle("insert-time");
     const deliveryFormCheckbox = screen.getByTitle("insert-delivery");
 
-    fireEvent.change(dateFormTextArea, { target: { value: "data_pippo" } });
-    fireEvent.change(timeFormTextArea, { target: { value: "ora_pippo" } });
+    //Check time and date
+    expect(dateFormTextArea.value).toBe(fake_date);
+    expect(timeFormTextArea.value).toBe(fake_time);
+
+    fireEvent.change(dateFormTextArea, { target: { value: "2017-04-12" } });
+    fireEvent.change(timeFormTextArea, { target: { value: "4:45" } });
 
     //Check function called
     fireEvent.click(deliveryFormCheckbox);

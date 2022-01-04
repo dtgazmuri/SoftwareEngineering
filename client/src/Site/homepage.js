@@ -50,8 +50,9 @@ function MyBody() {
     return (
         <Container id="title" className="align-items-center">
             <Row sm={5} className="title justify-content-center" >
-                Solidarity Purchasing Group
+                {/*<p style={{fontFamily: "Brush Script MT"}}>*/}Solidarity Purchasing Group{/*</p>*/}
             </Row>
+            &nbsp;
 
             <Row key="main" sm={10} id="main-row" className="h-100 v-70 justify-content-center">
                 <Col id="login-col" className="v-100 d-sm-block">
@@ -65,6 +66,7 @@ function MyBody() {
 
                         </Link>
                     </Container>
+                    &nbsp;
                 </Col>
                 <Col id="signin-col" className="v-100 d-sm-block">
                     {/*<Button variant="outline-success">Log in</Button>*/}
@@ -74,6 +76,7 @@ function MyBody() {
                             <h3>Sign-Up</h3>
                         </Link>
                     </Container>
+                    &nbsp;
                 </Col>
 
                 <Col id="seeproduct-col" className="v-100 d-sm-block">
@@ -84,6 +87,7 @@ function MyBody() {
                             <h3>See Products</h3>
                         </Link>
                     </Container>
+                    &nbsp;
                 </Col>
             </Row>
 
