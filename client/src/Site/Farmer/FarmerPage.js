@@ -216,6 +216,7 @@ export function ProductForm(props) {
 export function ConfirmOrdersSection(props) {
 
     const [orders, setOrders] = useState([]);
+    const [updated, setUpdated] = useState(false);
 
 
 
@@ -224,6 +225,7 @@ export function ConfirmOrdersSection(props) {
             try {
                 const orders = await API.getOrdersOfFarmer(id);
                 const filterOrd = orders.filter(function (o) { return o.status === "pending"; });
+                setUpdated(true);
                 setOrders(filterOrd);
             } catch (err) {
                 console.log(err.error);
@@ -231,7 +233,20 @@ export function ConfirmOrdersSection(props) {
         };
         getOrders(props.user.userid);
 
-    }, []);
+    }, [props.user.userid, updated]);
+
+    function confirmOrder(id) {
+        API.confirmOrder(id);
+        setUpdated(false);
+    }
+
+    return (
+        <OrderList getCurrentTime={props.getCurrentTime} updated={updated} orders={orders} confirmOrder={confirmOrder}/>
+    );
+}
+
+export function OrderList(props) {
+
     let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime()); //building the dayjs obj
     if ((currentTime.day() === 7 && currentTime.hour() > 23) || (currentTime.day() === 1 && currentTime.hour() < 9)) {
@@ -242,55 +257,62 @@ export function ConfirmOrdersSection(props) {
     return (
         <>
             {!invalidTime ?
-                <Col>
-                    <ListGroup variant="primary">
-                        <ListGroup.Item id="farmer-products-title" key="farmer-products-title" variant="primary">
-                            <h5 className="text-left">Here is your list of orders to be confirmed</h5>
-                        </ListGroup.Item>
-                        {orders.length ?
-                            orders.map(order => {
-                                if (order.status === "pending") {
-                                    return (
-                                        <>
-                                            <ListGroup.Item id={order.id} key={order.id}>
-                                                <h5>Order number: {order.id}</h5>
-                                                <Row>
-                                                    <Col sm={4} md={6}>
-                                                        <Row>Product name:</Row>
-                                                    </Col>
-                                                    <Col sm={4} md={6}>
-                                                        <Row>Quantity:</Row>
-                                                    </Col>
-                                                </Row>
-                                                {order.products.map(product => {
-                                                    return (
-                                                        <Row>
-                                                            <Col sm={4} md={6}>
-                                                                <Row>{product.name}</Row>
-                                                            </Col>
-                                                            <Col sm={4} md={6}>
-                                                                <Row>{product.quantity}</Row>
-                                                            </Col>
-                                                        </Row>
-                                                    )
-                                                })}
-                                            </ListGroup.Item>
-                                            <ListGroupItem>
-                                                <Button onClick={() => API.confirmOrder(order.id)}>Confirm order</Button>
-                                            </ListGroupItem>
-                                        </>
-                                    );
-                                }
-                            })
-                            :
-                            <Alert variant='danger'>No orders found.</Alert>
-                        }
+                <>
+                    {props.updated ? 
+                    <Col>
+                        <ListGroup variant="primary">
+                            <ListGroup.Item id="farmer-products-title" key="farmer-products-title" variant="primary">
+                                <h5 className="text-left">Here is your list of orders to be confirmed</h5>
+                            </ListGroup.Item>
+                            {props.orders.length ?
+                                props.orders.map(order => {
+                                    if (order.status === "pending") {
+                                        return (
+                                            <>
+                                                <ListGroup.Item id={order.id} key={order.id}>
+                                                    <h5>Order number: {order.id}</h5>
+                                                    <Row>
+                                                        <Col sm={4} md={6}>
+                                                            <Row>Product name:</Row>
+                                                        </Col>
+                                                        <Col sm={4} md={6}>
+                                                            <Row>Quantity:</Row>
+                                                        </Col>
+                                                    </Row>
+                                                    {order.products.map(product => {
+                                                        return (
+                                                            <Row>
+                                                                <Col sm={4} md={6}>
+                                                                    <Row>{product.name}</Row>
+                                                                </Col>
+                                                                <Col sm={4} md={6}>
+                                                                    <Row>{product.quantity}</Row>
+                                                                </Col>
+                                                            </Row>
+                                                        )
+                                                    })}
+                                                </ListGroup.Item>
+                                                <ListGroupItem>
+                                                    <Button onClick={() => props.confirmOrder(order.id)}>Confirm order</Button>
+                                                </ListGroupItem>
+                                            </>
+                                        );
+                                    }
+                                })
+                                :
+                                <Alert variant='danger'>No orders found.</Alert>
+                            }
 
-                    </ListGroup>
-                </Col>
+                        </ListGroup>
+                    </Col>
+                    :
+                    <h3 className="text-center">Updating orders...</h3>
+                    }
+                </>
                 :
                 <Alert variant='danger'>Orders can be confirmed only from Monday at 9 am to Sunday at 11 pm</Alert>
             }
+
         </>
     );
-}
+};

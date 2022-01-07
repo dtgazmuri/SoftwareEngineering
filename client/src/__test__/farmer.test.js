@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductList, ProductForm, ConfirmOrdersSection, FarmerPage } from '../Site/Farmer/FarmerPage.js'
+import { ProductList, ProductForm, OrderList, FarmerPage } from '../Site/Farmer/FarmerPage.js'
 import Farmer from '../Site/Farmer/FarmerPage.js'
 
 import { waitFor } from '@testing-library/dom';
@@ -203,6 +203,150 @@ describe("test the FarmerPage component", () => {
         expect(setProd).toBeInTheDocument();
         expect(confirmOrders).toBeInTheDocument();
 
+    });
+
+});
+
+
+//######################################################## OrderList ########################################################//
+
+describe("test the confirmOrdersSection component", () => {
+    
+    //TEST #1
+    test('check rendering with correct time', async () => {
+        
+        let d1 = dayjs("2022-01-05");
+
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+        const mockOrders = [
+            {
+                id: 3,
+                products: [
+                    {
+                        name: "Red Apple",
+                        quantity: 4
+                    }
+                ],
+                status: "pending"
+            }
+        ];
+        const mockConfirmOrders = jest.fn(()=>{});
+
+        //Render the component
+        render(<OrderList getCurrentTime={mockGetCurrentTimeGOOD} updated={true} orders={mockOrders} confirmOrders={mockConfirmOrders}/>);
+
+        //Check if the has the given parts
+        const header = screen.getByText("Here is your list of orders to be confirmed");
+        const orderNo = screen.getByText("Order number: 3");
+        const name = screen.getByText("Red Apple");
+        const quantity = screen.getByText("4");
+        const button = screen.getByRole("button", {name: "Confirm order"});
+
+        expect(header).toBeInTheDocument();
+        expect(orderNo).toBeInTheDocument();
+        expect(name).toBeInTheDocument();
+        expect(quantity).toBeInTheDocument();
+        expect(button).toBeInTheDocument();
+    });
+
+    //TEST #2
+    test('check rendering with incorrect time', async () => {
+        
+        let d1 = dayjs("2022-01-03T01:00:00");
+
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+        const mockOrders = [];
+        const mockConfirmOrders = jest.fn(()=>{});
+
+        //Render the component
+        render(<OrderList getCurrentTime={mockGetCurrentTimeGOOD} updated={true} orders={mockOrders} confirmOrders={mockConfirmOrders}/>);
+
+        //Check if the has the given parts
+        const warning = screen.getByText("Orders can be confirmed only from Monday at 9 am to Sunday at 11 pm");
+
+        expect(warning).toBeInTheDocument();
+    });
+
+    //TEST #3
+    test('check rendering with multiple orders', async () => {
+        
+        let d1 = dayjs("2022-01-05");
+
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+        const mockOrders = [
+            {
+                id: 3,
+                products: [
+                    {
+                        name: "Red Apple",
+                        quantity: 4
+                    }
+                ],
+                status: "pending"
+            },
+            {
+                id: 4,
+                products: [
+                    {
+                        name: "Banana",
+                        quantity: 1
+                    }
+                ],
+                status: "pending"
+            }
+        ];
+        const mockConfirmOrders = jest.fn(()=>{});
+
+        //Render the component
+        render(<OrderList getCurrentTime={mockGetCurrentTimeGOOD} updated={true} orders={mockOrders} confirmOrders={mockConfirmOrders}/>);
+
+        //Check if the has the given parts
+        const orderNo1 = screen.getByText("Order number: 3");
+        const name1 = screen.getByText("Red Apple");
+        const quantity1 = screen.getByText("4");
+        const orderNo2 = screen.getByText("Order number: 4");
+        const name2 = screen.getByText("Banana");
+        const quantity2 = screen.getByText("1");
+        const buttons = screen.getAllByRole("button", {name: "Confirm order"})
+
+        expect(orderNo1).toBeInTheDocument();
+        expect(name1).toBeInTheDocument();
+        expect(quantity1).toBeInTheDocument();
+        expect(orderNo2).toBeInTheDocument();
+        expect(name2).toBeInTheDocument();
+        expect(quantity2).toBeInTheDocument();
+        expect(buttons.length).toBe(2);
+    });
+
+    //TEST #4
+    test('check if confirm orders button works', async () => {
+        
+        let d1 = dayjs("2022-01-05");
+
+        const mockGetCurrentTimeGOOD = jest.fn(() => d1);
+        const mockOrders = [
+            {
+                id: 3,
+                products: [
+                    {
+                        name: "Red Apple",
+                        quantity: 4
+                    }
+                ],
+                status: "pending"
+            }
+        ];
+        const mockConfirmOrders = jest.fn(()=>{});
+
+        //Render the component
+        render(<OrderList getCurrentTime={mockGetCurrentTimeGOOD} updated={true} orders={mockOrders} confirmOrder={mockConfirmOrders}/>);
+
+        //Check if the has the given parts
+        const button = screen.getByRole("button", {name: "Confirm order"});
+
+        fireEvent.click(button);
+
+        await waitFor(() => expect(mockConfirmOrders).toHaveBeenCalled());
     });
 
 });
