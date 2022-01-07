@@ -21,6 +21,8 @@ function Basket(props) {
   const [time, setTime] = React.useState();
   const [delivery, setDelivery] = React.useState(false);
   const [address, setAddress] = React.useState("");
+  const [city, setCity] = React.useState("");
+  const [cap, setCap] = React.useState("");
   const [items, setItems] = React.useState(
     JSON.parse(sessionStorage.getItem("shopping-basket") || "[]")
   );
@@ -88,6 +90,18 @@ function Basket(props) {
       good = false;
     }
 
+    if (city === "" && good && delivery) {
+      setCartError(true);
+      setCartErrorMessage("Please enter the delivery city");
+      good = false;
+    }
+
+    if (cap === "" && good && delivery) {
+      setCartError(true);
+      setCartErrorMessage("Please enter the delivery CAP");
+      good = false;
+    }
+
     setShow(true);
   };
 
@@ -123,10 +137,10 @@ function Basket(props) {
     // Address  --> If Delivery is True, then client's entered address. Else, "Shop"
     let wantsDelivery = "False";
     let deladd = "Shop";
-    if (delivery && address != "") {
-      deladd = address;
+    if (delivery && address != "" && city !== "" && cap !== "") {
+      deladd = address+", "+city+", "+cap;
       wantsDelivery = "True";
-    }
+  }
     let deliveryDate = orderDate;
     let deliveryTime = orderTime;
     let dateTime = deliveryDate + " " + deliveryTime;
@@ -221,6 +235,10 @@ function Basket(props) {
               handleDelivery={handleDelivery}
               address={address}
               setAddress={setAddress}
+              city={city}
+              setCity={setCity}
+              cap={cap}
+              setCap={setCap}
               delivery={delivery}
               date={date}
               time={time}
@@ -243,6 +261,8 @@ function Basket(props) {
                 show={show}
                 handleSubmit={handleSubmit}
                 address={address}
+                city={city}
+                cap={cap}
                 delivery={delivery}
                 date={date}
                 time={time}
@@ -316,7 +336,7 @@ export function ConfirmDeliveryPanel(props) {
                   props.setTime(ev.target.value);
                   console.log(ev.target.value);
                 }
-              }
+                }
               />
             </Form.Group>
           </Card.Text>
@@ -333,19 +353,28 @@ export function ConfirmDeliveryPanel(props) {
               />
             </Form.Group>
 
-            {props.delivery ? (
-              <Form.Group className="mb-3" controlId="delivery">
-                <Form.Control
-                  id="address"
-                  type="address"
-                  placeholder="Enter Address"
-                  value={props.address}
-                  onChange={(ev) => props.setAddress(ev.target.value)}
-                />
-              </Form.Group>
-            ) : (
-              <></>
-            )}
+            {
+              props.delivery ?
+                <>
+                  <Form.Group className="mb-3" controlId="delivery">
+                    <Form.Control id="address" type="address" placeholder="Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
+                  </Form.Group>
+                  <Row>
+                    <Col>
+                      <Form.Group className="mb-3" controlId="city">
+                        <Form.Control id="city" type="address" placeholder="City" value={props.city} onChange={ev => props.setCity(ev.target.value)} />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group className="mb-3" controlId="cap">
+                        <Form.Control id="cap" type="address" placeholder="CAP" value={props.cap} onChange={ev => props.setCap(ev.target.value)} />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </>
+                :
+                <></>
+            }
           </Card.Text>
           <div class="h-divider" />
           <br />
@@ -454,7 +483,7 @@ export function RecapCart(props) {
                 <b>Delivery Address:</b>
               </td>
               <td id="address" colSpan="2">
-                {props.delivery ? props.address : "Pick-up at the shop"}
+                {props.delivery ? props.address+", "+props.city+" "+props.cap : "Pick-up at the shop"}
               </td>
             </tr>
 
