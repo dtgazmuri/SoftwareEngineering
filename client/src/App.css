@@ -78,6 +78,17 @@
   left: 0px;
 }
 
+.back_cabbage {
+  background: url("CabbageCut.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+  opacity: 1;
+  z-index: -1;
+  top: 41 px;
+  left: 0px;
+}
+
 
 
 .buttonslog {
