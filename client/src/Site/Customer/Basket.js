@@ -627,13 +627,18 @@ function BasketButton(props) {
       props.setChangeBasket((changeFlag) => (changeFlag ? false : true));
   };
 
+  const update = (product, mode)=>{
+    addOrDeleteBasketItem(product, mode);
+    props.setUpdated((old) => !old);
+  }
+
   return (
     <Button
       size="sm"
       variant="success"
       test-id="add"
       title="add_remove_basket_button"
-      onClick={() => addOrDeleteBasketItem(props.product, props.mode)}
+      onClick={() => update(props.product, props.mode)}
     >
       {/* eslint-disable-next-line eqeqeq*/}
       {props.mode == "add" ? <Plus id="add" /> : <Dash id="remove" />}

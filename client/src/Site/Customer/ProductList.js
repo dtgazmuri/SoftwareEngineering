@@ -32,6 +32,7 @@ function Information(props){
 
 
 function ProductList(props) {
+  const[updated, setUpdated] = useState(false);
 
   let ini_prod_list = [];
   if (props.debug_product_list){
@@ -45,6 +46,7 @@ function ProductList(props) {
     const getProducts = async () => {
       try {
         const all_products = await API.fetchAllProducts();
+        setUpdated(true);
         setProducts(all_products);
       } catch (err) {
         //setLogged(false)
@@ -63,13 +65,13 @@ function ProductList(props) {
         <td>{prod.price} € <Information quantity={prod.quantity}/></td>
         <td>{prod.availability}</td>
         <td>
-          <BasketButton
+        <BasketButton
             product={prod}
-            
             mode={"add"}
             notifyBalance={props.notifyBalance}
             wallet={props.wallet}
             notifyQuantity={props.notifyQuantity}
+            setUpdated={setUpdated}
           ></BasketButton>{" "}
         </td>
         <td id="booked">
@@ -82,6 +84,7 @@ function ProductList(props) {
             notifyBalance={props.notifyBalance}
             wallet={props.wallet}
             notifyQuantity={props.notifyQuantity}
+            setUpdated={setUpdated}
           ></BasketButton>{" "}
         </td>
       </tr>
