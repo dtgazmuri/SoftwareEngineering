@@ -198,7 +198,7 @@ function OrderList(props) {
     //handout is possible from Wednesday at 9:00 until Friday 21:00
     let invalidTime = false;
     const currentTime = dayjs(props.getCurrentTime());
-    if (currentTime.day() === 4 || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
+    if ((currentTime.day() === 4) || (currentTime.day() === 3 && currentTime.hour() > 8) || (currentTime.day() === 5 && currentTime.hour() < 21))
         invalidTime = false;
     else
         invalidTime = true;
