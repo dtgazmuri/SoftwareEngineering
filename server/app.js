@@ -362,10 +362,10 @@ module.exports = function (app, db, testUser, bot) {
               price: el.price,
             };
 
-            //console.log(`item instance : ${itemINST}`);
+            console.log(itemINST);
 
             //POST IT
-            // const id_item = await employeeDAO.createOrderItem(itemINST);
+            const id_item = await employeeDAO.createOrderItem(db, itemINST);
           }
         }
 
@@ -488,7 +488,7 @@ module.exports = function (app, db, testUser, bot) {
             //console.log(`item instance : ${itemINST}`);
 
             //POST IT
-            // const id_item = await employeeDAO.createOrderItem(itemINST);
+            const id_item = await employeeDAO.createOrderItem(db, itemINST);
           }
         }
 
