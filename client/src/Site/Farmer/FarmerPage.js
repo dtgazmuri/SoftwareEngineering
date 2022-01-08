@@ -293,7 +293,7 @@ export function OrderList(props) {
                                                     })}
                                                 </ListGroup.Item>
                                                 <ListGroupItem>
-                                                    <Button onClick={() => props.confirmOrder(order.id)}>Confirm order</Button>
+                                                    <Button onClick={() => props.confirmOrder(order.id)}>Confirm preparation of order</Button>
                                                 </ListGroupItem>
                                             </>
                                         );

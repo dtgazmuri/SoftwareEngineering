@@ -329,6 +329,7 @@ exports.createOrderItem = (db, item) => {
       [item.orderid, item.productid, item.quantity, item.price],
       function (err) {
         if (err) {
+          console.log(err);
           reject(err);
           return;
         }
