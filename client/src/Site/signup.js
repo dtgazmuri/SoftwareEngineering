@@ -191,9 +191,11 @@ function SignupForm(props) {
                                 </Col>
                             </Row>
                             <Row className="buttonRow d-flex justify-content-around">
+                                
                                 <Form.Group as={Col} xs={1} className="mb-5">
                                     <Button test-id="save-button" onClick={handleSubmit}>Save</Button>
                                 </Form.Group>
+                                
                                 <Form.Group as={Col} xs={1} className="mb-5">
                                     <Link to="/home">
                                         <Button variant="secondary">Cancel</Button>
