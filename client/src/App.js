@@ -115,6 +115,7 @@ function App() {
         setMessage({ type: "", msg: "" });
       }, 3000);
     } catch (err) {
+      setLoading(false)
       setMessage({ type: "danger", msg: `Login failed. ${err}` });
       setTimeout(() => {
         setMessage({ type: "", msg: "" });
