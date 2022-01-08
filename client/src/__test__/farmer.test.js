@@ -240,7 +240,7 @@ describe("test the confirmOrdersSection component", () => {
         const orderNo = screen.getByText("Order number: 3");
         const name = screen.getByText("Red Apple");
         const quantity = screen.getByText("4");
-        const button = screen.getByRole("button", {name: "Confirm order"});
+        const button = screen.getByRole("button", {name: "Confirm preparation of order"});
 
         expect(header).toBeInTheDocument();
         expect(orderNo).toBeInTheDocument();
@@ -307,7 +307,7 @@ describe("test the confirmOrdersSection component", () => {
         const orderNo2 = screen.getByText("Order number: 4");
         const name2 = screen.getByText("Banana");
         const quantity2 = screen.getByText("1");
-        const buttons = screen.getAllByRole("button", {name: "Confirm order"})
+        const buttons = screen.getAllByRole("button", {name: "Confirm preparation of order"})
 
         expect(orderNo1).toBeInTheDocument();
         expect(name1).toBeInTheDocument();
@@ -342,7 +342,7 @@ describe("test the confirmOrdersSection component", () => {
         render(<OrderList getCurrentTime={mockGetCurrentTimeGOOD} updated={true} orders={mockOrders} confirmOrder={mockConfirmOrders}/>);
 
         //Check if the has the given parts
-        const button = screen.getByRole("button", {name: "Confirm order"});
+        const button = screen.getByRole("button", {name: "Confirm preparation of order"});
 
         fireEvent.click(button);
 
