@@ -3,7 +3,8 @@ module.exports = function (app, db, testUser, bot) {
   const employeeDAO = require("./Dao/employeeDBAccess"); // module for accessing the DB
   const farmerDAO = require("./Dao/farmerDAO"); //module for accessing db from farmer
 
-  const nodemailer = require("nodemailer");
+  const nodemailer = require('nodemailer');
+  const creds = require('./config');
 
   const bcrypt = require("bcrypt");
   /*TO DO: capire se usare un unico db con campo tipodiuser o diverse tabelle*/
@@ -21,10 +22,6 @@ module.exports = function (app, db, testUser, bot) {
 
   const userDao = require("./Dao/dbusers");
 
-  /*var router = express.Router();
-  app.use('/sayHello', router);
-  router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello*/
-
   if (!testUser) {
     bot.command("start", (ctx) => {
       myUserDao.addNewTelegramUser(db, ctx.chat.id);
@@ -36,30 +33,51 @@ module.exports = function (app, db, testUser, bot) {
     });
   }
 
-  function handleMail(req, res) {
-    // Not the movie transporter!
-    var transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: "spg.p13.polito@gmail.com", // Email id
-        pass: "spgp13gmail", // Password
-      },
-    });
+  var transport = {
+    host: 'smtp.gmail.com', // e.g. smtp.gmail.com
+    secure: false, // use SSL
+    auth: {
+      user: creds.USER,
+      pass: creds.PASS
+    },
+    tls: {
+      rejectUnauthorized: false
+  }
+  }
+  
+  var transporter = nodemailer.createTransport(transport)
+  
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email setup completed!');
+    }
+  });
+
+  function handleMail(emailAddr) {
     var text = "Your order has been confirmed!";
-    var mailOptions = {
-      from: "spg.p13.polito@gmail.com>", // sender address
-      to: req.body.user, // list of receivers
-      subject: "Order confirmed", // Subject line
-      text: text, //, // plaintext body
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        res.json({ yo: "error" });
+    var mail = {
+      from: "spg.p13.polito@gmail.com",
+      to: emailAddr,
+      subject: 'Order confirmed',
+  
+      html: text
+    }
+  
+    transporter.sendMail(mail, (err, data) => {
+      if (err) {
+        /*res.json({
+          msg: 'fail'
+        })*/
+        console.log("Email not sent");
       } else {
-        res.json({ yo: info.response });
+        /*res.json({
+          msg: 'success'
+        })*/
+        console.log("Email sent");
       }
-    });
+    })
   }
 
   passport.use(
@@ -915,7 +933,7 @@ module.exports = function (app, db, testUser, bot) {
     try {
       let result = await farmerDAO.confirmOrder(db, id);
       let customer = await farmerDAO.getCustomerMail(db, id);
-      //handleMail(customer);
+      handleMail(customer);
       return res.status(200).json(result);
     } catch (err) {
       console.log(err);
