@@ -1,4 +1,4 @@
-import { Form, Button, Alert, Container, Card } from 'react-bootstrap';
+import { Form, Button, Alert, Card } from 'react-bootstrap';
 import { useState } from 'react';
 
 function LoginPage(props) {

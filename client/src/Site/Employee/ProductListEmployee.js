@@ -201,7 +201,7 @@ function ProductListEmployee(props) {
             if (newQta <= 0) {
                 //Cancel it from the array
                 neworder = order.filter(o => {
-                    if (o.id == prod.id) {
+                    if (o.id === prod.id) {
                         return false;
                     }
                     else {
@@ -219,7 +219,7 @@ function ProductListEmployee(props) {
         let total = 0;
         let wantsDelivery = "False";
         let deladd = "Shop";
-        if (delivery && address != "" && city !== "" && cap !== "") {
+        if (delivery && address !== "" && city !== "" && cap !== "") {
             deladd = address+", "+city+", "+cap;
             wantsDelivery = "True";
         }
@@ -252,7 +252,7 @@ function ProductListEmployee(props) {
 
     const getBookedProduct = ((prod_id) => {
         for (let i = 0; i < order.length; i++) {
-            if (order[i].id == prod_id) {
+            if (order[i].id === prod_id) {
                 return order[i].quantity;
             }
         }

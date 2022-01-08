@@ -10,7 +10,7 @@ import {
   Table,
   Badge,
 } from "react-bootstrap";
-import { CartPlus, CartDash, Plus, Dash } from "react-bootstrap-icons";
+import { Plus, Dash } from "react-bootstrap-icons";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -137,7 +137,7 @@ function Basket(props) {
     // Address  --> If Delivery is True, then client's entered address. Else, "Shop"
     let wantsDelivery = "False";
     let deladd = "Shop";
-    if (delivery && address != "" && city !== "" && cap !== "") {
+    if (delivery && address !== "" && city !== "" && cap !== "") {
       deladd = address + ", " + city + ", " + cap;
       wantsDelivery = "True";
     }
@@ -599,7 +599,7 @@ function BasketButton(props) {
         if (mode === "delete" && basketItems[i].quantity >= 1) {
           basketItems[i].quantity--;
           total = total - basketItems[i].price * basketItems[i].quantity;
-          if (basketItems[i].quantity == 0) delete basketItems[i];
+          if (basketItems[i].quantity === 0) delete basketItems[i];
         }
         sessionStorage.setItem(
           "shopping-basket",

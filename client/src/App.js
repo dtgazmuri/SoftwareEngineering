@@ -9,8 +9,8 @@ import dayjs from "dayjs";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Alert, Container, Button, Spinner, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { ToastContainer, toast } from "react-toastify";
-import { ArrowReturnRight, Calendar } from 'react-bootstrap-icons';
+import { ToastContainer } from "react-toastify";
+import { Calendar } from 'react-bootstrap-icons';
 //Our components
 import Farmer2 from './Site/Farmer/farmerold';
 import MyBody from './Site/homepage'

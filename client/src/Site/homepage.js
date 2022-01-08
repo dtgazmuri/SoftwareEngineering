@@ -1,9 +1,8 @@
-import { Container, Row, Col, Card } from "react-bootstrap"
+import { Container, Row, Col } from "react-bootstrap"
 import { React } from 'react';
 import { Link } from "react-router-dom";
 import { login, signin, productlist } from "./icons";
 
-import LogoImg from '../CabbageCut.jpg';
 import "../App.css";
 
 /*

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { OverlayTrigger, Button, Popover, Table } from "react-bootstrap";
+import { OverlayTrigger, Popover, Table } from "react-bootstrap";
 import {BasketButton, returnQuantity} from "./Basket";
 
 import API from "../../API";
