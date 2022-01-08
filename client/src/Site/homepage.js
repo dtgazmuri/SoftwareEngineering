@@ -1,9 +1,8 @@
-import { Container, Row, Col, Card } from "react-bootstrap"
+import { Container, Row, Col } from "react-bootstrap"
 import { React } from 'react';
 import { Link } from "react-router-dom";
 import { login, signin, productlist } from "./icons";
 
-import LogoImg from '../CabbageCut.jpg';
 import "../App.css";
 
 /*
@@ -52,13 +51,6 @@ function MyBody() {
 
     return (
         <>
-
-
-
-
-
-
-
             <Container id="title" className="align-items-center">
 
                 <Row>
@@ -66,7 +58,7 @@ function MyBody() {
                         <br />
                         <br />
                         <Container className="border-white square border border-5 container-sm align-items-center" style={{ "backgroundColor": "rgba(0, 0, 0, 0.5)" }}>
-                            <p style={{ "text-align": "center", "fontFamily": "Brush Script MT", "color": "white", "fontSize": 30 }} class="align-middle">
+                            <p style={{ "textAlign": "center", "fontFamily": "Brush Script MT", "color": "white", "fontSize": 30 }} className="align-middle">
                                 <br />
                                 <b>Solidarity Purchasing Group</b>
                                 <br />

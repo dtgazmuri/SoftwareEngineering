@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+/*import dayjs from 'dayjs';
 import { React, useState, useEffect } from 'react';
 import { Col, Container, Row, ListGroup, Form, Button, Alert, ListGroupItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -305,4 +305,4 @@ function ConfirmOrdersSection(props) {
     );
 }
 
-export default Farmer2;
+export default Farmer2;*/

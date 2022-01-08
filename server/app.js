@@ -1023,7 +1023,7 @@ module.exports = function (app, db, testUser, bot) {
 
         for (let j = 0; j < lostFood.length; j++) {
           let currentProduct = lostFood[j];
-          foodDate = new Date(lostFood[j].date);
+          let foodDate = new Date(lostFood[j].date);
           var d1 = new Date(initialDate);
           var d2 = new Date(finalDate);
 

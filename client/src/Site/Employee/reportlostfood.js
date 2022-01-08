@@ -1,8 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import API from '../../EmployeeAPI';
 import API2 from '../../API';
-import { Container, Row, Col, ListGroup, Alert, Button, Form, Modal, Table } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Row, Col, ListGroup, Alert, Button, Form } from "react-bootstrap";
 import dayjs from 'dayjs';
 
 function ReportLostFood(props) {
@@ -117,7 +116,7 @@ function ReportLostFood(props) {
         let dateArray = date[1].split("/");
         let product;
         for (let i = 0; i < productList.length ; i++){
-            if (productList[i].id == selectedProduct) {
+            if (productList[i].id === selectedProduct) {
                 product = productList[i];
                 break;
             }
@@ -148,7 +147,7 @@ function ReportLostFood(props) {
             productid: product.id,
         }
         console.log(productData);
-        let response = API.postLostFood(productData);
+        API.postLostFood(productData);
         //setAlert(response);
     }
 
@@ -293,7 +292,7 @@ function DisplayOrder(props) {
                 let productId = product.productid;
                 let currentProduct;
                 for (let j = 0; j < productList.length; j++) {
-                    if (productId == productList[j].id) {
+                    if (productId === productList[j].id) {
                         currentProduct = productList[j];
                         break;
                     }
@@ -306,7 +305,7 @@ function DisplayOrder(props) {
                     productid: productId,
                 }
                 console.log(productData);
-                let response = API.postLostFood(productData);
+                API.postLostFood(productData);
             }
             API.lostOrderStatus(props.order.id);
             setAlert("Food from order reported as lost correctly");

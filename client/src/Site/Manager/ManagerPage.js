@@ -415,9 +415,9 @@ function ManagerReports(props) {
 function ReportWeekItem(props) {
     const [show, setShow] = useState(false);
 
-    const ShowWeeklyReport = () => {
+    const ShowWeeklyReport = (() => {
         setShow(true);
-    }
+    });
 
     const handleClose = () => {
         setShow(false);
@@ -465,7 +465,7 @@ function ReportWeekItem(props) {
 
     return (
         <>
-            <ListGroup.Item action variant="light" onClick={() => ShowWeeklyReport(report)}>
+            <ListGroup.Item action variant="light" onClick={() => ShowWeeklyReport()}>
                 <h6>{startDateWords} - {finalDateWords}</h6>
             </ListGroup.Item>
             <Modal show={show} onHide={handleClose}>
