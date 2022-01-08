@@ -273,7 +273,7 @@ function OrderList(props) {
                                                 Sorry, handouts are only possible between Wednesday at 9:00 and Friday at 21:00.
                                             </Alert>
                                         }
-                                        {(order.state === "pending" && !invalidTime) &&
+                                        {(order.state !== "delivered" && !invalidTime) &&
                                             <Button onClick={() => handOutOrder(order.id)}>Hand out order</Button>
                                         }
                                         {
