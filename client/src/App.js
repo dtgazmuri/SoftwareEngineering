@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from "react-toastify";
 import { Calendar } from 'react-bootstrap-icons';
 //Our components
-import Farmer2 from './Site/Farmer/farmerold';
 import MyBody from './Site/homepage'
 import MyNavbar from './Site/navbar';
 import LoginPage from './Site/loginpage'
@@ -346,8 +345,8 @@ function App() {
               : <Navigate replace to="/" />
           }
           />
-          {/*the old page is here*/}
-          <Route exact path="/farmer2" element={<Farmer2 getCurrentTime={getCurrentTime} user={user} />} />
+          {/*the old page is here
+          <Route exact path="/farmer2" element={<Farmer2 getCurrentTime={getCurrentTime} user={user} />} />*/}
 
           <Route exact path="/farmer/yourproducts"
             element={
