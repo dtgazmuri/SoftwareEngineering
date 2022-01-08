@@ -62,11 +62,11 @@ function MyBody() {
             <Container id="title" className="align-items-center">
 
                 <Row>
-                    <Container fluid className="align-items-center border border-dark border-left-0 border-right-0">
+                    <Container fluid className="align-items-center border border-5 border-dark border-left-0 border-right-0">
                         <br />
                         <br />
                         <Container className="border-white square border border-5 container-sm align-items-center" style={{ "backgroundColor": "rgba(0, 0, 0, 0.5)" }}>
-                            <p style={{ "text-align": "center", "fontFamily": "Brush Script Std", "color": "white", "fontSize": 30 }} class="align-middle">
+                            <p style={{ "text-align": "center", "fontFamily": "Brush Script MT", "color": "white", "fontSize": 30 }} class="align-middle">
                                 <br />
                                 <b>Solidarity Purchasing Group</b>
                                 <br />

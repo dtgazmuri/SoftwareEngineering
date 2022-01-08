@@ -614,6 +614,7 @@ function BasketButton(props) {
       size="sm"
       variant="success"
       test-id="add"
+      title="add_remove_basket_button"
       onClick={() => addOrDeleteBasketItem(props.product, props.mode)}
     >
       {/* eslint-disable-next-line eqeqeq*/}
