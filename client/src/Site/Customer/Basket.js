@@ -138,9 +138,9 @@ function Basket(props) {
     let wantsDelivery = "False";
     let deladd = "Shop";
     if (delivery && address != "" && city !== "" && cap !== "") {
-      deladd = address+", "+city+", "+cap;
+      deladd = address + ", " + city + ", " + cap;
       wantsDelivery = "True";
-  }
+    }
     let deliveryDate = orderDate;
     let deliveryTime = orderTime;
     let dateTime = deliveryDate + " " + deliveryTime;
@@ -158,6 +158,7 @@ function Basket(props) {
         date: dateTime,
         address: deladd,
       });
+      setItems(JSON.parse("[]"));
       props.setMessage({
         type: "success",
         msg: `Order request added correctly. Now it has to be approved by an employee`,
@@ -320,8 +321,7 @@ export function ConfirmDeliveryPanel(props) {
                 onChange={(ev) => {
                   props.setDate(ev.target.value);
                   console.log(ev.target.value);
-                }
-                }
+                }}
               />
             </Form.Group>
             <Form.Group controlId="form-deadline-time">
@@ -335,8 +335,7 @@ export function ConfirmDeliveryPanel(props) {
                 onChange={(ev) => {
                   props.setTime(ev.target.value);
                   console.log(ev.target.value);
-                }
-                }
+                }}
               />
             </Form.Group>
           </Card.Text>
@@ -353,28 +352,45 @@ export function ConfirmDeliveryPanel(props) {
               />
             </Form.Group>
 
-            {
-              props.delivery ?
-                <>
-                  <Form.Group className="mb-3" controlId="delivery">
-                    <Form.Control id="address" type="address" placeholder="Address" value={props.address} onChange={ev => props.setAddress(ev.target.value)} />
-                  </Form.Group>
-                  <Row>
-                    <Col>
-                      <Form.Group className="mb-3" controlId="city">
-                        <Form.Control id="city" type="address" placeholder="City" value={props.city} onChange={ev => props.setCity(ev.target.value)} />
-                      </Form.Group>
-                    </Col>
-                    <Col>
-                      <Form.Group className="mb-3" controlId="cap">
-                        <Form.Control id="cap" type="address" placeholder="CAP" value={props.cap} onChange={ev => props.setCap(ev.target.value)} />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                </>
-                :
-                <></>
-            }
+            {props.delivery ? (
+              <>
+                <Form.Group className="mb-3" controlId="delivery">
+                  <Form.Control
+                    id="address"
+                    type="address"
+                    placeholder="Address"
+                    value={props.address}
+                    onChange={(ev) => props.setAddress(ev.target.value)}
+                  />
+                </Form.Group>
+                <Row>
+                  <Col>
+                    <Form.Group className="mb-3" controlId="city">
+                      <Form.Control
+                        id="city"
+                        type="address"
+                        placeholder="City"
+                        value={props.city}
+                        onChange={(ev) => props.setCity(ev.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="mb-3" controlId="cap">
+                      <Form.Control
+                        id="cap"
+                        type="address"
+                        placeholder="CAP"
+                        value={props.cap}
+                        onChange={(ev) => props.setCap(ev.target.value)}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <></>
+            )}
           </Card.Text>
           <div class="h-divider" />
           <br />
@@ -483,7 +499,9 @@ export function RecapCart(props) {
                 <b>Delivery Address:</b>
               </td>
               <td id="address" colSpan="2">
-                {props.delivery ? props.address+", "+props.city+" "+props.cap : "Pick-up at the shop"}
+                {props.delivery
+                  ? props.address + ", " + props.city + " " + props.cap
+                  : "Pick-up at the shop"}
               </td>
             </tr>
 
