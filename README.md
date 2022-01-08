@@ -4,7 +4,7 @@ To explore the developed functions, login into the application using the followi
 
 | Username               |  Password       |  Role      |
 | ---------------        | --------------- | ---------- |
-|calvin@gmail.com        | stefano         |   farmer   |
+|calvin@gmail.com        | farmer          |   farmer   |
 |mario@gmail.com         | riccardo        |  employee  |
 |miriam.smith@gmail.com  | miriam          | customer   |
 |manager@gmail.com       | manager         | manager    |
