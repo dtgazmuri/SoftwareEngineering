@@ -657,6 +657,71 @@ describe("test the ManagerReports component", () => {
         mockReports.mockRestore();
     });
 
-    //TODO: testing the modal showing the report info, weekly and monthly
+    //TEST #3
+    test('check rendering of the modal weekly', async () => {
+        //Define a mock function
+        const mockReports = jest.spyOn(API, 'getManagerReports');
+        const responseBody = [monthReport, weekReport];
+        mockReports.mockImplementation(() => Promise.resolve(responseBody));
+        
+        //Render the component
+        render(<ManagerReports />);
+
+        //Check if the function is called
+        await waitFor(() => {
+            expect(mockReports).toHaveBeenCalled();
+        });
+
+        //check page content
+        expect(screen.getByText('Manager Reports')).toBeInTheDocument();
+        expect(screen.getByText('Reports are completely generated after each week and after each month. Only partial version are available before that.')).toBeInTheDocument();
+        expect(screen.queryByText('No reports found.')).not.toBeInTheDocument();
+        expect(screen.getByText('Weekly Reports')).toBeInTheDocument();
+        expect(screen.getByText('Monthly Reports')).toBeInTheDocument();
+        const report0 = screen.getByText("November 2021");
+        expect(report0).toBeInTheDocument();
+        const report1 = screen.getByText('November 22, 2021 - November 28, 2021');
+        expect(report1).toBeInTheDocument();
+
+        act(() => {
+            //click on button
+            fireEvent.click(report1);
+        });
+        await waitFor(() => {
+            //MODAL
+            expect(screen.getByText('Week Report')).toBeInTheDocument();
+            expect(screen.getByText('Close')).toBeInTheDocument();
+            expect(screen.getByText('The following products were lost during this period:')).toBeInTheDocument();
+            expect(screen.getByText('Product')).toBeInTheDocument();
+            expect(screen.getByText('Quantity')).toBeInTheDocument();
+            expect(screen.getByText('Total:')).toBeInTheDocument();
+            expect(screen.getByText('0')).toBeInTheDocument();
+            expect(screen.getByText(`Week: from ${weekReport.weekStartDate} to ${weekReport.weekEndDate}`)).toBeInTheDocument();     
+        });
+        act(() => {
+            //click on close
+            const closeBtn = screen.getByText('Close');
+            expect(closeBtn).toBeInTheDocument();
+            fireEvent.click(closeBtn);
+        });
+        act(() => {
+            const report = screen.getByText("November 2021");
+            expect(report).toBeInTheDocument();
+            //click on monthly report
+            fireEvent.click(report);
+        });
+        await waitFor(() => {
+            //MODAL
+            expect(screen.getByText('November 2021 Report')).toBeInTheDocument();
+            expect(screen.getByText('Close')).toBeInTheDocument();
+            expect(screen.getByText('The following food was lost during this month:')).toBeInTheDocument();
+            expect(screen.getByText('Product')).toBeInTheDocument();
+            expect(screen.getByText('Quantity')).toBeInTheDocument();
+            expect(screen.getByText('Total:')).toBeInTheDocument();
+            expect(screen.getByText('0')).toBeInTheDocument();
+        });
+        //Restore the API
+        mockReports.mockRestore();
+    });
 
 });

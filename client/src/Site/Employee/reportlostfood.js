@@ -167,8 +167,8 @@ function ReportLostFood(props) {
 
             <>
                 <ListGroup id="list" variant = "primary" >
-                    <ListGroup.Item action variant="primary">
-                        <h6 onClick={() => {showInsert(); handleFilterProduct("")}}>Insert lost product</h6>
+                    <ListGroup.Item action variant="primary" onClick={() => {showInsert(); handleFilterProduct("")}}>
+                        <h6>Insert lost product</h6>
                     </ListGroup.Item>
 
                     {(insert) ? 
@@ -183,8 +183,9 @@ function ReportLostFood(props) {
                                         <Form.Control test-id="filter" type="text" placeholder="Search product" value={productName} onChange={(event) => handleFilterProduct(event.target.value)} />
                                     </Col>
                                     <Col>
-                                        <Form.Control id="filter-select" title="select-statement" as="select" aria-label="Please select a product" onChange={ev => handleSelectedProduct(ev.target.value)}>
-                                            <option key={`customerdefault`} selected disabled hidden >---select---</option>
+                                        <Form.Control id="filter-select" title="select-statement" as="select" aria-label="Please select a product" 
+                                        defaultValue={"---select---"} onChange={ev => handleSelectedProduct(ev.target.value)}>
+                                            <option key={`customerdefault`} disabled hidden >---select---</option>
                                             {products}
                                         </Form.Control>
                                     </Col>
@@ -210,8 +211,8 @@ function ReportLostFood(props) {
                     : <></>
                     }
 
-                    <ListGroup.Item action variant="primary">
-                        <h6 onClick={showOrders}>Report that an entire order was lost</h6>
+                    <ListGroup.Item action variant="primary" onClick={showOrders}>
+                        <h6 >Report that an entire order was lost</h6>
                     </ListGroup.Item>
 
                     {(showOrderList) ? 
@@ -219,7 +220,7 @@ function ReportLostFood(props) {
                         orders.map(order => {
                             if (order.state === 'pending') {
                                 return (
-                                    <DisplayOrder order={order} productList={productList} getCurrentTime={props.getCurrentTime}/>
+                                    <DisplayOrder key = {order.id} order={order} productList={productList} getCurrentTime={props.getCurrentTime}/>
                                 )
                             }
                         })

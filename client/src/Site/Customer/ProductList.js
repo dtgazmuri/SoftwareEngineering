@@ -58,7 +58,7 @@ function ProductList(props) {
 
   const productlist = products.map((prod, id) => {
     return (
-      <tr test-id={`product-item-${prod.id}`}>
+      <tr test-id={`product-item-${prod.id}`} key = {prod.id}>
         <td >{prod.id}</td>
         <td>{prod.name}</td>
         <td>{prod.farmer.name + " " + prod.farmer.surname}</td>
