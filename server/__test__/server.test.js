@@ -799,10 +799,11 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("farmer", farmerId);
     
   });
-  //What's the problem?
-  /*test("responds to /api/confirmOrder/", async () => {
+  
+  test("responds to /api/confirmOrder/", async () => {
     const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
     const customerId = await functions.addCustomerForTest(newCustomer);
+    const userId = await functions.addUser({USERNAME: "test@gmail.com", USERID: customerId, HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m", ROLE: "customer"});
     const clientOrder = await functions.addClientOrder(
       {
         CUSTOMER: customerId,
@@ -822,8 +823,9 @@ describe("Test api's", () => {
     expect(res.statusCode).toEqual(200);
     
     await functions.deleteTableWhereId("clientorder", clientOrder);
+    await functions.deleteTableWhereId("users", userId);
     await functions.deleteTableWhereId("customer", customerId);
-  });*/
+  });
 
   /* removed because all tests are logged in 
   test("response to api/orders/insufficientWallet if unlogged", async () => {

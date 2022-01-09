@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.25% </span>
+                <span class="strong">64.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>234/382</span>
+                <span class='fraction'>247/382</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.75% </span>
+                <span class="strong">42.16% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>33/83</span>
+                <span class='fraction'>35/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">46.96% </span>
+                <span class="strong">51.51% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>31/66</span>
+                <span class='fraction'>34/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.91% </span>
+                <span class="strong">64.42% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>226/371</span>
+                <span class='fraction'>239/371</span>
             </div>
         
             
@@ -1212,8 +1212,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1221,17 +1221,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2081,16 +2081,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2308,9 +2308,9 @@
     }
   });
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >handleMail(</span>emailAddr) {
-    var text = <span class="cstat-no" title="statement not covered" >"Your order has been confirmed!";</span>
-    var mail = <span class="cstat-no" title="statement not covered" >{</span>
+  function handleMail(emailAddr) {
+    var text = "Your order has been confirmed!";
+    var mail = {
       from: "spg.p13.polito@gmail.com",
       to: emailAddr,
       subject: 'Order confirmed',
@@ -2318,8 +2318,8 @@
       html: text
     }
   
-<span class="cstat-no" title="statement not covered" >    transporter.sendMail(mail, <span class="fstat-no" title="function not covered" >(e</span>rr, data) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (err) {</span>
+    transporter.sendMail(mail, (err, data) =&gt; {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (err) {
         /*res.json({
           msg: 'fail'
         })*/
@@ -2328,7 +2328,7 @@
         /*res.json({
           msg: 'success'
         })*/
-<span class="cstat-no" title="statement not covered" >        console.log("Email sent");</span>
+        console.log("Email sent");
       }
     })
   }
@@ -3177,17 +3177,17 @@
     }
   });
 &nbsp;
-  app.post("/api/confirmOrder/", [check("id").isInt()], <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
-    const errors = <span class="cstat-no" title="statement not covered" >validationResult(req);</span> //looking for errors thrown by the validation
-<span class="cstat-no" title="statement not covered" >    if (!errors.isEmpty())</span>
+  app.post("/api/confirmOrder/", [check("id").isInt()], async (req, res) =&gt; {
+    const errors = validationResult(req); //looking for errors thrown by the validation
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!errors.isEmpty())
 <span class="cstat-no" title="statement not covered" >      return res.status(422).json({ errors: errors.array() }); </span>//unprocessable entity in case of errors
 &nbsp;
-    const id = <span class="cstat-no" title="statement not covered" >req.body.id;</span>
-<span class="cstat-no" title="statement not covered" >    try {</span>
-      let result = <span class="cstat-no" title="statement not covered" >await farmerDAO.confirmOrder(db, id);</span>
-      let customer = <span class="cstat-no" title="statement not covered" >await farmerDAO.getCustomerMail(db, id);</span>
-<span class="cstat-no" title="statement not covered" >      handleMail(customer);</span>
-<span class="cstat-no" title="statement not covered" >      return res.status(200).json(result);</span>
+    const id = req.body.id;
+    try {
+      let result = await farmerDAO.confirmOrder(db, id);
+      let customer = await farmerDAO.getCustomerMail(db, id);
+      handleMail(customer);
+      return res.status(200).json(result);
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      console.log(err);</span>
 <span class="cstat-no" title="statement not covered" >      return res.status(500).json({</span>
@@ -3355,7 +3355,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Jan 09 2022 22:39:25 GMT+0100 (Ora standard dell’Europa centrale)
+                at Sun Jan 09 2022 22:49:17 GMT+0100 (Ora standard dell’Europa centrale)
             </div>
         </div>
         <script src="../prettify.js"></script>
