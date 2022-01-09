@@ -90,6 +90,219 @@ describe("Test Dao classes", () => {
       });
     });
 
+    //TEST story #14, farmerDao.getFarmerOrderIds
+    test("test getFarmerOrderIds when no order is present", async () => {
+      //initializing farmerorder table and checking if empty
+      await functions.deleteTable("clientorder");
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const res = await farmerDao.getFarmerOrderIds(db, farmerId);
+      expect(res).toHaveLength(0);
+
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
+    test("test getFarmerOrderIds when one order is present", async () => {
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const prodId = await functions.addProductForTest(
+        { NAME: "watermelon", PRICE: 13.71 },
+        farmerId
+      ); //create prod sold by farmer
+      const customerId = await functions.addCustomerForTest(newCustomer);
+      const clientOrder = await functions.addClientOrder(
+        {
+          CUSTOMER: customerId,
+          STATE: "pending",
+          DELIVERY: "False",
+          TOTAL: 13.71,
+          DATETIME: "2022-01-12 12:00",
+          ADDRESS: "Shop"
+        }
+      );
+      const orderItems = await functions.addOrderItem(
+        {
+          ORDERID: clientOrder,
+          PRODUCT: prodId,
+          QUANTITY: 1,
+          PRICE: 13.71
+        }
+      );
+      
+      const expectedResponse = [{id: clientOrder, status: "pending"}];
+      const res = await farmerDao.getFarmerOrderIds(db, farmerId);
+      expect(res).toEqual(expectedResponse);
+  
+      //clean db from the data just put
+      await functions.deleteTableWhereId("orderitems", orderItems);
+      await functions.deleteTableWhereId("clientorder", clientOrder);
+      await functions.deleteTableWhereId("customer", customerId);
+      await functions.deleteTableWhereId("product", prodId);
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
+    //TEST story #14, farmerDao.getOrdersInfo
+    test("test getOrdersInfo when no order is present", async () => {
+      //initializing farmerorder table and checking if empty
+      await functions.deleteTable("orderitems");
+      await functions.deleteTable("product");
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const customerId = await functions.addCustomerForTest(newCustomer);
+      const clientOrder = await functions.addClientOrder(
+        {
+          CUSTOMER: customerId,
+          STATE: "pending",
+          DELIVERY: "False",
+          TOTAL: 13.71,
+          DATETIME: "2022-01-12 12:00",
+          ADDRESS: "Shop"
+        }
+      );
+      const res = await farmerDao.getOrdersInfo(db, clientOrder, farmerId);
+      expect(res).toHaveLength(0);
+
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
+    test("test getOrdersInfo when one order is present", async () => {
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const prodId = await functions.addProductForTest(
+        { NAME: "watermelon", PRICE: 13.71 },
+        farmerId
+      ); //create prod sold by farmer
+      const customerId = await functions.addCustomerForTest(newCustomer);
+      const clientOrder = await functions.addClientOrder(
+        {
+          CUSTOMER: customerId,
+          STATE: "pending",
+          DELIVERY: "False",
+          TOTAL: 13.71,
+          DATETIME: "2022-01-12 12:00",
+          ADDRESS: "Shop"
+        }
+      );
+      const orderItems = await functions.addOrderItem(
+        {
+          ORDERID: clientOrder,
+          PRODUCT: prodId,
+          QUANTITY: 1,
+          PRICE: 13.71
+        }
+      );
+      
+      const expectedResponse = [{ name: "watermelon", quantity: 1 }];
+      const res = await farmerDao.getOrdersInfo(db, clientOrder, farmerId);
+      expect(res).toEqual(expectedResponse);
+  
+      //clean db from the data just put
+      await functions.deleteTableWhereId("orderitems", orderItems);
+      await functions.deleteTableWhereId("clientorder", clientOrder);
+      await functions.deleteTableWhereId("customer", customerId);
+      await functions.deleteTableWhereId("product", prodId);
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
+    //TEST story #14, farmerDao.confirmOrder
+    test("test confirmOrder when the order is present", async () => {
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const prodId = await functions.addProductForTest(
+        { NAME: "watermelon", PRICE: 13.71 },
+        farmerId
+      ); //create prod sold by farmer
+      const customerId = await functions.addCustomerForTest(newCustomer);
+      const clientOrder = await functions.addClientOrder(
+        {
+          CUSTOMER: customerId,
+          STATE: "pending",
+          DELIVERY: "False",
+          TOTAL: 13.71,
+          DATETIME: "2022-01-12 12:00",
+          ADDRESS: "Shop"
+        }
+      );
+      const orderItems = await functions.addOrderItem(
+        {
+          ORDERID: clientOrder,
+          PRODUCT: prodId,
+          QUANTITY: 1,
+          PRICE: 13.71
+        }
+      );
+      
+      const expectedResponse = { id: clientOrder, state: "confirmed" };
+      const res = await farmerDao.confirmOrder(db, clientOrder);
+      expect(res).toEqual(expectedResponse);
+  
+      //clean db from the data just put
+      await functions.deleteTableWhereId("orderitems", orderItems);
+      await functions.deleteTableWhereId("clientorder", clientOrder);
+      await functions.deleteTableWhereId("customer", customerId);
+      await functions.deleteTableWhereId("product", prodId);
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
+    //TEST story #14, farmerDao.getCustomerMail
+    test("test getCustomerMail when the customer is present", async () => {
+      const farmerId = await functions.addFarmerForTest({
+        NAME: "Lorenzo",
+        SURNAME: "Molteni",
+      }); //create farmer
+      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const prodId = await functions.addProductForTest(
+        { NAME: "watermelon", PRICE: 13.71 },
+        farmerId
+      ); //create prod sold by farmer
+      const customerId = await functions.addCustomerForTest(newCustomer);
+      const userId = await functions.addUser({USERNAME: "test@gmail.com", USERID: customerId, HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m", ROLE: "customer"});
+      const clientOrder = await functions.addClientOrder(
+        {
+          CUSTOMER: customerId,
+          STATE: "pending",
+          DELIVERY: "False",
+          TOTAL: 13.71,
+          DATETIME: "2022-01-12 12:00",
+          ADDRESS: "Shop"
+        }
+      );
+      const orderItems = await functions.addOrderItem(
+        {
+          ORDERID: clientOrder,
+          PRODUCT: prodId,
+          QUANTITY: 1,
+          PRICE: 13.71
+        }
+      );
+      
+      const expectedResponse = "test@gmail.com";
+      const res = await farmerDao.getCustomerMail(db, clientOrder);
+      expect(res).toEqual(expectedResponse);
+  
+      //clean db from the data just put
+      await functions.deleteTableWhereId("orderitems", orderItems);
+      await functions.deleteTableWhereId("clientorder", clientOrder);
+      await functions.deleteTableWhereId("users", userId);
+      await functions.deleteTableWhereId("customer", customerId);
+      await functions.deleteTableWhereId("product", prodId);
+      await functions.deleteTableWhereId("farmer", farmerId);
+    });
+
     //TEST story #15, farmerDao.getFarmerOrders
     test("test getFarmerOrders when no order is present", async () => {
       //initializing farmerorder table and checking if empty
@@ -486,7 +699,7 @@ describe("Test api's", () => {
       };
       employeeDAO.createClientOrder(db, fakeOrder).then(async (id) => {
         const res = await request(app).get("/api/orders/all");
-        console.log(res.body[0].state);
+        //console.log(res.body[0].state);
         expect(res.statusCode).toBe(200);
         expect(res.body[0].state).toEqual("pending");
         //  expect(res.body[0].delivery.toEqual(true));
@@ -529,29 +742,87 @@ describe("Test api's", () => {
         expect(res.body.surname).toEqual("test");
       });
   });
-
-  /*test("responds to /api/farmerOrders/:id with invalid id", async () => {
+  /* removed because all tests are logged in
+  test("responds to /api/farmerOrders/:id with invalid id", async () => {
     const res = await request(app).get(`/api/farmerOrders/tt`);
     expect(res.statusCode).toBe(500);
+  });*/
+
+  test("responds to /api/farmerOrders/:id", async () => {
+    const farmerId = await functions.addFarmerForTest({
+      NAME: "Lorenzo",
+      SURNAME: "Molteni",
+    }); //create farmer
+    const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+    const prodId = await functions.addProductForTest(
+      { NAME: "watermelon", PRICE: 13.71 },
+      farmerId
+    ); //create prod sold by farmer
+    const customerId = await functions.addCustomerForTest(newCustomer);
+    const clientOrder = await functions.addClientOrder(
+      {
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop"
+      }
+    );
+    const orderItems = await functions.addOrderItem(
+      {
+        ORDERID: clientOrder,
+        PRODUCT: prodId,
+        QUANTITY: 1,
+        PRICE: 13.71
+      }
+    );
+    
+    const expectedResponse = {
+      id: clientOrder,
+      products: [
+        {
+          name: "watermelon",
+          quantity: 1
+        },
+      ],
+      status: "pending"
+    };
+    const res = await request(app).get(`/api/farmerOrders/${farmerId}`);
+    expect(res.body).toEqual([expectedResponse]);
+
+    //clean db from the data just put
+    await functions.deleteTableWhereId("orderitems", orderItems);
+    await functions.deleteTableWhereId("clientorder", clientOrder);
+    await functions.deleteTableWhereId("customer", customerId);
+    await functions.deleteTableWhereId("product", prodId);
+    await functions.deleteTableWhereId("farmer", farmerId);
+    
   });
-  test("responds to /api/farmerOrders/:id", () => {
-    functions
-      .addFarmerAndOrderForTest({ NAME: "test", SURNAME: "test" }, { NAME: "test", PRICE: 1 })
-      .then(async (id) => {
-        const res = await request(app).get(`/api/farmerOrders/${id}`);
-        expect(res.statusCode).toBe(200);
-        expect(res.body.id).toEqual(0);
-        expect(res.body.products).toEqual([{ name: "test", quantity: 1 }]);
-      });
-  });
-  test("responds to /api/confirmOrder/", () => {
-    functions
-      .addOrderForTest()
-      .then(async (id) => {
-        farmerDao.confirmOrder(id).then(async () => {
-          expect(res.statusCode).toBe(200);
-        });
-      });
+  //What's the problem?
+  /*test("responds to /api/confirmOrder/", async () => {
+    const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+    const customerId = await functions.addCustomerForTest(newCustomer);
+    const clientOrder = await functions.addClientOrder(
+      {
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop"
+      }
+    );
+
+    const res = await request(app)
+    .post("/api/confirmOrder/")
+    .send({
+      id: clientOrder,
+    });
+    expect(res.statusCode).toEqual(200);
+    
+    await functions.deleteTableWhereId("clientorder", clientOrder);
+    await functions.deleteTableWhereId("customer", customerId);
   });*/
 
   /* removed because all tests are logged in 

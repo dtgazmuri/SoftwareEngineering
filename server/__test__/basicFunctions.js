@@ -106,35 +106,41 @@ exports.addUserForTest = (user, userId, hash, role) => {
   });
 };
 
-exports.addFarmerAndOrderForTest = (farmer, product) => {
+exports.addClientOrder = (order) => {
   return new Promise((resolve, reject) => {
-    const sql1 = "INSERT INTO farmer(NAME, SURNAME) VALUES (?, ?)";
-    db.run(sql, [farmer.NAME, farmer.SURNAME], function (err) {
+    const sql = "INSERT INTO clientorder(CUSTOMER, STATE, DELIVERY, TOTAL, DATETIME, ADDRESS) VALUES (?, ? , ? , ?, ?, ?)";
+    db.run(sql, [order.CUSTOMER, order.STATE, order.DELIVERY, order.TOTAL, order.DATETIME, order.ADDRESS], function (err) {
       if (err) {
         reject(err);
         return;
       }
-      fid = this.lastID;
-      const sql2 = "INSERT INTO product(NAME, FARMER, PRICE) VALUES(?, ?, ?)";
-      db.run(sql2, [product.NAME, fid, product.PRICE], function (err) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        pid = this.lastID;
-        const sql3 =
-          "INSERT INTO farmerorderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES(?, ?, ?)";
-        db.run(sql3, [0, pid, 1, 1], function (err) {
-          if (err) {
-            reject(err);
-            return;
-          }
+      resolve(this.lastID)
+    });
+  });
+};
 
-          resolve();
-        });
-        resolve();
-      });
-      resolve();
+exports.addUser = (user) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO users(USERID, USERNAME, HASH, ROLE) VALUES (?, ? , ? , ?)";
+    db.run(sql, [user.USERID, user.USERNAME, user.HASH, user.ROLE], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(this.lastID)
+    });
+  });
+};
+
+exports.addOrderItem = (item) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO orderitems(ORDERID, PRODUCT, QUANTITY, PRICE) VALUES (?, ? , ? , ?)";
+    db.run(sql, [item.ORDERID, item.PRODUCT, item.QUANTITY, item.PRICE], function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(this.lastID)
     });
   });
 };

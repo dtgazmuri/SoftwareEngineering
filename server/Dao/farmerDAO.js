@@ -143,10 +143,6 @@ exports.ackDeliveryFarmerOrder = (db, orderid) => {
 //get farmer orders given the farmer id
 exports.getFarmerOrderIds = (db, farmerId) => {
   return new Promise((resolve, reject) => {
-    console.log("we");
-
-    //NON e' farmerorderitems! e' orderitems!
-
     const sql = "SELECT DISTINCT ORDERID, STATE FROM orderitems FOI, product P, clientorder CO WHERE P.FARMER = ? AND P.ID = FOI.PRODUCT AND CO.ID = FOI.ORDERID";
     db.all(sql, [farmerId], (err, rows) => {
       if (err) {
@@ -189,6 +185,7 @@ exports.confirmOrder = (db, orderId) => {
     const sql = "UPDATE clientorder SET state = 'confirmed' WHERE id = ?";
     db.run(sql, [orderId], (err) => {
       if (err) {
+        console.log(err);
         reject(err);
         return;
       }
@@ -200,7 +197,7 @@ exports.confirmOrder = (db, orderId) => {
   });
 };
 
-//get username of customer given the id
+//get username of customer given the id of the order he made
 exports.getCustomerMail = (db, oid) => {
   return new Promise((resolve, reject) => {
     const sql = "SELECT username FROM users U, clientorder CO WHERE U.ROLE LIKE 'customer' AND U.USERID = CO.CUSTOMER AND CO.ID = ?";
@@ -209,7 +206,7 @@ exports.getCustomerMail = (db, oid) => {
         reject(err);
         return;
       }
-      resolve(rows[0].username);
+      resolve(rows[0].USERNAME);
     });
   });
 };
