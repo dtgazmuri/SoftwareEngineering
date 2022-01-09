@@ -306,7 +306,7 @@ export function ConfirmDeliveryPanel(props) {
       <Card id="orderconfirmation">
         <Card.Body>
           <Card.Title>Order Confirmation</Card.Title>
-          <div class="h-divider" />
+          <div className="h-divider" />
           <Card.Text>
             <Form.Group controlId="form-date">
               <Form.Label>Date</Form.Label>
@@ -392,7 +392,7 @@ export function ConfirmDeliveryPanel(props) {
               <></>
             )}
           </Card.Text>
-          <div class="h-divider" />
+          <div className="h-divider" />
           <br />
           <Row>
             <Col></Col>

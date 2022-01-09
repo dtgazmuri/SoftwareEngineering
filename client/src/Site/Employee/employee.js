@@ -257,24 +257,24 @@ function OrderList(props) {
                 {orders.length ?
                     orders.map(order => {
                         return (
-                            <ListGroup.Item id={order.id} key={order.id}>
+                            <ListGroup.Item test-id = {order.username} id={order.id} key={order.id}>
                                 <h5>Order number: {order.id}</h5>
                                 <Row id={order.customerid}>
-                                    <Col>
-                                        <Row>Customer mail: {order.username} </Row>
+                                    <Col test-id="order-data">
+                                        <Row test-id={`username`}>Customer mail: {order.username}</Row>
                                         
                                         <Row>Customer id: {order.customerid} </Row>
-                                        <Row>Order state: {order.state} </Row>
+                                        <Row test-id="state">Order state: {order.state}</Row>
                                         <Row>Order total: {order.total.toFixed(2)}</Row>
                                     </Col>
                                     <Col>
                                         {invalidTime &&
-                                            <Alert variant="warning" >
+                                            <Alert variant="warning" test-id="time-elapsed" >
                                                 Sorry, handouts are only possible between Wednesday at 9:00 and Friday at 21:00.
                                             </Alert>
                                         }
                                         {(order.state !== "delivered" && !invalidTime) &&
-                                            <Button onClick={() => handOutOrder(order.id)}>Hand out order</Button>
+                                            <Button test-id="handout-button" onClick={() => handOutOrder(order.id)}>Hand out order</Button>
                                         }
                                         {
                                             (updated !== {} && updated.id === order.id) &&

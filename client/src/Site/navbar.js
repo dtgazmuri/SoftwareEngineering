@@ -39,7 +39,7 @@ function MyNavbar(props) {
         {loc ? (
           <Link to="../">
             {" "}
-            <ArrowLeft variant="outline-light" />{" "}
+            <ArrowLeft test-id="back" variant="outline-light" />{" "}
           </Link>
         ) : props.isLogged ? (
           <TelegramBotButton></TelegramBotButton>
