@@ -199,6 +199,7 @@ function Basket(props) {
 
                 {items.map((item) => (
                   <BasketItem
+                    key = {item.id}
                     product={item}
                     setChangeBasket={setChangeBasket}
                     basket={true}
@@ -534,6 +535,7 @@ export function BasketItem(props) {
         <ListGroup.Item
           as={Row}
           id={`product-item-${props.product.id}`}
+          key = {props.product.id}
           className="d-flex justify-content-between align-items-start"
         >
           <Col>
@@ -619,6 +621,7 @@ function BasketButton(props) {
       if (isExist === false) {
         basketItems.push(newItem);
         sessionStorage.setItem("shopping-basket", JSON.stringify(basketItems));
+        console.log(basketItems);
         total += newItem.price;
         if (total > props.wallet) props.notifyBalance();
       }
@@ -629,7 +632,8 @@ function BasketButton(props) {
 
   const update = (product, mode)=>{
     addOrDeleteBasketItem(product, mode);
-    props.setUpdated((old) => !old);
+    if(props.setUpdated !== undefined)
+      props.setUpdated((old) => !old);
   }
 
   return (
