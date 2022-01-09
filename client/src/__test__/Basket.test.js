@@ -224,43 +224,31 @@ describe("test the Basket component", () => {
         const nameEl = screen.getByText(/[Nn]ame/i);
         expect(nameEl).toBeInTheDocument();
     });
-
     screen.debug();
     */
-
     //const priceEl = await screen.findByText(/[Pp]rice/i);
-
     //Wait
-
     /*
     await waitFor(() => {
-
       console.log("DEBUG TEST BASKET");
       screen.debug();
-
-      
       const nameEl = screen.getByText("Farmer");
-      
       const priceEl = screen.getByText(/[Pp]rice/i);
       const walletEl = screen.getByText(/[Ww]allet/i);
       const totalEl = screen.getByText(/[Tt]otal/i);
- 
       expect(nameEl).toBeInTheDocument();
       expect(priceEl).toBeInTheDocument();
       expect(walletEl).toBeInTheDocument();
       expect(totalEl).toBeInTheDocument();
-      
-      
     });
     */
-
-
-
+    expect(screen.getByText("Your basket is empty")).toBeInTheDocument();
+    expect(screen.getByText("Return")).toBeInTheDocument();
 
     mockFetchCustomerById.mockRestore();
-
-
   });
+  
+  
 });
 
 

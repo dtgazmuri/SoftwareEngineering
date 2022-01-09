@@ -1,3 +1,7 @@
+/// <reference types="Cypress" />
+
+context("New Order", () => {
+
 it("Create a new order",() => {
     cy.logincustomer()
     cy.getById("time-elapsed").should("not.exist")
@@ -34,7 +38,9 @@ it("Create a new order",() => {
       cy.getById("date").type(tomorrow).should("have.value", tomorrow)
       cy.getById("time").type("12:00").should("have.value", "12:00")
       cy.getById("delivery").check().should("have.value", "on")
-      cy.getById("address").should("exist").type("Via Fermi 2").should("have.value", "Via Fermi 2")
+      cy.getById("address").type("Via Fermi 2").should("have.value", "Via Fermi 2")
+      cy.getById("city").type("Torino").should("have.value", "Torino")
+      cy.getById("cap").type("10141").should("have.value", "10141")
       cy.getById("sendorder").click()
     })
     
@@ -43,11 +49,12 @@ it("Create a new order",() => {
           cy.get("tr").its('length').should('be.gte', 2)
         })
         cy.getById("delivery").within( () => {
-         cy.getById("address").should("have.text", "Via Fermi 2")
-         cy.getById("date").should("have.text", `${tomorrow} at 12:00`)
+          cy.getById("address").should("have.text", "Via Fermi 2, Torino 10141")
+          cy.getById("date").should("have.text", `${tomorrow} at 12:00`)
         })
         cy.getById("sendorder").click()
         cy.intercept("/api/order/customer", {statusCode:200})
     })
 
   })
+})
