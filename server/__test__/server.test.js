@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("../dbTest");
+const dbWrong = require("./wrongDBTest");
 const app = express();
 const server = require("../app")(app, db, true);
 const request = require("supertest");
@@ -38,6 +39,11 @@ describe("Test Dao classes", () => {
           ).rejects.toEqual({ code: 409, msg: "user already exits." });
         })
         .catch(() => {});
+    });
+    test("test checkIfUserNotExists with wrong db", async () => {
+      userDao.checkIfUserNotExists(dbWrong, "test@polito.it").catch((res) => {
+        return expect(res.code).toEqual(500);
+      });
     });
   });
 
@@ -109,35 +115,35 @@ describe("Test Dao classes", () => {
         NAME: "Lorenzo",
         SURNAME: "Molteni",
       }); //create farmer
-      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const newCustomer = {
+        NAME: "CustomerName",
+        SURNAME: "CustomerSurname",
+        WALLET: 50,
+      }; //create customer
       const prodId = await functions.addProductForTest(
         { NAME: "watermelon", PRICE: 13.71 },
         farmerId
       ); //create prod sold by farmer
       const customerId = await functions.addCustomerForTest(newCustomer);
-      const clientOrder = await functions.addClientOrder(
-        {
-          CUSTOMER: customerId,
-          STATE: "pending",
-          DELIVERY: "False",
-          TOTAL: 13.71,
-          DATETIME: "2022-01-12 12:00",
-          ADDRESS: "Shop"
-        }
-      );
-      const orderItems = await functions.addOrderItem(
-        {
-          ORDERID: clientOrder,
-          PRODUCT: prodId,
-          QUANTITY: 1,
-          PRICE: 13.71
-        }
-      );
-      
-      const expectedResponse = [{id: clientOrder, status: "pending"}];
+      const clientOrder = await functions.addClientOrder({
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop",
+      });
+      const orderItems = await functions.addOrderItem({
+        ORDERID: clientOrder,
+        PRODUCT: prodId,
+        QUANTITY: 1,
+        PRICE: 13.71,
+      });
+
+      const expectedResponse = [{ id: clientOrder, status: "pending" }];
       const res = await farmerDao.getFarmerOrderIds(db, farmerId);
       expect(res).toEqual(expectedResponse);
-  
+
       //clean db from the data just put
       await functions.deleteTableWhereId("orderitems", orderItems);
       await functions.deleteTableWhereId("clientorder", clientOrder);
@@ -155,18 +161,20 @@ describe("Test Dao classes", () => {
         NAME: "Lorenzo",
         SURNAME: "Molteni",
       }); //create farmer
-      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const newCustomer = {
+        NAME: "CustomerName",
+        SURNAME: "CustomerSurname",
+        WALLET: 50,
+      }; //create customer
       const customerId = await functions.addCustomerForTest(newCustomer);
-      const clientOrder = await functions.addClientOrder(
-        {
-          CUSTOMER: customerId,
-          STATE: "pending",
-          DELIVERY: "False",
-          TOTAL: 13.71,
-          DATETIME: "2022-01-12 12:00",
-          ADDRESS: "Shop"
-        }
-      );
+      const clientOrder = await functions.addClientOrder({
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop",
+      });
       const res = await farmerDao.getOrdersInfo(db, clientOrder, farmerId);
       expect(res).toHaveLength(0);
 
@@ -178,35 +186,35 @@ describe("Test Dao classes", () => {
         NAME: "Lorenzo",
         SURNAME: "Molteni",
       }); //create farmer
-      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const newCustomer = {
+        NAME: "CustomerName",
+        SURNAME: "CustomerSurname",
+        WALLET: 50,
+      }; //create customer
       const prodId = await functions.addProductForTest(
         { NAME: "watermelon", PRICE: 13.71 },
         farmerId
       ); //create prod sold by farmer
       const customerId = await functions.addCustomerForTest(newCustomer);
-      const clientOrder = await functions.addClientOrder(
-        {
-          CUSTOMER: customerId,
-          STATE: "pending",
-          DELIVERY: "False",
-          TOTAL: 13.71,
-          DATETIME: "2022-01-12 12:00",
-          ADDRESS: "Shop"
-        }
-      );
-      const orderItems = await functions.addOrderItem(
-        {
-          ORDERID: clientOrder,
-          PRODUCT: prodId,
-          QUANTITY: 1,
-          PRICE: 13.71
-        }
-      );
-      
+      const clientOrder = await functions.addClientOrder({
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop",
+      });
+      const orderItems = await functions.addOrderItem({
+        ORDERID: clientOrder,
+        PRODUCT: prodId,
+        QUANTITY: 1,
+        PRICE: 13.71,
+      });
+
       const expectedResponse = [{ name: "watermelon", quantity: 1 }];
       const res = await farmerDao.getOrdersInfo(db, clientOrder, farmerId);
       expect(res).toEqual(expectedResponse);
-  
+
       //clean db from the data just put
       await functions.deleteTableWhereId("orderitems", orderItems);
       await functions.deleteTableWhereId("clientorder", clientOrder);
@@ -221,35 +229,35 @@ describe("Test Dao classes", () => {
         NAME: "Lorenzo",
         SURNAME: "Molteni",
       }); //create farmer
-      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const newCustomer = {
+        NAME: "CustomerName",
+        SURNAME: "CustomerSurname",
+        WALLET: 50,
+      }; //create customer
       const prodId = await functions.addProductForTest(
         { NAME: "watermelon", PRICE: 13.71 },
         farmerId
       ); //create prod sold by farmer
       const customerId = await functions.addCustomerForTest(newCustomer);
-      const clientOrder = await functions.addClientOrder(
-        {
-          CUSTOMER: customerId,
-          STATE: "pending",
-          DELIVERY: "False",
-          TOTAL: 13.71,
-          DATETIME: "2022-01-12 12:00",
-          ADDRESS: "Shop"
-        }
-      );
-      const orderItems = await functions.addOrderItem(
-        {
-          ORDERID: clientOrder,
-          PRODUCT: prodId,
-          QUANTITY: 1,
-          PRICE: 13.71
-        }
-      );
-      
+      const clientOrder = await functions.addClientOrder({
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop",
+      });
+      const orderItems = await functions.addOrderItem({
+        ORDERID: clientOrder,
+        PRODUCT: prodId,
+        QUANTITY: 1,
+        PRICE: 13.71,
+      });
+
       const expectedResponse = { id: clientOrder, state: "confirmed" };
       const res = await farmerDao.confirmOrder(db, clientOrder);
       expect(res).toEqual(expectedResponse);
-  
+
       //clean db from the data just put
       await functions.deleteTableWhereId("orderitems", orderItems);
       await functions.deleteTableWhereId("clientorder", clientOrder);
@@ -264,36 +272,41 @@ describe("Test Dao classes", () => {
         NAME: "Lorenzo",
         SURNAME: "Molteni",
       }); //create farmer
-      const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+      const newCustomer = {
+        NAME: "CustomerName",
+        SURNAME: "CustomerSurname",
+        WALLET: 50,
+      }; //create customer
       const prodId = await functions.addProductForTest(
         { NAME: "watermelon", PRICE: 13.71 },
         farmerId
       ); //create prod sold by farmer
       const customerId = await functions.addCustomerForTest(newCustomer);
-      const userId = await functions.addUser({USERNAME: "test@gmail.com", USERID: customerId, HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m", ROLE: "customer"});
-      const clientOrder = await functions.addClientOrder(
-        {
-          CUSTOMER: customerId,
-          STATE: "pending",
-          DELIVERY: "False",
-          TOTAL: 13.71,
-          DATETIME: "2022-01-12 12:00",
-          ADDRESS: "Shop"
-        }
-      );
-      const orderItems = await functions.addOrderItem(
-        {
-          ORDERID: clientOrder,
-          PRODUCT: prodId,
-          QUANTITY: 1,
-          PRICE: 13.71
-        }
-      );
-      
+      const userId = await functions.addUser({
+        USERNAME: "test@gmail.com",
+        USERID: customerId,
+        HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m",
+        ROLE: "customer",
+      });
+      const clientOrder = await functions.addClientOrder({
+        CUSTOMER: customerId,
+        STATE: "pending",
+        DELIVERY: "False",
+        TOTAL: 13.71,
+        DATETIME: "2022-01-12 12:00",
+        ADDRESS: "Shop",
+      });
+      const orderItems = await functions.addOrderItem({
+        ORDERID: clientOrder,
+        PRODUCT: prodId,
+        QUANTITY: 1,
+        PRICE: 13.71,
+      });
+
       const expectedResponse = "test@gmail.com";
       const res = await farmerDao.getCustomerMail(db, clientOrder);
       expect(res).toEqual(expectedResponse);
-  
+
       //clean db from the data just put
       await functions.deleteTableWhereId("orderitems", orderItems);
       await functions.deleteTableWhereId("clientorder", clientOrder);
@@ -455,7 +468,6 @@ describe("Test Dao classes", () => {
       //elimino la entry di test appena messa nel db
       await functions.deleteTableWhereId("clientorder", orderId);
     });
-
   });
   describe("Test employeeDAO functions", () => {
     let customerId;
@@ -610,13 +622,13 @@ describe("Test Dao classes", () => {
         date: "2021-12-27 12:15",
         month: 12,
         productid: 1,
-      }
-      
+      };
+
       const res = await employeeDAO.postLostFood(db, order);
       expect(res).toEqual(order);
       await functions.deleteTable("lostfood");
     });
-    test("test lostOrderStatus", async () => {  
+    test("test lostOrderStatus", async () => {
       const fakeOrder = {
         customerid: 1000,
         state: "pending",
@@ -630,8 +642,6 @@ describe("Test Dao classes", () => {
       const orders = await functions.getClientOrderById(orderid);
       expect(orders[0].state).toEqual("lost");
     });
-    
-
   });
   describe("Test managerDAO functions", () => {
     //testing getReports
@@ -639,14 +649,14 @@ describe("Test Dao classes", () => {
       const weekReport = {
         type: 0,
         initialdate: "2021-11-01",
-        finaldate: "2021-11-07"
+        finaldate: "2021-11-07",
       };
       const monthlyReport = {
         type: 1,
         initialdate: "2021-11-01",
-        finaldate: "2021-11-30"
+        finaldate: "2021-11-30",
       };
-  
+
       await functions.addManagerReport(weekReport);
       await functions.addManagerReport(monthlyReport);
       const res = await managerDAO.getReports(db);
@@ -665,7 +675,7 @@ describe("Test Dao classes", () => {
         date: "2021-12-27 12:15",
         month: 12,
         productid: 1,
-      }
+      };
       //putting lostfood
       await employeeDAO.postLostFood(db, lostFood);
       const res = await managerDAO.getLostFood(db);
@@ -753,40 +763,40 @@ describe("Test api's", () => {
       NAME: "Lorenzo",
       SURNAME: "Molteni",
     }); //create farmer
-    const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
+    const newCustomer = {
+      NAME: "CustomerName",
+      SURNAME: "CustomerSurname",
+      WALLET: 50,
+    }; //create customer
     const prodId = await functions.addProductForTest(
       { NAME: "watermelon", PRICE: 13.71 },
       farmerId
     ); //create prod sold by farmer
     const customerId = await functions.addCustomerForTest(newCustomer);
-    const clientOrder = await functions.addClientOrder(
-      {
-        CUSTOMER: customerId,
-        STATE: "pending",
-        DELIVERY: "False",
-        TOTAL: 13.71,
-        DATETIME: "2022-01-12 12:00",
-        ADDRESS: "Shop"
-      }
-    );
-    const orderItems = await functions.addOrderItem(
-      {
-        ORDERID: clientOrder,
-        PRODUCT: prodId,
-        QUANTITY: 1,
-        PRICE: 13.71
-      }
-    );
-    
+    const clientOrder = await functions.addClientOrder({
+      CUSTOMER: customerId,
+      STATE: "pending",
+      DELIVERY: "False",
+      TOTAL: 13.71,
+      DATETIME: "2022-01-12 12:00",
+      ADDRESS: "Shop",
+    });
+    const orderItems = await functions.addOrderItem({
+      ORDERID: clientOrder,
+      PRODUCT: prodId,
+      QUANTITY: 1,
+      PRICE: 13.71,
+    });
+
     const expectedResponse = {
       id: clientOrder,
       products: [
         {
           name: "watermelon",
-          quantity: 1
+          quantity: 1,
         },
       ],
-      status: "pending"
+      status: "pending",
     };
     const res = await request(app).get(`/api/farmerOrders/${farmerId}`);
     expect(res.body).toEqual([expectedResponse]);
@@ -797,31 +807,35 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("customer", customerId);
     await functions.deleteTableWhereId("product", prodId);
     await functions.deleteTableWhereId("farmer", farmerId);
-    
   });
-  
-  test("responds to /api/confirmOrder/", async () => {
-    const newCustomer = { NAME: "CustomerName", SURNAME: "CustomerSurname", WALLET: 50 }; //create customer
-    const customerId = await functions.addCustomerForTest(newCustomer);
-    const userId = await functions.addUser({USERNAME: "test@gmail.com", USERID: customerId, HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m", ROLE: "customer"});
-    const clientOrder = await functions.addClientOrder(
-      {
-        CUSTOMER: customerId,
-        STATE: "pending",
-        DELIVERY: "False",
-        TOTAL: 13.71,
-        DATETIME: "2022-01-12 12:00",
-        ADDRESS: "Shop"
-      }
-    );
 
-    const res = await request(app)
-    .post("/api/confirmOrder/")
-    .send({
+  test("responds to /api/confirmOrder/", async () => {
+    const newCustomer = {
+      NAME: "CustomerName",
+      SURNAME: "CustomerSurname",
+      WALLET: 50,
+    }; //create customer
+    const customerId = await functions.addCustomerForTest(newCustomer);
+    const userId = await functions.addUser({
+      USERNAME: "test@gmail.com",
+      USERID: customerId,
+      HASH: "$2b$10$jWmSxke0udXqlelLOqy.SOsiauQF4rXSE45uBNAoGaIfp.Wymwg.m",
+      ROLE: "customer",
+    });
+    const clientOrder = await functions.addClientOrder({
+      CUSTOMER: customerId,
+      STATE: "pending",
+      DELIVERY: "False",
+      TOTAL: 13.71,
+      DATETIME: "2022-01-12 12:00",
+      ADDRESS: "Shop",
+    });
+
+    const res = await request(app).post("/api/confirmOrder/").send({
       id: clientOrder,
     });
     expect(res.statusCode).toEqual(200);
-    
+
     await functions.deleteTableWhereId("clientorder", clientOrder);
     await functions.deleteTableWhereId("users", userId);
     await functions.deleteTableWhereId("customer", customerId);
@@ -951,7 +965,7 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(422);
     expect(res.body).toHaveProperty("errors");
   });
-  
+
   test("response to /api/order/customer with incorrect delivery", async () => {
     const res = await request(app).post("/api/order/customer").send({
       customerid: 1,
@@ -964,7 +978,7 @@ describe("Test api's", () => {
     expect(res.statusCode).toBe(422);
     expect(res.body).toHaveProperty("errors");
   });
-  
+
   test("response to /api/order/customer with incorrect total", async () => {
     const res = await request(app).post("/api/order/customer").send({
       customerid: 1,
@@ -1104,7 +1118,7 @@ describe("Test api's", () => {
     const res = await request(app).get("/api/customers/all");
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([]);
-  });  
+  });
 
   test("resonse to /api/customers/:id when customer does not exist", async () => {
     const id = 10;
@@ -1112,16 +1126,22 @@ describe("Test api's", () => {
     const res = await request(app).get(`/api/customers/${id}`);
     expect(res.statusCode).toBe(404);
   });
-  
+
   test("resonse to /api/customers/:id when customer exists", async () => {
     const newCustomer = { name: "setare", surname: "askari", init_wallet: 500 };
     const id = await employeeDAO.createNewCustomer(db, newCustomer);
     const res = await request(app).get(`/api/customers/${id}`);
     //expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([{ID: id, NAME: newCustomer.name, SURNAME: newCustomer.surname, WALLET: 0}]);
+    expect(res.body).toEqual([
+      {
+        ID: id,
+        NAME: newCustomer.name,
+        SURNAME: newCustomer.surname,
+        WALLET: 0,
+      },
+    ]);
   });
-  
-  
+
   //TEST story#15
   //TEST /api/farmerOrders
   test("response to /api/farmerOrders when table it's empty", async () => {
@@ -1186,7 +1206,7 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("product", prodId);
     await functions.deleteTableWhereId("farmer", farmerId);
   });
-  
+
   //TEST /api/farmerOrders/:id/ack
   test("response to /api/farmerOrders/:id/ack with a string instead of id ", async () => {
     await functions.deleteTable("farmerorder");
@@ -1260,15 +1280,15 @@ describe("Test api's", () => {
       date: "2021-12-27 12:15",
       month: 12,
       productid: 1,
-  }
+    };
     const res = await request(app).post("/api/lostfood").send(productData);
     expect(res.statusCode).toBe(200);
     await functions.deleteTable("lostfood");
   });
   test("response to /api/lostfood with a wrong body", async () => {
     const productData = {
-      name: "productName"
-    }
+      name: "productName",
+    };
     const res = await request(app).post("/api/lostfood").send(productData);
     expect(res.statusCode).toBe(422);
   });
@@ -1283,12 +1303,12 @@ describe("Test api's", () => {
     const weekReport = {
       type: 0,
       initialdate: "2021-11-01",
-      finaldate: "2021-11-07"
+      finaldate: "2021-11-07",
     };
     const monthlyReport = {
       type: 1,
       initialdate: "2021-11-01",
-      finaldate: "2021-11-30"
+      finaldate: "2021-11-30",
     };
 
     const id1 = await functions.addManagerReport(weekReport);
@@ -1301,6 +1321,4 @@ describe("Test api's", () => {
     await functions.deleteTableWhereId("reports", id1);
     await functions.deleteTableWhereId("reports", id2);
   });
-
-  
 });
