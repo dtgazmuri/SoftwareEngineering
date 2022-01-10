@@ -10,7 +10,6 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import { Alert, Container, Button, Spinner, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { ToastContainer } from "react-toastify";
-import { Calendar } from 'react-bootstrap-icons';
 //Our components
 import MyBody from './Site/homepage'
 import MyNavbar from './Site/navbar';
