@@ -186,7 +186,7 @@ export function ProductForm(props) {
                 :
                 <Form>
                     <Form.Group controlId={`amountOf${props.id}`} className="mb-3">
-                        <Form.Control size="sm" type="number" placeholder="Insert here the expected amount" value={amount} onChange={(event) => setAmount(event.target.value)} />
+                        <Form.Control size="sm" id="quantity" type="number" placeholder="Insert here the expected amount" value={amount} onChange={(event) => setAmount(event.target.value)} />
                     </Form.Group>
                     {(error !== "" && showWarning) &&
                         <Alert variant='warning'>
@@ -199,12 +199,12 @@ export function ProductForm(props) {
                     {(props.updatedQuantity.product === props.id && show) &&
                         <Alert variant='success'>
                             <Row>
-                                <Col>Availability of product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Col>
+                                <Col id="msg">Availability of product {props.id} updated successfully. New availability: {props.updatedQuantity.quantity}</Col>
                                 <Col lg={1}><Button variant="outline-success" className="p-0" onClick={() => setShow(false)}>{littleX}</Button></Col>
                             </Row>
                         </Alert>
                     }
-                    <Button onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
+                    <Button id="setamount" onClick={() => handleSetAmount(props.id, amount)}>Set expected amount</Button>
                 </Form>
             }
         </>
