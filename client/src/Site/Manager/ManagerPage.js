@@ -561,7 +561,7 @@ function ReportMonthItem(props) {
 
     return (
         <>
-            <ListGroup.Item action variant="light" onClick={() => ShowMonthlyReport(report)} >
+            <ListGroup.Item action variant="light" onClick={() => ShowMonthlyReport()} >
                 <h6>{monthArray[report.month - 1]} {report.year}</h6>
             </ListGroup.Item>
             <Modal show={show} onHide={handleClose}>
