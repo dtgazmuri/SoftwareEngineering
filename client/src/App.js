@@ -25,7 +25,7 @@ import { FarmerPage, ConfirmOrdersSection, FarmerProducts } from './Site/Farmer/
 import { SignupForm } from "./Site/signup";
 import { CustomerHome } from "./Site/Customer/customer";
 import { Basket } from "./Site/Customer/Basket";
-import { Clock, ModalDate } from './Clock';
+import { Clock } from './Clock';
 import { ManagerPage, ManagerPageFarmerOrders, ManagerReports } from './Site/Manager/ManagerPage';
 import { notifyBalance, notifyQuantity, notifyError, notifySuccess } from './toastes'
 //API
@@ -37,12 +37,8 @@ function App() {
   const [message, setMessage] = useState({ type: "", msg: "" }); //for messages interface!
   const [url, setURL] = useState("");
   const [time, setTime] = useState();
-  const [faketime, setFakeTime] = useState();
-  const [showModal, setShowModal] = useState(false);
-  const [dirty, setDirty] = useState(false); //to see if the time is real-time or not
   const [notifOfTime, setNotifOfTime] = useState(false);
   const [isLoading, setLoading] = useState(false)
-  //you need to add time={dirty ? time : faketime}
 
   //AUTH LOGIN LOGOUT
   useEffect(() => {
@@ -99,7 +95,7 @@ function App() {
       }
     };
     checkTime();
-  }, [time, faketime, dirty]);
+  }, [time]);
 
   const doLogin = async (credentials) => {
     try {
@@ -154,17 +150,9 @@ function App() {
     }, 3000);
   };
 
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   /**USE THIS FUNCTION TO GET THE CURRENT TIME OF THE APPLICATION */
   const getCurrentTime = () => {
-    if (!dirty) return time;
-    else return faketime;
+    return time;
   };
 
   return (
@@ -184,28 +172,14 @@ function App() {
             <b>
               <Clock
                 time={time}
-                faketime={faketime}
                 setTime={setTime}
-                setFakeTime={setFakeTime}
-                setDirty={setDirty}
-                dirty={dirty}
+                
               />
             </b>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <Button onClick={handleOpenModal}>
-              <Calendar /> Set Date and Time{" "}
-            </Button>
           </Container>
         }
 
-        <ModalDate
-          show={showModal}
-          handleClose={handleCloseModal}
-          setFakeTime={setFakeTime}
-          setDirty={setDirty}
-          dirty={dirty}
-          setTime={setTime}
-        />
         {message.msg !== "" ? (
           <Alert className="" variant={message.type}>
             {message.msg}
@@ -251,7 +225,7 @@ function App() {
           <Route
             path="/unregistered-productlist/"
             element={
-              <UnregisteredUserProductList time={!dirty ? time : faketime}/>
+              <UnregisteredUserProductList time={time}/>
             }
           />
           /
@@ -263,7 +237,7 @@ function App() {
               isLogged ? (
                 <ProductList
                   setMessage={setMessage}
-                  time={!dirty ? time : faketime}
+                  time={time}
                 />
               ) : (
                 <Navigate replace to="/home" />
@@ -277,7 +251,7 @@ function App() {
               isLogged ? (
                 <ProductList
                   setMessage={setMessage}
-                  time={!dirty ? time : faketime}
+                  time={time}
                 />
               ) : (
                 <Navigate replace to="/home" />
