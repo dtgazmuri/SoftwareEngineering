@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 //REACT COMPONENTS
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Alert, Container, Button, Spinner, Row, Col } from 'react-bootstrap';
+import { Alert, Container, Spinner, Row, Col, Navbar } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { ToastContainer } from "react-toastify";
 //Our components
@@ -442,15 +442,12 @@ function ErrorPage() {
 }
 function LoadingPage() {
   return (<Container className="vh-100 d-flex fixed-center justify-content-center align-items-center">
-    <Col>
+    <Col className="align-items-center " style={{ "backgroundColor": "rgba(0, 0, 0, 0.2)" }}>
+      <Row className="justify-content-center my-2"> <h1 style={{ "color": "white" }}>Hold on</h1> </Row>
+      <Row className="justify-content-center  my-2"> <Spinner animation="border" variant="light" /></Row>
+      <Row className="justify-content-center  my-2"><h5 style={{ "color": "white" }}>We're landing on the right page...</h5></Row>
     </Col>
-    <Col className="align-items-center">
-      <Row> <h1>Hold on</h1> </Row>
-      <Row> <Spinner animation="border" variant="primary" /></Row>
-      <Row><h5>We're landing on the right page - - -</h5></Row>
-    </Col>
-    <Col>
-    </Col>
+    
   </Container>)
 }
 export default App;
