@@ -10,6 +10,7 @@
     "bcrypt": "^5.0.1",
     "bootstrap": "^4.6.0",
     "cypress": "^9.1.0",
+    "cypress-sql-server": "^1.0.0",
     "dayjs": "^1.10.7",
     "eslint-plugin-cypress": "^2.12.1",
     "express": "^4.17.1",
@@ -19,6 +20,7 @@
     "jquery": "^3.6.0",
     "moment-timezone": "^0.5.34",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.7.2",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
     "popper.js": "^1.16.1",
@@ -36,7 +38,7 @@
     "web-vitals": "^1.1.2",
     "yup": "^0.32.11"
   },
-  "proxy": "http://backend:3001/",
+  "proxy": "http://backend:3001",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

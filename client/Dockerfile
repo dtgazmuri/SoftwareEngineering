@@ -4,8 +4,7 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY package-docker.json ./package.json
-COPY package-lock.json ./
+COPY ["package.json", "package-lock.json", "./"]
 
 RUN npm install --production
 
