@@ -116,7 +116,8 @@ function ReportLostFood(props) {
         let dateArray = date[1].split("/");
         let product;
         for (let i = 0; i < productList.length ; i++){
-            if (productList[i].id === selectedProduct) {
+            console.log(productList[i]);
+            if (productList[i].id == selectedProduct) {
                 product = productList[i];
                 break;
             }
@@ -163,7 +164,7 @@ function ReportLostFood(props) {
             </ListGroup>
             <br></br>
 
-            {(!invalidTime) ?
+            {(invalidTime) ?
 
             <>
                 <ListGroup id="list" variant = "primary" >

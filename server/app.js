@@ -219,6 +219,7 @@ module.exports = function (app, db, testUser, bot) {
     try {
       //1) Get the products from the table
       const productsList = await employeeDAO.listProductsAll(db);
+      console.log(productsList);
       res.status(200).json(productsList);
     } catch (err) {
       console.log(err);

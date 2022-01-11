@@ -51,6 +51,7 @@ exports.listProductsAll = (db) => {
     const sql =
       "SELECT ID, NAME, FARMER, PRICE, AVAILABILITY AS QUANTITY, QUANTITY AS AVAILABILITY FROM product P, warehouse W WHERE ID = PRODUCT";
 
+
     db.all(sql, [], (err, rows) => {
       if (err) {
         reject(err);
