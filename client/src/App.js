@@ -13,15 +13,7 @@ import {
   Link,
   Navigate,
 } from "react-router-dom";
-import {
-  Alert,
-  Container,
-  Spinner,
-  Row,
-  Col,
-  Navbar,
-  Button,
-} from "react-bootstrap";
+import { Alert, Container, Button, Spinner, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { Calendar } from "react-bootstrap-icons";
@@ -69,6 +61,7 @@ function App() {
   const [dirty, setDirty] = useState(false); //to see if the time is real-time or not
   const [notifOfTime, setNotifOfTime] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  //you need to add time={dirty ? time : faketime}
 
   //AUTH LOGIN LOGOUT
   useEffect(() => {
@@ -186,6 +179,7 @@ function App() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
   /**USE THIS FUNCTION TO GET THE CURRENT TIME OF THE APPLICATION */
   const getCurrentTime = () => {
     if (!dirty) return time;
@@ -213,6 +207,8 @@ function App() {
                 faketime={faketime}
                 setTime={setTime}
                 setFakeTime={setFakeTime}
+                setDirty={setDirty}
+                dirty={dirty}
               />
             </b>
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -221,6 +217,7 @@ function App() {
             </Button>
           </Container>
         )}
+
         <ModalDate
           show={showModal}
           handleClose={handleCloseModal}
