@@ -33,7 +33,7 @@ sections:
 - E2E testing done
 
 
-> In this sprint number 3, we have revised our DoD with respect to sprint number 2, in order to consider also E2E testing as part of DoD.
+> In this sprint number 4 we have used the same DoD used in the previous sprint.
 
 
 ### Detailed statistics
