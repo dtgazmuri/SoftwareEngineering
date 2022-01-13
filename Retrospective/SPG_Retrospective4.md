@@ -12,13 +12,12 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed vs done: 6 vs 3 
+- Number of stories committed vs done: 5 vs 5 
 
 - Total points committed vs done: 21 vs 11
 
-- Nr of hours planned vs spent (as a team): 100 vs 99h 30m
+- Nr of hours planned vs spent (as a team): 96h vs 96h
 
-  (For the three missing story we didn't have time to finish the frontend/backend testing so they are not done)
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -77,32 +76,32 @@ STORY 41: TASKS DONE: SPG-41:Frontend (4h30m vs 6h30m), SPG-41:Frontend - testin
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated		26h 30m (to recover previous sprint) + 11h (for this sprint) -> total of 37h 30m
-  - Total hours spent			31h 45m
+  - Total hours estimated		36h
+  - Total hours spent			29h
   - Nr of automated unit test cases 
-    - Frontend Unit Testing: 97
-    - Backend Unit Testing: 38
-  - Coverage (if available)		22.6%
+    - Frontend Unit Testing: 116
+    - Backend Unit Testing: 84
+  - Coverage (if available)		37.6%
 - E2E testing:
-  - Total hours estimated		12h 30m
-  - Total hours spent			11h 30m
+  - Total hours estimated		7h
+  - Total hours spent			7h
 - Code review 
-  - Total hours estimated 		5h 15m
+  - Total hours estimated 		5h 30m
   - Total hours spent			5h 30m
 
 - Technical Debt management:		
-  - Total hours estimated 		3h
-  - Total hours spent			4h
+  - Total hours estimated 		0h
+  - Total hours spent			0h
   - Hours estimated for remediation by SonarQube		
     - Reliability 0m 
     - Security 0m
-    - Maintainability 1d 3h
-    - Total of 1d 3h
+    - Maintainability 1d 6h
+    - Total of 1d 6h
   - Hours estimated for remediation by SonarQube only for the selected and planned issues
-    - Critics: 2 issues for a total of 38m
-    - Major: 38 issues for a total of 1d
-    - Total of: 1h 38m
-  - Hours spent on remediation 														4h
+    - Critics: 3 issues for a total of 3h 18m
+    - Major: 64 issues for a total of 1d
+    - Total of: 1d 3h 18m
+  - Hours spent on remediation 														0h
   - debt ratio (as reported by SonarQube under "Measures-Maintainability")									0.4%
   - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability)	
     - Reliability: A
