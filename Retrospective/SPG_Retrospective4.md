@@ -14,10 +14,11 @@ sections:
 
 - Number of stories committed vs done: 5 vs 5 
 
-- Total points committed vs done: 21 vs 11
+- Total points committed vs done: 26 vs 26
 
-- Nr of hours planned vs spent (as a team): 96h vs 96h
+- Nr of hours planned vs spent (as a team): 96h vs 99h 
 
+  
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -114,30 +115,26 @@ NOTE: our policy is to remedy at all Critics and Major issues, and ignore minor.
 
 - What caused your errors in estimation (if any)?
 
-  Our estimations have been improving as we continue working with React and the testing tools, becasue we understand better the complexity of the tasks we undertake. Nevertheless, we had estimation errors on the development of stories 14 and 15. This is becasuse this stories introduced something new that was not present at all in our application before this sprint (involving the farmers and the manager), making it hard to estimate properly the amount of time they would require.
+  On this final sprint, our estimations were not perfect but they continued improving. This is because our knowledge of the technologies and tools we are using has improved substantially throughout the semester. This was also reflected in the reduced time we needed to develop new tasks. There were some estimation errors in the subdivision of tasks (i.e. when we broke down a big story into smaller parts), but the total time allocated for the entire task was usually fairly accurate.
 
 - What lessons did you learn (both positive and negative) in this sprint?
 
   Negative lessons:
 
-  We were not able to show all the work we did this sprint because some stories had not been completely tested and therefore were not done (because of what the definition states). Due to this, we need to spend more time trying to test everything and thus avoid incurring in more technical debt.
+  A big lesson we learnt the hard way throughout the entire project is the importance of reducing the amount technical debt. We spent a lot of time trying to properly test what we had done two weeks ago, which is very inefficient. Another problem was that we selected just a few people to do it, when it would probably have been better if every person tested their one work, since it is a lot easier and the person testing already understand perfectly the code.
 
   Positive lessons:
 
-  We had a good sprint planning session, being able to organize the sprint efficiently (without using a lot of time). Due to this, we now know we are able to do it and need to continue working to always have meetings like this.
+  Recently, especially in this sprint, we have been noticing our errors in previous sprints and have been working to fix them. This tells us that we have been learning about the optimization of the process of software development, which will be very useful when we have to undertake our next software projects in our lives.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 
-    Our first meeting this sprint, where we organized the entire sprint and divided the work load, was a lot more efficient. It took less time and the organization was clear for everybody.
+  We managed to continue having more efficient meetings, dividing the work load adequately between us. We also managed to resolve the technical debt we had from previous sprints, also minimizing the amount we incurred in this sprint.
 
 - Which ones you were not able to achieve? Why?
 
-    We were not able to test every single story we developed in this sprint, so there is some technical debt that needs to be addressed now in the current sprint.
-
-- Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.) 
-
-  We would like to continue having efficient meetings, hopefully avoiding going back to having long ones. We would also like to eradicate or at least continue reducing the amount of technical debt.
+  We were not able to test every single story we developed in this sprint, so there is some technical debt that needs to be addressed now in the current sprint.
 
 - One thing you are proud of as a Team:
 
-  Our programming knowledge continues to improve and we have been able to reduce (not completely eliminate yet) the technical debt incurred in previous sprints. We were also more efficient organizing ourselves.
+  Throughout the entire semester, our programming knowledge and our teamwork abilities have improved a lot. We are also very proud of the final project we managed to deliver, because it works very well and the amount of technical debt at the end is minimal; it is a nearly finished product. We were also able to listen to the stakeholder's feedback and improve based on it, which is a very important attribute of a good programmer.
