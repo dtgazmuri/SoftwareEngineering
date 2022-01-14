@@ -129,11 +129,8 @@ NOTE: our policy is to remedy at all Critics and Major issues, and ignore minor.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 
-  We managed to continue having more efficient meetings, dividing the work load adequately between us. We also managed to resolve the technical debt we had from previous sprints, also minimizing the amount we incurred in this sprint.
+  We were able to achieve all the goals we set on the previous sprint: we managed to continue having more efficient meetings, dividing the work load adequately between us. We also managed to resolve the technical debt we had from previous sprints, also minimizing the amount we incurred in this sprint.
 
-- Which ones you were not able to achieve? Why?
-
-  We were not able to test every single story we developed in this sprint, so there is some technical debt that needs to be addressed now in the current sprint.
 
 - One thing you are proud of as a Team:
 
